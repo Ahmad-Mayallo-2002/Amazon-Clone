@@ -1,0 +1,36 @@
+work with TypeScript in an Express.js project
+
+1. Initialize Your Project
+
+2. Install Dependencies
+npm install express
+npm install -D typescript ts-node @types/node @types/express nodemon
+
+3. Initialize TypeScript
+Generate a tsconfig.json file: npx tsc --init
+Then edit tsconfig.json for Express projects — here’s a recommended setup:
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  }
+}
+
+4. Add Development Scripts
+"scripts": {
+  "build": "tsc",
+  "start": "node dist/server.js",
+  "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node src/server.ts"
+}
+
+5. Run the Server
+For development: npm run dev
+To build and run production version:
+npm run build
+npm start
