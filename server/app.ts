@@ -13,6 +13,7 @@ import {
   OK_REASON,
 } from "./utils/statusCodes";
 import { sendResponse } from "./utils/sendResponse";
+import {checkToken} from "./middlewares/checkToken.middleware"
 
 const app = express();
 const port: number = parseInt(process.env.PORT as string);
@@ -23,7 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "images")));
 
-app.get("/", async (_req: Request, res: Response) =>
+app.get("/", checkToken, async (_req: Request, res: Response) =>
   sendResponse(res, "Hello, World!", OK, OK_REASON)
 );
 
