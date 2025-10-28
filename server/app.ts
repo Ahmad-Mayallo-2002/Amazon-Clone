@@ -13,8 +13,6 @@ import {
   OK_REASON,
 } from "./utils/statusCodes";
 import { sendResponse } from "./utils/sendResponse";
-import { authorizeRoles } from "./middlewares/authorizeRoles.middleware";
-import { Roles } from "./enums/role.enum";
 
 const app = express();
 const port: number = parseInt(process.env.PORT as string);
