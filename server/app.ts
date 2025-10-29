@@ -13,6 +13,8 @@ import {
   OK_REASON,
 } from "./utils/statusCodes";
 import { sendResponse } from "./utils/sendResponse";
+import { upload } from "./utils/multer";
+import { localUpload } from "./utils/localUpload";
 
 const app = express();
 const port: number = parseInt(process.env.PORT as string);
