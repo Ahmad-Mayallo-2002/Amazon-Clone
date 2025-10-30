@@ -11,6 +11,8 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME as string,
   password: process.env.DB_PASS as string,
   database: process.env.DB_DATABASE as string,
+  synchronize: true,
+  entities: ["**/*.entity.ts"],
 });
 
 async function connect() {
