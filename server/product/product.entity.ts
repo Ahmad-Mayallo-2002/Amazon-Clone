@@ -1,7 +1,16 @@
-import { Column, Entity, JoinColumn, ManyToOne, Relation } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  Relation,
+} from "typeorm";
 import { AbstractEntity } from "../utils/abstractEntity";
 import { Vendor } from "../vendor/vendor.entity";
 import { Category } from "../category/category.entity";
+import { Comment } from "../comment/comment.entity";
+import { Review } from "../review/review.entity";
 
 @Entity({ name: "products" })
 export class Product extends AbstractEntity {
@@ -37,4 +46,10 @@ export class Product extends AbstractEntity {
   @JoinColumn({ name: "category_id" })
   @ManyToOne(() => Category, (category) => category.productId)
   category: Relation<Category>;
+
+  @OneToMany(() => Comment, (comment) => comment.product)
+  comments: Relation<Comment[]>;
+
+  @OneToMany(() => Review, (reviews) => reviews.product)
+  reviews: Relation<Review[]>;
 }
