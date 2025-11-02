@@ -11,6 +11,9 @@ import { Vendor } from "../vendor/vendor.entity";
 import { Category } from "../category/category.entity";
 import { Comment } from "../comment/comment.entity";
 import { Review } from "../review/review.entity";
+import { CartItem } from "../cartItem/cartItem.entity";
+import { OrderItem } from "../orderItem/orderItem.entity";
+import { WishItem } from "../wishItem/wishItem.entity";
 
 @Entity({ name: "products" })
 export class Product extends AbstractEntity {
@@ -52,4 +55,13 @@ export class Product extends AbstractEntity {
 
   @OneToMany(() => Review, (reviews) => reviews.product)
   reviews: Relation<Review[]>;
+
+  @OneToMany(() => CartItem, (cartItem) => cartItem.product)
+  cartItems: Relation<Product[]>;
+
+  @OneToMany(() => OrderItem, (orderItems) => orderItems.product)
+  orderItems: Relation<Product[]>;
+
+  @OneToMany(() => WishItem, (wishItems) => wishItems.product)
+  wishItems: Relation<Product[]>;
 }
