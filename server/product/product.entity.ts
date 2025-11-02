@@ -1,5 +1,7 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, Relation } from "typeorm";
 import { AbstractEntity } from "../utils/abstractEntity";
+import { Vendor } from "../vendor/vendor.entity";
+import { Category } from "../category/category.entity";
 
 @Entity({ name: "products" })
 export class Product extends AbstractEntity {
@@ -20,4 +22,19 @@ export class Product extends AbstractEntity {
 
   @Column({ type: "float", default: 0 })
   discount: number;
+
+  @Column({ type: "varchar", length: 255 })
+  vendorId: string;
+
+  @Column({ type: "varchar", length: 255 })
+  categoryId: string;
+
+  // Relations
+  @JoinColumn({ name: "vendor_id" })
+  @ManyToOne(() => Vendor, (vendor) => vendor.productsIds)
+  vendor: Relation<Vendor>;
+
+  @JoinColumn({ name: "category_id" })
+  @ManyToOne(() => Category, (category) => category.productId)
+  category: Relation<Category>;
 }
