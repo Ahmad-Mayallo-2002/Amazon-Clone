@@ -1,7 +1,9 @@
-import { Column, Entity, OneToOne, Relation } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, Relation } from "typeorm";
 import { Roles } from "../enums/role.enum";
 import { AbstractEntity } from "../utils/abstractEntity";
 import { Vendor } from "../vendor/vendor.entity";
+import { Comment } from "../comment/comment.entity";
+import { Review } from "../review/review.entity";
 
 @Entity({ name: "users" })
 export class User extends AbstractEntity {
@@ -23,4 +25,10 @@ export class User extends AbstractEntity {
   // Relations
   @OneToOne(() => Vendor, (vendor) => vendor.user)
   vendorId: Relation<Vendor>;
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Relation<Comment[]>;
+
+  @OneToMany(() => Review, (reviews) => reviews.user)
+  reviews: Relation<Review[]>;
 }
