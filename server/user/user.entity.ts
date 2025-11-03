@@ -1,9 +1,20 @@
-import { Column, Entity, OneToMany, OneToOne, Relation } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  Relation,
+} from "typeorm";
 import { Roles } from "../enums/role.enum";
 import { AbstractEntity } from "../utils/abstractEntity";
 import { Vendor } from "../vendor/vendor.entity";
 import { Comment } from "../comment/comment.entity";
 import { Review } from "../review/review.entity";
+import { Cart } from "../cart/cart.entity";
+import { Wish } from "../wish/wish.entity";
+import { Order } from "../order/order.entity";
+import { Address } from "../address/address.entity";
 
 @Entity({ name: "users" })
 export class User extends AbstractEntity {
@@ -31,4 +42,16 @@ export class User extends AbstractEntity {
 
   @OneToMany(() => Review, (reviews) => reviews.user)
   reviews: Relation<Review[]>;
+
+  @OneToOne(() => Cart, (cart) => cart.user)
+  cart: Relation<Cart>;
+
+  @OneToOne(() => Wish, (wish) => wish.user)
+  wish: Relation<Wish>;
+
+  @ManyToOne(() => Order, (order) => order.user)
+  orders: Relation<Order[]>;
+
+  @OneToMany(() => Address, (address) => address.user)
+  addresses: Relation<Address[]>;
 }
