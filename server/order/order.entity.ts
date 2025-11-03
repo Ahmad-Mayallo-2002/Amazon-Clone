@@ -12,6 +12,7 @@ import { User } from "../user/user.entity";
 import { OrderItem } from "../orderItem/orderItem.entity";
 import { OrderStatus } from "../enums/order-status.enum";
 import { Address } from "../address/address.entity";
+import { Payment } from "../payment/payment.entity";
 
 @Entity({ name: "orders" })
 export class Order extends AbstractEntity {
@@ -38,4 +39,7 @@ export class Order extends AbstractEntity {
 
   @OneToOne(() => Address, (address) => address.order)
   addresse: Relation<Address>;
+
+  @OneToOne(() => Payment, (payment) => payment.order)
+  payment: Relation<Payment>;
 }
