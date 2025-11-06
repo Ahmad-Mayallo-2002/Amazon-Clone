@@ -1,5 +1,3 @@
-import type { Express } from "express";
-import type { Multer } from "multer";
 import { UploadApiResponse } from "cloudinary";
 
 export interface IUploadStrategy {

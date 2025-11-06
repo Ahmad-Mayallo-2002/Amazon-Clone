@@ -13,6 +13,7 @@ import {
   OK_REASON,
 } from "./utils/statusCodes";
 import { sendResponse } from "./utils/sendResponse";
+import { router as userRoutes } from "./user/user.route";
 const app = express();
 const port: number = parseInt(process.env.PORT as string);
 
@@ -21,6 +22,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "images")));
+
+// Routes
+app.use("/api", userRoutes);
 
 app.get("/", async (_req: Request, res: Response) =>
   sendResponse(res, "Hello, World!", OK, OK_REASON)

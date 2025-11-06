@@ -6,8 +6,6 @@ import { FORBIDDEN, FORBIDDEN_REASON } from "../utils/statusCodes";
 export const authorizeRoles =
   (...roles: Roles[]) =>
   (req: Request, _res: Response, next: NextFunction) => {
-    (req as any).user = { role: "asd" };
-
     const role: Roles = (req as any).user.role;
 
     if (!roles.includes(role))
