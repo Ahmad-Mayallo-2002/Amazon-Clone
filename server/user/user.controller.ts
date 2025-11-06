@@ -31,8 +31,8 @@ export class UserController {
     try {
       const { id } = req.params;
       const data = req.body;
-      const updatedUser = await this.userService.updateUser(id, data);
-      return sendResponse(res, updatedUser, OK, "User updated successfully");
+      const result = await this.userService.updateUser(id, data);
+      return sendResponse(res, result, OK, OK_REASON);
     } catch (error) {
       next(error);
     }
@@ -41,8 +41,8 @@ export class UserController {
   deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      await this.userService.deleteUser(id);
-      return sendResponse(res, null, OK, "User deleted successfully");
+      const result = await this.userService.deleteUser(id);
+      return sendResponse(res, result, OK, OK_REASON);
     } catch (error) {
       next(error);
     }

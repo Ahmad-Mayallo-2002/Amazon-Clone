@@ -23,7 +23,7 @@ export class UserService {
     return users;
   }
 
-  async getUser(id: string): Promise<User | null> {
+  async getUser(id: string): Promise<User> {
     const user = await this.userRepo.findOne({
       where: { id, role: Roles.USER },
     });
@@ -32,15 +32,16 @@ export class UserService {
     return user;
   }
 
-  async updateUser(id: string, data: Partial<User>): Promise<User | null> {
+  async updateUser(id: string, data: Partial<User>): Promise<string> {
     const user = (await this.getUser(id)) as User;
     Object.assign(user, data);
-    return await this.userRepo.save(user);
+    await this.userRepo.save(user);
+    return "User updated successfully";
   }
 
-  async deleteUser(id: string): Promise<boolean> {
+  async deleteUser(id: string): Promise<string> {
     const user = (await this.getUser(id)) as User;
     await this.userRepo.remove(user);
-    return true;
+    return "User deleted successfully";
   }
 }

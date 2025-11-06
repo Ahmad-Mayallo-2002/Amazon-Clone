@@ -14,6 +14,7 @@ import {
 } from "./utils/statusCodes";
 import { sendResponse } from "./utils/sendResponse";
 import { router as userRoutes } from "./user/user.route";
+import { router as vendorRoutes } from "./vendor/vendor.route";
 const app = express();
 const port: number = parseInt(process.env.PORT as string);
 
@@ -25,6 +26,7 @@ app.use(express.static(path.join(__dirname, "images")));
 
 // Routes
 app.use("/api", userRoutes);
+app.use("/api", vendorRoutes);
 
 app.get("/", async (_req: Request, res: Response) =>
   sendResponse(res, "Hello, World!", OK, OK_REASON)
