@@ -20,8 +20,8 @@ export class Product extends AbstractEntity {
   @Column({ type: "varchar", length: 255 })
   title: string;
 
-  @Column({ type: "varchar", length: 255 })
-  image: string;
+  @Column({ type: "simple-json" })
+  image: { url: string; public_id: string };
 
   @Column({ type: "text" })
   description: string;
