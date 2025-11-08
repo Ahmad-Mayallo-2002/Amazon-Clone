@@ -6,7 +6,7 @@ import { Roles } from "../enums/role.enum";
 import { checkToken } from "../middlewares/checkToken.middleware";
 import { adminOrOwnerProfileMiddleware } from "../middlewares/adminOrOwnerProfile.middleware";
 
-export const router = Router();
+const router = Router();
 
 const controller = userContainer.get<UserController>(UserController);
 
@@ -37,3 +37,5 @@ router.delete(
   adminOrOwnerProfileMiddleware,
   controller.deleteUser
 );
+
+export default router;

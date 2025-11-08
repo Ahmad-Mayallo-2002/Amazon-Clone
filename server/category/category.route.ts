@@ -5,7 +5,7 @@ import { checkToken } from "../middlewares/checkToken.middleware";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
 
-export const router = Router();
+const router = Router();
 
 const container = categoryContainer.get<CategoryController>(CategoryController);
 
@@ -33,3 +33,5 @@ router.delete(
   authorizeRoles(Roles.ADMIN),
   container.deleteCategory
 );
+
+export default router;

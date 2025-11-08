@@ -5,7 +5,7 @@ import { ProductController } from "./product.controller";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
 
-export const router = Router();
+ const router = Router();
 
 const container = productContainer.get<ProductController>(ProductController);
 
@@ -38,3 +38,5 @@ router.delete(
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
   container.deleteProduct
 );
+
+export default router;

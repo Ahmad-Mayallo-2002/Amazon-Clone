@@ -13,10 +13,13 @@ import {
   OK_REASON,
 } from "./utils/statusCodes";
 import { sendResponse } from "./utils/sendResponse";
-import { router as userRoutes } from "./user/user.route";
-import { router as vendorRoutes } from "./vendor/vendor.route";
-import { router as productRoutes } from "./product/product.route";
-import { router as categoryRoutes } from "./category/category.route";
+import userRoutes from "./user/user.route";
+import vendorRoutes from "./vendor/vendor.route";
+import productRoutes from "./product/product.route";
+import categoryRoutes from "./category/category.route";
+import addressRoutes from "./address/address.route";
+import commentRoutes from "./comment/comment.route";
+import reviewRoutes from "./review/review.route";
 const app = express();
 const port: number = parseInt(process.env.PORT as string);
 
@@ -31,6 +34,9 @@ app.use("/api", userRoutes);
 app.use("/api", vendorRoutes);
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
+app.use("/api", addressRoutes);
+app.use("/api", commentRoutes);
+app.use("/api", reviewRoutes);
 
 app.get("/", async (_req: Request, res: Response) =>
   sendResponse(res, "Hello, World!", OK, OK_REASON)

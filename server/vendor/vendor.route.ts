@@ -6,7 +6,7 @@ import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
 import { adminOrOwnerProfileMiddleware } from "../middlewares/adminOrOwnerProfile.middleware";
 
-export const router = Router();
+const router = Router();
 
 const container = vendorContainer.get<VendorController>(VendorController);
 
@@ -47,3 +47,5 @@ router.put(
   authorizeRoles(Roles.ADMIN),
   container.verifyVendorExists
 );
+
+export default router;
