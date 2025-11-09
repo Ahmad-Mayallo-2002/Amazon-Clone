@@ -29,7 +29,7 @@ export class Vendor extends AbstractEntity {
 
   // Relations
   @JoinColumn({ name: "user_id" })
-  @OneToOne(() => User, (user) => user.vendorId)
+  @OneToOne(() => User, (user) => user.vendor, { onDelete: "CASCADE" })
   user: Relation<User>;
 
   @OneToMany(() => Product, (product) => product.vendor)

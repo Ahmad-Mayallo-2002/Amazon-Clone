@@ -35,7 +35,7 @@ export class User extends AbstractEntity {
 
   // Relations
   @OneToOne(() => Vendor, (vendor) => vendor.user)
-  vendorId: Relation<Vendor>;
+  vendor: Relation<Vendor>;
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Relation<Comment[]>;

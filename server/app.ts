@@ -20,6 +20,9 @@ import categoryRoutes from "./category/category.route";
 import addressRoutes from "./address/address.route";
 import commentRoutes from "./comment/comment.route";
 import reviewRoutes from "./review/review.route";
+import cartRoutes from "./cart/cart.route";
+import authRoutes from "./auth/auth.route";
+
 const app = express();
 const port: number = parseInt(process.env.PORT as string);
 
@@ -37,6 +40,8 @@ app.use("/api", categoryRoutes);
 app.use("/api", addressRoutes);
 app.use("/api", commentRoutes);
 app.use("/api", reviewRoutes);
+app.use("/api", cartRoutes);
+app.use("/api", authRoutes);
 
 app.get("/", async (_req: Request, res: Response) =>
   sendResponse(res, "Hello, World!", OK, OK_REASON)
