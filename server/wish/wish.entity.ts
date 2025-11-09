@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, Relation } from "typeorm";
 import { AbstractEntity } from "../utils/abstractEntity";
 import { User } from "../user/user.entity";
-import { WishItem } from "../wishItem/wishItem.entity";
+import { WishItem } from "./wishItem.entity";
 
 @Entity({ name: "wishes" })
 export class Wish extends AbstractEntity {

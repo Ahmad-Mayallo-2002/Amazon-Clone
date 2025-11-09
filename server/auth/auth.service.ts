@@ -20,13 +20,14 @@ import { Roles } from "../enums/role.enum";
 import { ILogin } from "../interfaces/login.interface";
 import { sendVerificationCode } from "../utils/sendVerificationCode";
 import { redis } from "../utils/redis";
+import { WishService } from "../wish/wish.service";
 
 config();
 
 @injectable()
 export class AuthService {
   private userRepo: Repository<User> = AppDataSource.getRepository(User);
-  constructor() {}
+  private wishService: WishService;
 
   async register(data: CreateUserDto): Promise<User> {
     const existingUser = await this.userRepo.findOne({
@@ -36,7 +37,9 @@ export class AuthService {
       throw new AppError("User already exists", CONFLICT, CONFLICT_REASON);
     const user = this.userRepo.create(data);
     user.password = await hash(user.password, 10);
-    return await this.userRepo.save(user);
+    const newUser = await this.userRepo.save(user);
+    await this.wishService.create({ userId: newUser.id });
+    return newUser;
   }
 
   async login(data: LoginDto): Promise<ILogin> {
