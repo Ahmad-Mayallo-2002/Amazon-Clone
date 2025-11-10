@@ -7,7 +7,7 @@ import {
   Relation,
 } from "typeorm";
 import { AbstractEntity } from "../utils/abstractEntity";
-import { CartItem } from "../cartItem/cartItem.entity";
+import { CartItem } from "./cartItem.entity";
 import { User } from "../user/user.entity";
 
 @Entity({ name: "carts" })

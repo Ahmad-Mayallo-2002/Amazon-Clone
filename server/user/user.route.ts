@@ -1,10 +1,12 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
 import { UserController } from "./user.controller";
 import { userContainer } from "./user.container";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
 import { checkToken } from "../middlewares/checkToken.middleware";
 import { adminOrOwnerProfileMiddleware } from "../middlewares/adminOrOwnerProfile.middleware";
+import { validateZod } from "../middlewares/validate-zod.middleware";
+import { CreateUserSchema } from "./zod/createUserSchema.zod";
 
 const router = Router();
 
@@ -28,6 +30,7 @@ router.put(
   "/update-user/:id",
   checkToken,
   adminOrOwnerProfileMiddleware,
+  validateZod(CreateUserSchema.partial()),
   controller.updateUser
 );
 

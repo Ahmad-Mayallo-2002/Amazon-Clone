@@ -11,9 +11,9 @@ import { Vendor } from "../vendor/vendor.entity";
 import { Category } from "../category/category.entity";
 import { Comment } from "../comment/comment.entity";
 import { Review } from "../review/review.entity";
-import { CartItem } from "../cartItem/cartItem.entity";
+import { CartItem } from "../cart/cartItem.entity";
 import { OrderItem } from "../orderItem/orderItem.entity";
-import { WishItem } from "../wishItem/wishItem.entity";
+import { WishItem } from "../wish/wishItem.entity";
 
 @Entity({ name: "products" })
 export class Product extends AbstractEntity {

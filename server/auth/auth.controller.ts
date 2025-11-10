@@ -49,8 +49,21 @@ export class AuthController {
   resetPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password, confirmPassword } = req.body;
-      const result = await this.authService.resetPassword(email, password, confirmPassword);
+      const result = await this.authService.resetPassword(
+        email,
+        password,
+        confirmPassword
+      );
       return sendResponse(res, result, OK, OK_REASON);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  seedAdmin = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.authService.seedAdmin();
+      return sendResponse(res, result, CREATED, CREATED_REASON);
     } catch (error) {
       next(error);
     }

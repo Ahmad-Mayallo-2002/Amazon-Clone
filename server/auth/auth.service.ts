@@ -1,9 +1,7 @@
 import { injectable } from "inversify";
-import { CreateUserDto } from "../user/dto/create-user.dto";
 import { User } from "../user/user.entity";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
-import { LoginDto } from "./dto/login.dto";
 import {
   BAD_REQUEST,
   BAD_REQUEST_REASON,
@@ -20,16 +18,14 @@ import { Roles } from "../enums/role.enum";
 import { ILogin } from "../interfaces/login.interface";
 import { sendVerificationCode } from "../utils/sendVerificationCode";
 import { redis } from "../utils/redis";
-import { WishService } from "../wish/wish.service";
 
 config();
 
 @injectable()
 export class AuthService {
   private userRepo: Repository<User> = AppDataSource.getRepository(User);
-  private wishService: WishService;
 
-  async register(data: CreateUserDto): Promise<User> {
+  async register(data: { email: string }): Promise<User> {
     const existingUser = await this.userRepo.findOne({
       where: { email: data.email },
     });
@@ -38,11 +34,10 @@ export class AuthService {
     const user = this.userRepo.create(data);
     user.password = await hash(user.password, 10);
     const newUser = await this.userRepo.save(user);
-    await this.wishService.create({ userId: newUser.id });
     return newUser;
   }
 
-  async login(data: LoginDto): Promise<ILogin> {
+  async login(data: any): Promise<ILogin> {
     const user = await this.userRepo.findOne({
       where: { email: data.email },
       relations: ["vendor"],
@@ -66,7 +61,7 @@ export class AuthService {
     if (!user)
       throw new AppError("User not found", NOT_FOUND, NOT_FOUND_REASON);
     const code = await sendVerificationCode(email);
-    await redis.set(code, email, "EX", 60 * 60 * 24);
+    await redis.set(code, email, "EX", 60 * 10); // Code valid for 10 minutes
     return "Verification code sent to email";
   }
 
@@ -99,5 +94,26 @@ export class AuthService {
     user.password = await hash(confirmPassword, 10);
     await this.userRepo.save(user);
     return "Password reset successfully";
+  }
+
+  async seedAdmin(): Promise<string> {
+    const existingAdmin = await this.userRepo.findOne({
+      where: { role: Roles.ADMIN },
+    });
+    if (existingAdmin)
+      throw new AppError(
+        "Admin already exists",
+        BAD_REQUEST,
+        BAD_REQUEST_REASON
+      );
+    const admin = this.userRepo.create({
+      username: process.env.ADMIN_USERNAME,
+      email: process.env.ADMIN_EMAIL,
+      role: Roles.ADMIN,
+      phone: process.env.ADMIN_PHONE,
+    });
+    admin.password = await hash(`${process.env.ADMIN_PASSWORD}`, 10);
+    await this.userRepo.save(admin);
+    return "Admin user created successfully";
   }
 }

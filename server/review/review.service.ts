@@ -2,8 +2,6 @@ import { injectable } from "inversify";
 import { Repository } from "typeorm";
 import { Review } from "./review.entity";
 import { AppDataSource } from "../data-source";
-import { CreateReviewDTO } from "./dto/create-review.dto";
-import { UpdateReviewDTO } from "./dto/update-review.dto";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 
@@ -15,7 +13,7 @@ export class ReviewService {
     this.reviewRepo = AppDataSource.getRepository(Review);
   }
 
-  async createReview(data: CreateReviewDTO): Promise<Review> {
+  async createReview(data: { value: number }): Promise<Review> {
     const review = this.reviewRepo.create(data);
     return await this.reviewRepo.save(review);
   }
@@ -60,7 +58,7 @@ export class ReviewService {
     return avg || 0;
   }
 
-  async updateReview(id: string, data: UpdateReviewDTO): Promise<string> {
+  async updateReview(id: string, data: any): Promise<string> {
     const review = await this.getReviewById(id);
     await this.reviewRepo.save(Object.assign(review, data));
     return "Review updated successfully";

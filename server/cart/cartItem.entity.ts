@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, Relation } from "typeorm";
 import { AbstractEntity } from "../utils/abstractEntity";
 import { Product } from "../product/product.entity";
-import { Cart } from "../cart/cart.entity";
+import { Cart } from "./cart.entity";
 
 @Entity({ name: "cart_items" })
 export class CartItem extends AbstractEntity {

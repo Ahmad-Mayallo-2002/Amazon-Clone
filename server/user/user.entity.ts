@@ -49,7 +49,7 @@ export class User extends AbstractEntity {
   @OneToOne(() => Wish, (wish) => wish.user)
   wish: Relation<Wish>;
 
-  @ManyToOne(() => Order, (order) => order.user)
+  @OneToMany(() => Order, (order) => order.user)
   orders: Relation<Order[]>;
 
   @OneToMany(() => Address, (address) => address.user)

@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { injectable, inject } from "inversify";
 import { CommentService } from "./comment.service";
-import { CreateCommentDto } from "./dto/create-comment.dto";
-import { UpdateCommentDto } from "./dto/update-comment.dto";
 import { sendResponse } from "../utils/sendResponse";
 import { CREATED, CREATED_REASON, OK, OK_REASON } from "../utils/statusCodes";
 
@@ -12,7 +10,7 @@ export class CommentController {
 
   createComment = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dto: CreateCommentDto = req.body;
+      const dto: any = req.body;
       const comment = await this.commentService.createComment(dto);
       return sendResponse(res, comment, CREATED, CREATED_REASON);
     } catch (error) {
@@ -56,7 +54,7 @@ export class CommentController {
   updateComment = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const dto: UpdateCommentDto = req.body;
+      const dto: any = req.body;
       const updated = await this.commentService.updateComment(id, dto);
       return sendResponse(res, updated, OK, OK_REASON);
     } catch (error) {

@@ -2,8 +2,6 @@ import { injectable } from "inversify";
 import { Repository } from "typeorm";
 import { Product } from "./product.entity";
 import { AppDataSource } from "../data-source";
-import { CreateProductDto } from "./dto/create-product.dto";
-import { UpdateProductDto } from "./dto/update-product.dto";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 
@@ -15,7 +13,7 @@ export class ProductService {
     this.productRepo = AppDataSource.getRepository(Product);
   }
 
-  async createProduct(data: CreateProductDto) {
+  async createProduct(data: any) {
     const product = this.productRepo.create(data);
     return await this.productRepo.save(product);
   }
@@ -43,7 +41,7 @@ export class ProductService {
     return products;
   }
 
-  async updateProduct(id: string, data: UpdateProductDto): Promise<string> {
+  async updateProduct(id: string, data: any): Promise<string> {
     const product = await this.getProductById(id);
     await this.productRepo.save(Object.assign(product, data));
     return "Product updated successfully";

@@ -3,7 +3,6 @@ import { WishService } from "./wish.service";
 import { Request, Response, NextFunction } from "express";
 import { sendResponse } from "../utils/sendResponse";
 import { CREATED, CREATED_REASON, OK, OK_REASON } from "../utils/statusCodes";
-import { CreateWishDTO } from "./dto/create-wish.dto";
 
 @injectable()
 export class WishController {
@@ -40,7 +39,7 @@ export class WishController {
 
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dto: CreateWishDTO = req.body;
+      const dto: any = req.body;
       const wish = await this.wishService.create(dto);
       return sendResponse(res, wish, CREATED, CREATED_REASON);
     } catch (error) {

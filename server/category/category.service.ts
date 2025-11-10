@@ -2,8 +2,6 @@ import { injectable } from "inversify";
 import { Repository } from "typeorm";
 import { Category } from "./category.entity";
 import { AppDataSource } from "../data-source";
-import { CreateCategoryDto } from "./dto/create-category.dto";
-import { UpdateCategoryDto } from "./dto/update-category.dto";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 
@@ -15,7 +13,7 @@ export class CategoryService {
     this.categoryRepo = AppDataSource.getRepository(Category);
   }
 
-  async createCategory(data: CreateCategoryDto): Promise<Category> {
+  async createCategory(data: {name: string}): Promise<Category> {
     const category = this.categoryRepo.create(data);
     return await this.categoryRepo.save(category);
   }
@@ -32,7 +30,7 @@ export class CategoryService {
     return category;
   }
 
-  async updateCategory(id: string, data: UpdateCategoryDto): Promise<string> {
+  async updateCategory(id: string, data: any): Promise<string> {
     const category = await this.getCategoryById(id);
     await this.categoryRepo.save(Object.assign(category, data));
     return 'Category updated successfully';

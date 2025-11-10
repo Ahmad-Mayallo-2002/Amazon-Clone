@@ -3,7 +3,6 @@ import { Repository } from "typeorm";
 import { Wish } from "./wish.entity";
 import { AppDataSource } from "../data-source";
 import { WishItem } from "./wishItem.entity";
-import { CreateWishDTO } from "./dto/create-wish.dto";
 import AppError from "../utils/appError";
 import {
   BAD_REQUEST,
@@ -51,7 +50,7 @@ export class WishService {
     return wish;
   }
 
-  async create(data: CreateWishDTO): Promise<Wish> {
+  async create(data: {}): Promise<Wish> {
     const wish = this.wishRepo.create(data);
     return await this.wishRepo.save(wish);
   }
