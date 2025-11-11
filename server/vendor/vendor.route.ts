@@ -5,6 +5,8 @@ import { checkToken } from "../middlewares/checkToken.middleware";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
 import { adminOrOwnerProfileMiddleware } from "../middlewares/adminOrOwnerProfile.middleware";
+import { validateZod } from "../middlewares/validate-zod.middleware";
+import { VendorSchema } from "./zod/vendor.zod";
 
 const router = Router();
 
@@ -30,6 +32,7 @@ router.put(
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
   adminOrOwnerProfileMiddleware,
+  validateZod(VendorSchema.partial()),
   container.updateVendor
 );
 

@@ -4,8 +4,10 @@ import { productContainer } from "./product.container";
 import { ProductController } from "./product.controller";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
+import { validateZod } from "../middlewares/validate-zod.middleware";
+import { ProductSchema } from "./zod/product.zod";
 
- const router = Router();
+const router = Router();
 
 const container = productContainer.get<ProductController>(ProductController);
 
@@ -22,6 +24,7 @@ router.post(
   "/create-product",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
+  validateZod(ProductSchema),
   container.createProduct
 );
 
@@ -29,6 +32,7 @@ router.put(
   "/update-product/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
+  validateZod(ProductSchema.partial()),
   container.updateProduct
 );
 

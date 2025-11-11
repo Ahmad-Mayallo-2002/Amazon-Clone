@@ -18,6 +18,8 @@ import { Roles } from "../enums/role.enum";
 import { ILogin } from "../interfaces/login.interface";
 import { sendVerificationCode } from "../utils/sendVerificationCode";
 import { redis } from "../utils/redis";
+import { CreateUser } from "../user/zod/user.zod";
+import { Login } from "./zod/login.zod";
 
 config();
 
@@ -25,7 +27,7 @@ config();
 export class AuthService {
   private userRepo: Repository<User> = AppDataSource.getRepository(User);
 
-  async register(data: { email: string }): Promise<User> {
+  async register(data: CreateUser): Promise<User> {
     const existingUser = await this.userRepo.findOne({
       where: { email: data.email },
     });
@@ -37,7 +39,7 @@ export class AuthService {
     return newUser;
   }
 
-  async login(data: any): Promise<ILogin> {
+  async login(data: Login): Promise<ILogin> {
     const user = await this.userRepo.findOne({
       where: { email: data.email },
       relations: ["vendor"],

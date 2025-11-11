@@ -4,6 +4,7 @@ import { Product } from "./product.entity";
 import { AppDataSource } from "../data-source";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
+import { CreateProduct, UpdateProduct } from "./zod/product.zod";
 
 @injectable()
 export class ProductService {
@@ -13,7 +14,7 @@ export class ProductService {
     this.productRepo = AppDataSource.getRepository(Product);
   }
 
-  async createProduct(data: any) {
+  async createProduct(data: CreateProduct) {
     const product = this.productRepo.create(data);
     return await this.productRepo.save(product);
   }
@@ -41,7 +42,7 @@ export class ProductService {
     return products;
   }
 
-  async updateProduct(id: string, data: any): Promise<string> {
+  async updateProduct(id: string, data: UpdateProduct): Promise<string> {
     const product = await this.getProductById(id);
     await this.productRepo.save(Object.assign(product, data));
     return "Product updated successfully";

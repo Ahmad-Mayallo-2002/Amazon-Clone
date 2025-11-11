@@ -6,7 +6,7 @@ import { Roles } from "../enums/role.enum";
 import { checkToken } from "../middlewares/checkToken.middleware";
 import { adminOrOwnerProfileMiddleware } from "../middlewares/adminOrOwnerProfile.middleware";
 import { validateZod } from "../middlewares/validate-zod.middleware";
-import { CreateUserSchema } from "./zod/createUserSchema.zod";
+import { UserSchema } from "./zod/user.zod";
 
 const router = Router();
 
@@ -30,7 +30,7 @@ router.put(
   "/update-user/:id",
   checkToken,
   adminOrOwnerProfileMiddleware,
-  validateZod(CreateUserSchema.partial()),
+  validateZod(UserSchema.partial()),
   controller.updateUser
 );
 

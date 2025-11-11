@@ -3,6 +3,7 @@ import { AppDataSource } from "../data-source";
 import { Vendor } from "./vendor.entity";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
+import { UpdateVendor } from "./zod/vendor.zod";
 
 @injectable()
 export class VendorService {
@@ -24,7 +25,7 @@ export class VendorService {
     return vendor;
   }
 
-  async updateVendor(id: string, data: Partial<Vendor>): Promise<string> {
+  async updateVendor(id: string, data: UpdateVendor): Promise<string> {
     const vendor = await this.getVendor(id);
     Object.assign(vendor, data);
     await this.vendorRepo.save(vendor);

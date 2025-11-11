@@ -2,10 +2,9 @@ import { injectable } from "inversify";
 import { Repository } from "typeorm";
 import { Address } from "./address.entity";
 import { AppDataSource } from "../data-source";
-import { CreateAddressDTO } from "./dto/create-address.dto";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
-import { UpdateAddressDTO } from "./dto/update-address.dto";
+import { CreateAddress, UpdateAddress } from "./zod/address.zod";
 
 @injectable()
 export class AddressService {
@@ -40,14 +39,14 @@ export class AddressService {
     return addresses;
   }
 
-  async create(data: CreateAddressDTO): Promise<Address> {
+  async create(data: CreateAddress): Promise<Address> {
     const address = this.addressRepo.create(data);
     return this.addressRepo.save(address);
   }
 
   async updateAddress(
     id: string,
-    updateData: UpdateAddressDTO
+    updateData: UpdateAddress
   ): Promise<string> {
     const address = await this.getById(id);
     Object.assign(address, updateData);

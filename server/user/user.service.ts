@@ -5,6 +5,7 @@ import { User } from "./user.entity";
 import { Roles } from "../enums/role.enum";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
+import { UpdateUser } from "./zod/user.zod";
 
 @injectable()
 export class UserService {
@@ -32,7 +33,7 @@ export class UserService {
     return user;
   }
 
-  async updateUser(id: string, data: Partial<User>): Promise<string> {
+  async updateUser(id: string, data: UpdateUser): Promise<string> {
     const user = (await this.getUser(id)) as User;
     Object.assign(user, data);
     await this.userRepo.save(user);

@@ -4,6 +4,8 @@ import { AddressController } from "./address.controller";
 import { checkToken } from "../middlewares/checkToken.middleware";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
+import { validateZod } from "../middlewares/validate-zod.middleware";
+import { AddressSchema } from "./zod/address.zod";
 
 const container = addressContainer.get<AddressController>(AddressController);
 const router = Router();
@@ -29,6 +31,7 @@ router.put(
   "/update-address/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN),
+  validateZod(AddressSchema),
   container.updateAddress
 );
 router.delete(
