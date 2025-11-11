@@ -4,6 +4,8 @@ import { CategoryController } from "./category.controller";
 import { checkToken } from "../middlewares/checkToken.middleware";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
+import { validateZod } from "../middlewares/validate-zod.middleware";
+import { CategorySchema } from "./zod/category.zod";
 
 const router = Router();
 
@@ -17,6 +19,7 @@ router.post(
   "/create-category",
   checkToken,
   authorizeRoles(Roles.ADMIN),
+  validateZod(CategorySchema),
   container.createCategory
 );
 
@@ -24,6 +27,7 @@ router.put(
   "/update-category/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN),
+  validateZod(CategorySchema.partial()),
   container.updateCategory
 );
 

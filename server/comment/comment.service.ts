@@ -5,6 +5,8 @@ import { AppDataSource } from "../data-source";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { Product } from "../product/product.entity";
+import { CreateCommentType } from "./zod/comment.zod";
+import { UpdateCategoryType } from "../category/zod/category.zod";
 
 @injectable()
 export class CommentService {
@@ -23,8 +25,8 @@ export class CommentService {
     return product;
   }
 
-  async createComment(data: {content: string, productId: string}): Promise<Comment> {
-    await this.getProductById(data.productId);
+  async createComment(data: CreateCommentType, productId: string): Promise<Comment> {
+    await this.getProductById(productId);
     const comment = this.commentRepo.create(data);
     return await this.commentRepo.save(comment);
   }
@@ -58,7 +60,7 @@ export class CommentService {
     return comment;
   }
 
-  async updateComment(id: string, data: any): Promise<string> {
+  async updateComment(id: string, data: UpdateCategoryType): Promise<string> {
     const comment = await this.getCommentById(id);
     await this.commentRepo.save(Object.assign(comment, data));
     return "Comment updated successfully";

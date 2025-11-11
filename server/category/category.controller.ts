@@ -12,8 +12,7 @@ export class CategoryController {
 
   createCategory = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dto: any = req.body;
-      const category = await this.categoryService.createCategory(dto);
+      const category = await this.categoryService.createCategory(req.body);
       return sendResponse(res, category, CREATED, CREATED_REASON);
     } catch (error) {
       next(error);
@@ -46,8 +45,7 @@ export class CategoryController {
   updateCategory = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const dto: any = req.body;
-      const category = await this.categoryService.updateCategory(id, dto);
+      const category = await this.categoryService.updateCategory(id, req.body);
       return sendResponse(res, category, OK, OK_REASON);
     } catch (error) {
       next(error);

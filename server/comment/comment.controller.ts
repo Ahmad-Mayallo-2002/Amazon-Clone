@@ -10,8 +10,10 @@ export class CommentController {
 
   createComment = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dto: any = req.body;
-      const comment = await this.commentService.createComment(dto);
+      const comment = await this.commentService.createComment(
+        req.body,
+        req.params.productId
+      );
       return sendResponse(res, comment, CREATED, CREATED_REASON);
     } catch (error) {
       next(error);
@@ -54,8 +56,7 @@ export class CommentController {
   updateComment = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const dto: any = req.body;
-      const updated = await this.commentService.updateComment(id, dto);
+      const updated = await this.commentService.updateComment(id, req.body);
       return sendResponse(res, updated, OK, OK_REASON);
     } catch (error) {
       next(error);
