@@ -8,15 +8,6 @@ import { CREATED, CREATED_REASON, OK, OK_REASON } from "../utils/statusCodes";
 export class ReviewController {
   constructor(@inject(ReviewService) private reviewService: ReviewService) {}
 
-  createReview = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const review = await this.reviewService.createReview(req.body);
-      return sendResponse(res, review, CREATED, CREATED_REASON);
-    } catch (error) {
-      next(error);
-    }
-  };
-
   getAllReviews = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const reviews = await this.reviewService.getAllReviews();
@@ -65,11 +56,12 @@ export class ReviewController {
     }
   };
 
-  updateReview = async (req: Request, res: Response, next: NextFunction) => {
+  addReview = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const message = await this.reviewService.updateReview(
-        req.params.id,
-        req.body
+      const message = await this.reviewService.addReview(
+        req.params.productId,
+        req.body.value,
+        (req as any).user.id
       );
       return sendResponse(res, message, OK, OK_REASON);
     } catch (error) {

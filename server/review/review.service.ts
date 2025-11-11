@@ -4,6 +4,7 @@ import { Review } from "./review.entity";
 import { AppDataSource } from "../data-source";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
+import { AddReview } from "./zod/review.zod";
 
 @injectable()
 export class ReviewService {
@@ -11,11 +12,6 @@ export class ReviewService {
 
   constructor() {
     this.reviewRepo = AppDataSource.getRepository(Review);
-  }
-
-  async createReview(data: { value: number }): Promise<Review> {
-    const review = this.reviewRepo.create(data);
-    return await this.reviewRepo.save(review);
   }
 
   async getAllReviews(): Promise<Review[]> {
@@ -58,10 +54,25 @@ export class ReviewService {
     return avg || 0;
   }
 
-  async updateReview(id: string, data: any): Promise<string> {
-    const review = await this.getReviewById(id);
-    await this.reviewRepo.save(Object.assign(review, data));
-    return "Review updated successfully";
+  async addReview(
+    productId: string,
+    value: number,
+    userId: string
+  ): Promise<string> {
+    const review = await this.reviewRepo.findOne({
+      where: {
+        productId,
+        userId,
+      },
+    });
+    if (!review) {
+      const newReview = this.reviewRepo.create({ productId, userId, value });
+      await this.reviewRepo.save(newReview);
+    } else {
+      review.value = value;
+      await this.reviewRepo.save(review);
+    }
+    return "Review added successfully";
   }
 
   async deleteReview(id: string): Promise<string> {
