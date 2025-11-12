@@ -1,13 +1,11 @@
 import { infer as zInfer, object, string } from "zod";
-import { UserSchema } from "../../user/zod/user.zod";
 
 export const VendorSchema = object({
-  ...UserSchema,
   storeName: string(),
   storeDescription: string(),
 });
 
-const updateVendor = UserSchema.partial();
+const updateVendor = VendorSchema.partial();
 
-export type CreateVendor = zInfer<typeof UserSchema>;
+export type CreateVendor = zInfer<typeof VendorSchema>;
 export type UpdateVendor = zInfer<typeof updateVendor>;

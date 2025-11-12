@@ -20,12 +20,20 @@ import { sendVerificationCode } from "../utils/sendVerificationCode";
 import { redis } from "../utils/redis";
 import { CreateUser } from "../user/zod/user.zod";
 import { Login } from "./zod/login.zod";
+import { Vendor } from "../vendor/vendor.entity";
+import { CreateVendor } from "../vendor/zod/vendor.zod";
 
 config();
+
+type VendorT = {
+  vendor: CreateVendor;
+  user: CreateUser;
+};
 
 @injectable()
 export class AuthService {
   private userRepo: Repository<User> = AppDataSource.getRepository(User);
+  private vendorRepo: Repository<Vendor> = AppDataSource.getRepository(Vendor);
 
   async register(data: CreateUser): Promise<User> {
     const existingUser = await this.userRepo.findOne({
@@ -37,6 +45,12 @@ export class AuthService {
     user.password = await hash(user.password, 10);
     const newUser = await this.userRepo.save(user);
     return newUser;
+  }
+
+  async registerVendor(data: VendorT): Promise<Vendor> {
+    await this.register(data.user);
+    const vendor = this.vendorRepo.create(data.vendor);
+    return await this.vendorRepo.save(vendor);
   }
 
   async login(data: Login): Promise<ILogin> {
