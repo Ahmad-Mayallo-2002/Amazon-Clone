@@ -21,35 +21,40 @@ import { redis } from "../utils/redis";
 import { CreateUser } from "../user/zod/user.zod";
 import { Login } from "./zod/login.zod";
 import { Vendor } from "../vendor/vendor.entity";
-import { CreateVendor } from "../vendor/zod/vendor.zod";
+import { RegisterVendor } from "./zod/register-vendor.zod";
 
 config();
-
-type VendorT = {
-  vendor: CreateVendor;
-  user: CreateUser;
-};
 
 @injectable()
 export class AuthService {
   private userRepo: Repository<User> = AppDataSource.getRepository(User);
   private vendorRepo: Repository<Vendor> = AppDataSource.getRepository(Vendor);
 
-  async register(data: CreateUser): Promise<User> {
+  async register(data: CreateUser, role: Roles = Roles.USER): Promise<User> {
     const existingUser = await this.userRepo.findOne({
       where: { email: data.email },
     });
     if (existingUser)
       throw new AppError("User already exists", CONFLICT, CONFLICT_REASON);
-    const user = this.userRepo.create(data);
+    const user = this.userRepo.create({ ...data, role });
     user.password = await hash(user.password, 10);
     const newUser = await this.userRepo.save(user);
     return newUser;
   }
 
-  async registerVendor(data: VendorT): Promise<Vendor> {
-    await this.register(data.user);
-    const vendor = this.vendorRepo.create(data.vendor);
+  async registerVendor(data: RegisterVendor): Promise<Vendor> {
+    const { email, password, phone, storeDescription, storeName, username } =
+      data;
+    const user = await this.register(
+      { username, email, password, phone },
+      Roles.VENDOR
+    );
+    const vendor = this.vendorRepo.create({
+      storeDescription,
+      storeName,
+      userId: user.id,
+      user
+    });
     return await this.vendorRepo.save(vendor);
   }
 

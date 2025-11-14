@@ -4,7 +4,7 @@ import { AuthController } from "./auth.controller";
 import { validateZod } from "../middlewares/validate-zod.middleware";
 import { UserSchema } from "../user/zod/user.zod";
 import { LoginShema } from "./zod/login.zod";
-import { VendorSchema } from "../vendor/zod/vendor.zod";
+import { RegisterVendorSchema } from "./zod/register-vendor.zod";
 
 const container = authContainer.get<AuthController>(AuthController);
 const router = Router();
@@ -12,7 +12,7 @@ const router = Router();
 router.post("/register", validateZod(UserSchema), container.register);
 router.post(
   "/register-vendor",
-  validateZod(UserSchema, VendorSchema),
+  validateZod(RegisterVendorSchema),
   container.registerVendor
 );
 router.post("/login", validateZod(LoginShema), container.login);

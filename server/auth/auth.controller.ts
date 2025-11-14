@@ -3,6 +3,7 @@ import { AuthService } from "./auth.service";
 import { Request, Response, NextFunction } from "express";
 import { sendResponse } from "../utils/sendResponse";
 import { CREATED, CREATED_REASON, OK, OK_REASON } from "../utils/statusCodes";
+import { log } from "console";
 
 @injectable()
 export class AuthController {

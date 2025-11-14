@@ -12,7 +12,11 @@ export class VendorService {
   constructor() {}
 
   async getVendors(): Promise<Vendor[]> {
-    const vendors = await this.vendorRepo.find();
+    const vendors = await this.vendorRepo.find({
+      relations: {
+        user: true,
+      },
+    });
     if (!vendors.length)
       throw new AppError(NOT_FOUND_REASON, NOT_FOUND, "No vendors found");
     return vendors;
