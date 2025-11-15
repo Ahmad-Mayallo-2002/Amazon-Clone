@@ -9,7 +9,7 @@ import {
 } from "typeorm";
 import { AbstractEntity } from "../utils/abstractEntity";
 import { User } from "../user/user.entity";
-import { OrderItem } from "../orderItem/orderItem.entity";
+import { OrderItem } from "./orderItem.entity";
 import { OrderStatus } from "../enums/order-status.enum";
 import { Address } from "../address/address.entity";
 import { Payment } from "../payment/payment.entity";

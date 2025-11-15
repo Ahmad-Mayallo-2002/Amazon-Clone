@@ -6,7 +6,6 @@ import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { CreateProduct, UpdateProduct } from "./zod/product.zod";
 import { UploadContext } from "../utils/uploadContext";
-import { CloudinaryUpload } from "../utils/cloudinaryUpload";
 import { Image } from "../types/image.type";
 import { LocalUpload } from "../utils/localUpload";
 
