@@ -12,15 +12,17 @@ const {
   CLOUDINARY_API_SECRET: api_secret,
 } = process.env;
 
+v2.config({
+  cloud_name,
+  api_key,
+  api_secret,
+});
+
 export class CloudinaryUpload implements IUploadStrategy {
   upload = async (file: Express.Multer.File): Promise<UploadApiResponse> => {
     if (!file)
       throw new AppError("File is not exist", NOT_FOUND, NOT_FOUND_REASON);
-    v2.config({
-      cloud_name,
-      api_key,
-      api_secret,
-    });
+
     return await new Promise((resolve, reject) => {
       const stream = v2.uploader.upload_stream(
         { folder: "amazon" },

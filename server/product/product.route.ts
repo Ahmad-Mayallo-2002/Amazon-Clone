@@ -6,6 +6,7 @@ import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
 import { validateZod } from "../middlewares/validate-zod.middleware";
 import { ProductSchema } from "./zod/product.zod";
+import { upload } from "../utils/multer";
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.get(
 
 router.post(
   "/create-product",
+  upload.single('image'),
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
   validateZod(ProductSchema),

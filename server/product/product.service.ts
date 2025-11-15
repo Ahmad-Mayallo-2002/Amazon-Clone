@@ -5,6 +5,10 @@ import { AppDataSource } from "../data-source";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { CreateProduct, UpdateProduct } from "./zod/product.zod";
+import { UploadContext } from "../utils/uploadContext";
+import { CloudinaryUpload } from "../utils/cloudinaryUpload";
+import { Image } from "../types/image.type";
+import { LocalUpload } from "../utils/localUpload";
 
 @injectable()
 export class ProductService {
@@ -14,8 +18,24 @@ export class ProductService {
     this.productRepo = AppDataSource.getRepository(Product);
   }
 
-  async createProduct(data: CreateProduct) {
-    const product = this.productRepo.create(data);
+  async createProduct(data: CreateProduct, vendorId: string) {
+    const strategy = new UploadContext(new LocalUpload());
+    const result = await strategy.performStrategy(data.image);
+    const image: Image = {
+      public_id: "",
+      url: "",
+    };
+    if (typeof result === "string") {
+      image.url = result;
+    } else {
+      image.url = result.secure_url;
+      image.public_id = result.public_id;
+    }
+    const product = this.productRepo.create({
+      ...data,
+      image,
+      vendorId,
+    });
     return await this.productRepo.save(product);
   }
 

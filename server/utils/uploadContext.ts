@@ -1,3 +1,4 @@
+import { UploadApiResponse } from "cloudinary";
 import { IUploadStrategy } from "../interfaces/uploadStrategy.interface";
 
 export class UploadContext {
@@ -9,7 +10,9 @@ export class UploadContext {
     this.uploadStrategy = uploadStrategy;
   }
 
-  public async performStrategy(file: Express.Multer.File) {
-    await this.uploadStrategy.upload(file);
+  public async performStrategy(
+    file: Express.Multer.File
+  ): Promise<string | UploadApiResponse> {
+    return await this.uploadStrategy.upload(file);
   }
 }

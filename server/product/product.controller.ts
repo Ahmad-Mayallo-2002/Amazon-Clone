@@ -10,9 +10,14 @@ export class ProductController {
 
   createProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const product = await this.productService.createProduct(req.body);
+      req.body.image = req.file;
+      const product = await this.productService.createProduct(
+        req.body,
+        (req as any).user.vendorId
+      );
       return sendResponse(res, product, CREATED, CREATED_REASON);
     } catch (error) {
+      console.log(req.body);
       next(error);
     }
   };
