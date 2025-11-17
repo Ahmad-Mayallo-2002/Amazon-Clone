@@ -9,11 +9,7 @@ import { UpdateUser } from "./zod/user.zod";
 
 @injectable()
 export class UserService {
-  private userRepo: Repository<User>;
-
-  constructor() {
-    this.userRepo = AppDataSource.getRepository(User);
-  }
+  private userRepo: Repository<User> = AppDataSource.getRepository(User);
 
   async getUsers(): Promise<User[]> {
     const users: User[] = await this.userRepo.find({

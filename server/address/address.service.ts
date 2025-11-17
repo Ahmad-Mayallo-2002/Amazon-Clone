@@ -8,11 +8,8 @@ import { CreateAddress, UpdateAddress } from "./zod/address.zod";
 
 @injectable()
 export class AddressService {
-  private addressRepo: Repository<Address>;
-
-  constructor() {
-    this.addressRepo = AppDataSource.getRepository(Address);
-  }
+  private addressRepo: Repository<Address> =
+    AppDataSource.getRepository(Address);
 
   async getAll(): Promise<Address[]> {
     const addresses = await this.addressRepo.find();
@@ -44,19 +41,16 @@ export class AddressService {
     return this.addressRepo.save(address);
   }
 
-  async updateAddress(
-    id: string,
-    updateData: UpdateAddress
-  ): Promise<string> {
+  async updateAddress(id: string, updateData: UpdateAddress): Promise<string> {
     const address = await this.getById(id);
     Object.assign(address, updateData);
     await this.addressRepo.save(address);
-    return 'Address updated successfully';
+    return "Address updated successfully";
   }
 
   async removeAddress(id: string): Promise<string> {
     const address = await this.getById(id);
     await this.addressRepo.remove(address);
-    return 'Address removed successfully';
+    return "Address removed successfully";
   }
 }

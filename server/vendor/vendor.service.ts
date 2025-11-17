@@ -9,8 +9,6 @@ import { UpdateVendor } from "./zod/vendor.zod";
 export class VendorService {
   private vendorRepo = AppDataSource.getRepository(Vendor);
 
-  constructor() {}
-
   async getVendors(): Promise<Vendor[]> {
     const vendors = await this.vendorRepo.find({
       relations: {

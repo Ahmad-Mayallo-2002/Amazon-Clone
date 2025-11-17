@@ -8,11 +8,8 @@ import { CreateCategoryType, UpdateCategoryType } from "./zod/category.zod";
 
 @injectable()
 export class CategoryService {
-  private categoryRepo: Repository<Category>;
-
-  constructor() {
-    this.categoryRepo = AppDataSource.getRepository(Category);
-  }
+  private categoryRepo: Repository<Category> =
+    AppDataSource.getRepository(Category);
 
   async createCategory(data: CreateCategoryType): Promise<Category> {
     const category = this.categoryRepo.create(data);

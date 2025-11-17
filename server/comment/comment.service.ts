@@ -10,13 +10,10 @@ import { UpdateCategoryType } from "../category/zod/category.zod";
 
 @injectable()
 export class CommentService {
-  private commentRepo: Repository<Comment>;
-  private productRepo: Repository<Product>;
-
-  constructor() {
-    this.commentRepo = AppDataSource.getRepository(Comment);
-    this.productRepo = AppDataSource.getRepository(Product);
-  }
+  private commentRepo: Repository<Comment> =
+    AppDataSource.getRepository(Comment);
+  private productRepo: Repository<Product> =
+    AppDataSource.getRepository(Product);
 
   private async getProductById(id: string): Promise<Product> {
     const product = await this.productRepo.findOne({ where: { id } });
@@ -25,7 +22,10 @@ export class CommentService {
     return product;
   }
 
-  async createComment(data: CreateCommentType, productId: string): Promise<Comment> {
+  async createComment(
+    data: CreateCommentType,
+    productId: string
+  ): Promise<Comment> {
     await this.getProductById(productId);
     const comment = this.commentRepo.create(data);
     return await this.commentRepo.save(comment);

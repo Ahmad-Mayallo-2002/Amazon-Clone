@@ -38,7 +38,7 @@ export class Order extends AbstractEntity {
   user: Relation<User>;
 
   @OneToOne(() => Address, (address) => address.order)
-  addresse: Relation<Address>;
+  address: Relation<Address>;
 
   @OneToOne(() => Payment, (payment) => payment.order)
   payment: Relation<Payment>;

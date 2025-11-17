@@ -39,6 +39,6 @@ export class Address extends AbstractEntity {
   user: Relation<User>;
 
   @JoinColumn({ name: "order" })
-  @OneToOne(() => Order, (order) => order.addresse)
+  @OneToOne(() => Order, (order) => order.address)
   order: Relation<Order>;
 }

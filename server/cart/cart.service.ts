@@ -109,4 +109,9 @@ export class CartService {
     }
     return "Product added to cart successfully";
   }
+
+  deleteItemsFromCart = async (cartId: string): Promise<boolean> => {
+    await this.cartItemRepo.delete({cartId}); 
+    return true;
+  }
 }

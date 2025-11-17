@@ -11,11 +11,8 @@ import { LocalUpload } from "../utils/localUpload";
 
 @injectable()
 export class ProductService {
-  private productRepo: Repository<Product>;
-
-  constructor() {
-    this.productRepo = AppDataSource.getRepository(Product);
-  }
+  private productRepo: Repository<Product> =
+    AppDataSource.getRepository(Product);
 
   async createProduct(data: CreateProduct, vendorId: string) {
     const strategy = new UploadContext(new LocalUpload());

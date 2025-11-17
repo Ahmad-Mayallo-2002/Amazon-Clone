@@ -4,15 +4,11 @@ import { Review } from "./review.entity";
 import { AppDataSource } from "../data-source";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
-import { AddReview } from "./zod/review.zod";
 
 @injectable()
 export class ReviewService {
-  private reviewRepo: Repository<Review>;
+  private reviewRepo: Repository<Review> = AppDataSource.getRepository(Review);
 
-  constructor() {
-    this.reviewRepo = AppDataSource.getRepository(Review);
-  }
 
   async getAllReviews(): Promise<Review[]> {
     const reviews = await this.reviewRepo.find({
