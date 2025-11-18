@@ -19,7 +19,7 @@ export class Payment extends AbstractEntity {
   status: PaymentStatus;
 
   // Relations
-  @JoinColumn({name: 'order'})
+  @JoinColumn({ name: "order" })
   @OneToOne(() => Order, (order) => order.payment)
   order: Relation<Order>;
 }

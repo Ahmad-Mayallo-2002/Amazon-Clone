@@ -60,4 +60,12 @@ export class OrderController {
       next(error);
     }
   };
+  
+  createOrder = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.orderService.createOrder((req as any).user.id, req.body)
+    } catch (error) {
+      next(error);
+    }
+  }
 }

@@ -1,0 +1,77 @@
+import express, { Request, Response, Router } from "express";
+import { stripe } from "../utils/stripe";
+import { AppDataSource } from "../data-source";
+import { Payment } from "../payment/payment.entity";
+import { Order } from "../order/order.entity";
+import { PaymentStatus } from "../enums/payment-status.enum";
+import { OrderStatus } from "../enums/order-status.enum";
+import { sendResponse } from "../utils/sendResponse";
+import { OK, OK_REASON } from "../utils/statusCodes";
+
+const router = Router();
+
+router.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  async (req: Request, res: Response) => {
+    const sig = req.headers["stripe-signature"] as string;
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET!
+      );
+    } catch (err: any) {
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    const paymentRepo = AppDataSource.getRepository(Payment);
+    const orderRepo = AppDataSource.getRepository(Order);
+
+    const updatePaymentAndOrder = async (
+      intentId: string,
+      paymentStatus: PaymentStatus,
+      orderStatus: OrderStatus
+    ) => {
+      const payment = await paymentRepo.findOne({
+        where: { providerPaymentId: intentId },
+      });
+      if (!payment) return;
+      await paymentRepo.update(
+        { providerPaymentId: intentId },
+        { status: paymentStatus }
+      );
+      await orderRepo.update({ id: payment.orderId }, { status: orderStatus });
+    };
+
+    switch (event.type) {
+      case "payment_intent.succeeded":
+        await updatePaymentAndOrder(
+          event.data.object.id,
+          PaymentStatus.PAID,
+          OrderStatus.SHIPPED
+        );
+        break;
+      case "payment_intent.payment_failed":
+        await updatePaymentAndOrder(
+          event.data.object.id,
+          PaymentStatus.FAILED,
+          OrderStatus.CANCELLED
+        );
+        break;
+      case "charge.refunded":
+        await updatePaymentAndOrder(
+          event.data.object.id,
+          PaymentStatus.REFUNDED,
+          OrderStatus.CANCELLED
+        );
+        break;
+    }
+
+    sendResponse(res, true, OK, OK_REASON);
+  }
+);
+
+export default router;

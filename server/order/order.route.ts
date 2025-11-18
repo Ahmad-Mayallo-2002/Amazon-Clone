@@ -43,4 +43,11 @@ router.patch(
   controller.updateOrderStatus
 );
 
+router.post(
+  "/create-order",
+  checkToken,
+  authorizeRoles(Roles.ADMIN, Roles.USER),
+  controller.createOrder
+);
+
 export default router;

@@ -23,6 +23,8 @@ import reviewRoutes from "./review/review.route";
 import cartRoutes from "./cart/cart.route";
 import authRoutes from "./auth/auth.route";
 import wishRoutes from "./wish/wish.route";
+import webhook from "./webhook/stripe.webhook";
+import { AppDataSource } from "./data-source";
 
 const app = express();
 const port: number = parseInt(process.env.PORT as string);
@@ -44,6 +46,7 @@ app.use("/api", reviewRoutes);
 app.use("/api", cartRoutes);
 app.use("/api", authRoutes);
 app.use("/api", wishRoutes);
+app.use("/api", webhook);
 
 app.get("/", async (_req: Request, res: Response) =>
   sendResponse(res, "Hello, World!", OK, OK_REASON)
