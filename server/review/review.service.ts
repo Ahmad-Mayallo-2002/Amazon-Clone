@@ -9,7 +9,6 @@ import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 export class ReviewService {
   private reviewRepo: Repository<Review> = AppDataSource.getRepository(Review);
 
-
   async getAllReviews(): Promise<Review[]> {
     const reviews = await this.reviewRepo.find({
       relations: ["product", "user"],
@@ -62,7 +61,13 @@ export class ReviewService {
       },
     });
     if (!review) {
-      const newReview = this.reviewRepo.create({ productId, userId, value });
+      const newReview = this.reviewRepo.create({
+        productId,
+        userId,
+        value,
+        product: { id: productId },
+        user: { id: userId },
+      });
       await this.reviewRepo.save(newReview);
     } else {
       review.value = value;

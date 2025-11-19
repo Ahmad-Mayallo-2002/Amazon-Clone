@@ -24,8 +24,8 @@ export class ProductController {
 
   getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const products = await this.productService.getAllProducts();
-      return sendResponse(res, products, OK, OK_REASON);
+      const { data, counts } = await this.productService.getAllProducts();
+      return sendResponse(res, data, OK, OK_REASON);
     } catch (error) {
       next(error);
     }
@@ -57,6 +57,7 @@ export class ProductController {
 
   updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      if (req.file) req.body.image = req.file;
       const message = await this.productService.updateProduct(
         req.params.id,
         req.body

@@ -5,4 +5,5 @@ export interface IResponse<T> {
   msg: string;
   status: number;
   pagination?: IPagination;
+  counts?: number;
 }

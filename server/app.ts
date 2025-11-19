@@ -1,8 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
-import path from "path";
+import path, { join } from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import { log } from "console";
+import "reflect-metadata";
 import "./data-source";
 import globalErrorHandler from "./utils/errorHandler";
 import AppError from "./utils/appError";
@@ -24,7 +25,10 @@ import cartRoutes from "./cart/cart.route";
 import authRoutes from "./auth/auth.route";
 import wishRoutes from "./wish/wish.route";
 import webhook from "./webhook/stripe.webhook";
-import { AppDataSource } from "./data-source";
+import { config } from "dotenv";
+
+config();
+
 
 const app = express();
 const port: number = parseInt(process.env.PORT as string);

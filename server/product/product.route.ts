@@ -14,10 +14,10 @@ const container = productContainer.get<ProductController>(ProductController);
 
 router.get("/get-products", container.getAllProducts);
 
-router.get("/get-product/:id", container.getProductById);
+router.get("/get-products/:id", container.getProductById);
 
 router.get(
-  "/get-products-by-category/:category",
+  "/get-products-by-category/:categoryId",
   container.getProductsByCategory
 );
 
@@ -32,6 +32,7 @@ router.post(
 
 router.put(
   "/update-product/:id",
+  upload.single("image"),
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
   validateZod(ProductSchema.partial()),

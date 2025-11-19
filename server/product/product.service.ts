@@ -8,6 +8,10 @@ import { CreateProduct, UpdateProduct } from "./zod/product.zod";
 import { UploadContext } from "../utils/uploadContext";
 import { Image } from "../types/image.type";
 import { LocalUpload } from "../utils/localUpload";
+import { unlinkSync } from "fs";
+import { join } from "path";
+import { log } from "console";
+import { PaginatedDate } from "../interfaces/paginated-data.interface";
 
 @injectable()
 export class ProductService {
@@ -31,19 +35,30 @@ export class ProductService {
       ...data,
       image,
       vendorId,
+      vendor: { id: vendorId },
+      category: { id: data.categoryId },
     });
     return await this.productRepo.save(product);
   }
 
-  async getAllProducts(): Promise<Product[]> {
-    const products: Product[] = await this.productRepo.find();
+  async getAllProducts(): Promise<PaginatedDate<Product>> {
+    const products: Product[] = await this.productRepo.find({
+      relations: ["category"],
+    });
+    const counts = await this.productRepo.count();
     if (!products.length)
       throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);
-    return products;
+    return {
+      data: products,
+      counts
+    };
   }
 
   async getProductById(id: string): Promise<Product> {
-    const product = await this.productRepo.findOne({ where: { id } });
+    const product = await this.productRepo.findOne({
+      where: { id },
+      relations: ["category"],
+    });
     if (!product)
       throw new AppError("Product not found", NOT_FOUND, NOT_FOUND_REASON);
     return product;
@@ -52,6 +67,7 @@ export class ProductService {
   async getProductsByCategory(categoryId: string): Promise<Product[]> {
     const products = await this.productRepo.find({
       where: { categoryId },
+      relations: ["category"],
     });
     if (!products.length)
       throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);
@@ -60,12 +76,21 @@ export class ProductService {
 
   async updateProduct(id: string, data: UpdateProduct): Promise<string> {
     const product = await this.getProductById(id);
-    await this.productRepo.save(Object.assign(product, data));
+    const body: Record<any, any> = { ...data };
+    if (body.categoryId) body.category = { id: data.categoryId };
+    if (data.image) {
+      const context = new UploadContext(new LocalUpload());
+      const res = await context.performStrategy(data.image);
+      if (typeof res === "string") body.image = { url: res, public_id: "" };
+      unlinkSync(join(__dirname, "../images/", product.image.url));
+    }
+    await this.productRepo.save(Object.assign(product, body));
     return "Product updated successfully";
   }
 
   async deleteProduct(id: string): Promise<string> {
     const product = await this.getProductById(id);
+    unlinkSync(join(__dirname, "../images/", product.image.url));
     await this.productRepo.remove(product);
     return "Product deleted successfully";
   }
