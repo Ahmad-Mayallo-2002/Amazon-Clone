@@ -39,7 +39,7 @@ export class WishService {
   async getByUserId(userId: string): Promise<Wish> {
     const wish = await this.wishRepo.findOne({
       where: { userId },
-      relations: ["user", "wishItems"],
+      relations: ["wishItems", "wishItems.product"],
     });
     if (!wish)
       throw new AppError(
@@ -50,30 +50,48 @@ export class WishService {
     return wish;
   }
 
-  async create(data: {}): Promise<Wish> {
-    const wish = this.wishRepo.create(data);
-    return await this.wishRepo.save(wish);
-  }
-
   async deleteById(id: string): Promise<string> {
     const wish = await this.getById(id);
     await this.wishRepo.remove(wish);
     return "Wish deleted successfully";
   }
 
-  async addToWish(productId: string, wishId: string): Promise<string> {
-    const currentItem = await this.wishItemRepo.findOne({
-      where: { wishId, productId },
+  async addToWish(productId: string, userId: string): Promise<string> {
+    // 1. Check if user already has a wishlist
+    let wish = await this.wishRepo.findOne({
+      where: { userId },
     });
-    if (currentItem)
+
+    // If no wishlist → create one
+    if (!wish) {
+      wish = this.wishRepo.create({ userId, user: { id: userId } });
+      await this.wishRepo.save(wish);
+    }
+
+    // 2. Check if the product already exists in wish items
+    const existingItem = await this.wishItemRepo.findOne({
+      where: { wishId: wish.id, productId },
+    });
+
+    if (existingItem) {
       throw new AppError(
-        "This item already exist in wish item",
+        "This product already exists in your wish list",
         BAD_REQUEST,
         BAD_REQUEST_REASON
       );
-    const newItem = this.wishItemRepo.create({ productId, wishId });
+    }
+
+    // 3. Create new wish item
+    const newItem = this.wishItemRepo.create({
+      productId,
+      wishId: wish.id,
+      wish: { id: wish.id },
+      product: { id: productId },
+    });
+
     await this.wishItemRepo.save(newItem);
-    return "Item added successfully";
+
+    return "Item added to wish list successfully";
   }
 
   async removeFromWish(productId: string, wishId: string): Promise<string> {

@@ -12,7 +12,8 @@ export class CommentController {
     try {
       const comment = await this.commentService.createComment(
         req.body,
-        req.params.productId
+        req.params.productId,
+        (req as any).user.id
       );
       return sendResponse(res, comment, CREATED, CREATED_REASON);
     } catch (error) {

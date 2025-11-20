@@ -37,16 +37,6 @@ export class WishController {
     }
   };
 
-  create = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const dto: any = req.body;
-      const wish = await this.wishService.create(dto);
-      return sendResponse(res, wish, CREATED, CREATED_REASON);
-    } catch (error) {
-      next(error);
-    }
-  };
-
   deleteById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -59,8 +49,10 @@ export class WishController {
 
   addToWish = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { wishId, productId } = req.body;
-      const result = await this.wishService.addToWish(productId, wishId);
+      const result = await this.wishService.addToWish(
+        req.params.productId,
+        (req as any).user.id
+      );
       return sendResponse(res, result, OK, OK_REASON);
     } catch (error) {
       next(error);
@@ -69,7 +61,7 @@ export class WishController {
 
   removeFromWish = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { wishId, productId } = req.body;
+      const { wishId, productId } = req.params;
       const result = await this.wishService.removeFromWish(productId, wishId);
       return sendResponse(res, result, OK, OK_REASON);
     } catch (error) {

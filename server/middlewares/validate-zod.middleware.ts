@@ -5,9 +5,9 @@ import { treeifyError, ZodType } from "zod";
 
 export const validateZod =
   (schema: ZodType) => (req: Request, res: Response, next: NextFunction) => {
-    // req.body.price = +req.body.price;
-    // req.body.stock = +req.body.stock;
-    // req.body.discount = +req.body.discount;
+    if (req.body.price) req.body.price = +req.body.price;
+    if (req.body.stock) req.body.stock = +req.body.stock;
+    if (req.body.discount) req.body.discount = +req.body.discount;
     const result = schema.safeParse(req.body);
     if (!result.success) {
       const errors = (treeifyError(result.error) as any).properties;

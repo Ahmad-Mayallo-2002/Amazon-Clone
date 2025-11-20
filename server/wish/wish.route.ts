@@ -14,28 +14,30 @@ router.get(
   authorizeRoles(Roles.ADMIN),
   container.getAll
 );
+
 router.get(
-  "/get-wish-user-item/:userId",
+  "/get-wish-user-items/:userId",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.USER),
   container.getByUserId
 );
+
 router.delete(
-  "/delete-wish0item/:id",
+  "/delete-wish-item/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN),
   container.deleteById
 );
 
 router.post(
-  "/add-to-wish",
+  "/add-to-wish/:productId",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.USER),
   container.addToWish
 );
 
 router.delete(
-  "/remove-from-item",
+  "/remove-from-wish/:productId",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.USER),
   container.removeFromWish

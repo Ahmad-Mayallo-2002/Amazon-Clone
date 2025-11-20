@@ -24,10 +24,17 @@ export class CommentService {
 
   async createComment(
     data: CreateCommentType,
-    productId: string
+    productId: string,
+    userId: string
   ): Promise<Comment> {
     await this.getProductById(productId);
-    const comment = this.commentRepo.create(data);
+    const comment = this.commentRepo.create({
+      content: data.content,
+      product: { id: productId },
+      productId,
+      user: { id: userId },
+      userId,
+    });
     return await this.commentRepo.save(comment);
   }
 
@@ -43,7 +50,7 @@ export class CommentService {
   async getProductComments(productId: string): Promise<Comment[]> {
     const comments = await this.commentRepo.find({
       where: { product: { id: productId } },
-      relations: ["product", "user"],
+      relations: ["user"],
     });
     if (!comments.length)
       throw new AppError("No comments found", NOT_FOUND, NOT_FOUND_REASON);
