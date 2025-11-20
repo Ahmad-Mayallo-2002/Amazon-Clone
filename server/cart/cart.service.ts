@@ -37,7 +37,7 @@ export class CartService {
   async getByUserId(userId: string): Promise<Cart> {
     const cart = await this.cartRepo.findOne({
       where: { userId },
-      relations: ["user", "cartItems"],
+      relations: ["cartItems", "cartItems.product"],
     });
     if (!cart)
       throw new AppError(
@@ -67,7 +67,7 @@ export class CartService {
     // if not exist
     if (!cart) {
       // create one and save it
-      cart = this.cartRepo.create({ userId });
+      cart = this.cartRepo.create({ userId, user: { id: userId } });
       await this.cartRepo.save(cart);
     }
     const discount: number = 1 - product.discount / 100;
@@ -98,6 +98,8 @@ export class CartService {
       const newItem = this.cartItemRepo.create({
         productId,
         cartId: cart.id,
+        product: { id: productId },
+        cart: { id: cart.id },
         amount,
         priceAtPayment: price,
       });
@@ -110,8 +112,8 @@ export class CartService {
     return "Product added to cart successfully";
   }
 
-  deleteItemsFromCart = async (cartId: string): Promise<boolean> => {
-    await this.cartItemRepo.delete({cartId}); 
-    return true;
+  async removeFromCart(cartId: string, productId: string): Promise<string> {
+    await this.cartItemRepo.delete({ cartId, productId });
+    return "Item removed from cart successfully";
   }
 }
