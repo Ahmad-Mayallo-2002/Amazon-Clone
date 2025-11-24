@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
-import path, { join } from "path";
+import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import { log } from "console";
@@ -25,19 +25,29 @@ import cartRoutes from "./cart/cart.route";
 import authRoutes from "./auth/auth.route";
 import wishRoutes from "./wish/wish.route";
 import webhook from "./webhook/stripe.webhook";
+import orderRoutes from "./order/order.route";
 import { config } from "dotenv";
-
+import cors from "cors";
+import bodyParser from "body-parser";
 config();
-
 
 const app = express();
 const port: number = parseInt(process.env.PORT as string);
 
 app.use(logger("dev"));
-app.use(express.json());
+app.use((req, res, next) =>
+  req.originalUrl === "/api/webhook" ? next() : express.json()(req, res, next)
+);
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "images")));
+app.use(
+  cors({
+    credentials: true,
+    methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
+    origin: "http://localhost:5173",
+  })
+);
 
 // Routes
 app.use("/api", userRoutes);
@@ -51,6 +61,7 @@ app.use("/api", cartRoutes);
 app.use("/api", authRoutes);
 app.use("/api", wishRoutes);
 app.use("/api", webhook);
+app.use("/api", orderRoutes);
 
 app.get("/", async (_req: Request, res: Response) =>
   sendResponse(res, "Hello, World!", OK, OK_REASON)

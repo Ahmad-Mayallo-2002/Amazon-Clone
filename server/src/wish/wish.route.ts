@@ -37,7 +37,7 @@ router.post(
 );
 
 router.delete(
-  "/remove-from-wish/:productId",
+  "/remove-from-wish/:productId/:wishId",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.USER),
   container.removeFromWish

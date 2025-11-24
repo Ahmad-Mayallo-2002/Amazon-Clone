@@ -22,10 +22,10 @@ config();
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: "localhost",
-  port: parseInt(process.env.DB_PORT as string),
-  username: process.env.DB_USERNAME as string,
-  password: process.env.DB_PASS as string,
-  database: process.env.DB_DATABASE as string,
+  port: parseInt(process.env.DB_PORT!),
+  username: process.env.DB_USERNAME!,
+  password: process.env.DB_PASS!,
+  database: process.env.DB_DATABASE!,
   synchronize: true,
   entities: [
     User,
@@ -41,7 +41,7 @@ export const AppDataSource = new DataSource({
     Order,
     OrderItem,
     Address,
-    Payment
+    Payment,
   ],
 });
 

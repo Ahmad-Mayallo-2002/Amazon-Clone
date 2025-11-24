@@ -10,10 +10,14 @@
   "scripts": {
     "dev": "nodemon",
     "build": "tsc",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "watch": "src",
+    "ext": "ts",
+    "exec": "ts-node ./src/app.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
     "bullmq": "^5.62.0",
     "cloudinary": "^2.8.0",
     "cookie-parser": "~1.4.4",
@@ -41,6 +45,7 @@
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",

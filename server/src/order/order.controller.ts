@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { OrderService } from "./order.service";
 import { NextFunction, Request, Response } from "express";
 import { sendResponse } from "../utils/sendResponse";
-import { OK, OK_REASON } from "../utils/statusCodes";
+import { CREATED, CREATED_REASON, OK, OK_REASON } from "../utils/statusCodes";
 
 @injectable()
 export class OrderController {
@@ -54,18 +54,25 @@ export class OrderController {
   ) => {
     try {
       const { id } = req.params;
-      const message = await this.orderService.updateOrderStatus(id, req.body.status);
+      const message = await this.orderService.updateOrderStatus(
+        id,
+        req.body.status
+      );
       return sendResponse(res, message, OK, OK_REASON);
     } catch (error) {
       next(error);
     }
   };
-  
+
   createOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await this.orderService.createOrder((req as any).user.id, req.body)
+      const result = await this.orderService.createOrder(
+        (req as any).user.id,
+        req.body
+      );
+      return sendResponse(res, result, CREATED, CREATED_REASON);
     } catch (error) {
       next(error);
     }
-  }
+  };
 }

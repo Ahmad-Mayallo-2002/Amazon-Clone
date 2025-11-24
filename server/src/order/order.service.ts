@@ -12,16 +12,11 @@ import {
 } from "../utils/statusCodes";
 import { OrderStatus } from "../enums/order-status.enum";
 import { Product } from "../product/product.entity";
-import { AddressService } from "../address/address.service";
-import { PaymentService } from "../payment/payment.service";
-import { CartService } from "../cart/cart.service";
 import { Address } from "../address/address.entity";
 import { Cart } from "../cart/cart.entity";
 import { Payment } from "../payment/payment.entity";
-import Stripe from "stripe";
 import { config } from "dotenv";
 import { CreateOrder } from "./zod/order.zod";
-import { Transactional } from "typeorm-transactional";
 import { CartItem } from "../cart/cartItem.entity";
 import { stripe } from "../utils/stripe";
 
@@ -30,10 +25,6 @@ config();
 @injectable()
 export class OrderService {
   private orderRepo: Repository<Order> = AppDataSource.getRepository(Order);
-  private productRepo: Repository<Product> =
-    AppDataSource.getRepository(Product);
-  private orderItemRepo: Repository<OrderItem> =
-    AppDataSource.getRepository(OrderItem);
   constructor(@inject(DataSource) private dataSource: DataSource) {}
 
   async getAllOrders(): Promise<Order[]> {
@@ -105,10 +96,8 @@ export class OrderService {
 
   async createOrder(userId: string, data: CreateOrder) {
     return await this.dataSource.transaction(async (manager) => {
-      const { getRepository } = manager;
-
       // Get User Cart
-      const cart = await getRepository(Cart).findOne({
+      const cart = await manager.getRepository(Cart).findOne({
         where: { userId },
         relations: ["cartItems", "cartItems.product"],
       });
@@ -118,17 +107,17 @@ export class OrderService {
       const { cartItems, totalPrice } = cart;
 
       // Create New Order
-      const newOrder = getRepository(Order).create({
+      const newOrder = manager.getRepository(Order).create({
         totalPrice,
         userId,
         user: { id: userId },
       });
-      const order = await getRepository(Order).save(newOrder);
+      const order = await manager.getRepository(Order).save(newOrder);
       let totalAmount: number = 0;
 
       // Create Order Items and Update Product Stock
       for (const item of cartItems) {
-        const product = await getRepository(Product).findOne({
+        const product = await manager.getRepository(Product).findOne({
           where: { id: item.productId },
         });
         if (!product)
@@ -144,22 +133,22 @@ export class OrderService {
         product.stock -= item.amount;
 
         totalAmount += item.amount;
-        const newItem = getRepository(OrderItem).create({
+        const newItem = manager.getRepository(OrderItem).create({
           order: { id: order.id },
           orderId: order.id,
           product: { id: item.productId },
           productId: item.productId,
           totalPrice: item.priceAtPayment,
         });
-        await getRepository(Product).save(product);
-        const orderItem = await getRepository(OrderItem).save(newItem);
+        await manager.getRepository(Product).save(product);
+        const orderItem = await manager.getRepository(OrderItem).save(newItem);
       }
 
-      const { city, postalCode, provider, state, street, country } = data;
+      const { city, postalCode, state, street, country } = data;
 
       // Create Payment
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: totalAmount,
+        amount: Math.round(totalPrice * 100),
         currency: "usd",
         metadata: {
           orderId: order.id,
@@ -167,30 +156,31 @@ export class OrderService {
         },
       });
 
-      const newPayment = getRepository(Payment).create({
+      const newPayment = manager.getRepository(Payment).create({
         orderId: order.id,
         order: { id: order.id },
         providerPaymentId: paymentIntent.id,
-        provider,
       });
-      const payment = await getRepository(Payment).save(newPayment);
+      const payment = await manager.getRepository(Payment).save(newPayment);
 
       // Clear Cart
       cart.totalPrice = 0;
-      await getRepository(CartItem).delete({ cartId: cart.id });
-      await getRepository(Cart).save(cart);
+      await manager.getRepository(CartItem).delete({ cartId: cart.id });
+      await manager.getRepository(Cart).save(cart);
 
       // Create Address
-      const newAddress = getRepository(Address).create({
+      const newAddress = manager.getRepository(Address).create({
         city,
         country,
         postalCode,
         state,
         street,
-        order: {id: order.id},
-        orderId: order.id
+        order: { id: order.id },
+        orderId: order.id,
+        userId,
+        user: { id: userId },
       });
-      const address = await getRepository(Address).save(newAddress);
+      const address = await manager.getRepository(Address).save(newAddress);
 
       return {
         orderId: order.id,

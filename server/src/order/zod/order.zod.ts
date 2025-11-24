@@ -1,5 +1,4 @@
-import { object, string, enum as enum_, infer as zInfer } from "zod";
-import { PaymentProvider } from "../../enums/payment-provider.enum";
+import { object, string, infer as zInfer } from "zod";
 
 export const OrderSchema = object({
   street: string().max(255),
@@ -7,7 +6,6 @@ export const OrderSchema = object({
   country: string().max(100),
   state: string().max(100),
   postalCode: string().max(20),
-  provider: enum_(PaymentProvider)
 });
 
 const updateOrder = OrderSchema.partial();
