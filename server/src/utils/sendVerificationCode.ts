@@ -1,10 +1,11 @@
 import { createTransport } from "nodemailer";
 import { config } from "dotenv";
 import { generate } from "randomstring";
+import { getVerificationEmailTemplate } from "../emailTemplate/verificationCode";
 
 config();
 
-export const sendVerificationCode = async (to: string) => {
+export const sendVerificationCode = async (to: string, username: string) => {
   const transporter = createTransport({
     auth: {
       user: process.env.EMAIL_USER,
@@ -13,11 +14,13 @@ export const sendVerificationCode = async (to: string) => {
     service: "gmail",
   });
   const code = generate({ length: 6, charset: "hex" });
+  const html = getVerificationEmailTemplate(code, username);
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to,
     subject: "Verification Code",
     text: `This is your verification code: ${code}`,
+    html,
   };
   await transporter.sendMail(mailOptions);
   return code;

@@ -53,7 +53,7 @@ export class AuthService {
       storeDescription,
       storeName,
       userId: user.id,
-      user
+      user,
     });
     return await this.vendorRepo.save(vendor);
   }
@@ -81,7 +81,7 @@ export class AuthService {
     const user = await this.userRepo.findOne({ where: { email } });
     if (!user)
       throw new AppError("User not found", NOT_FOUND, NOT_FOUND_REASON);
-    const code = await sendVerificationCode(email);
+    const code = await sendVerificationCode(email, user.username);
     await redis.set(code, email, "EX", 60 * 10); // Code valid for 10 minutes
     return "Verification code sent to email";
   }

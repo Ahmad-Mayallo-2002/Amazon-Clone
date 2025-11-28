@@ -28,7 +28,6 @@ import webhook from "./webhook/stripe.webhook";
 import orderRoutes from "./order/order.route";
 import { config } from "dotenv";
 import cors from "cors";
-import bodyParser from "body-parser";
 config();
 
 const app = express();
