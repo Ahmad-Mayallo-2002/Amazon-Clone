@@ -16,13 +16,14 @@ import { sign } from "jsonwebtoken";
 import { config } from "dotenv";
 import { Roles } from "../enums/role.enum";
 import { ILogin } from "../interfaces/login.interface";
-import { sendVerificationCode } from "../utils/sendVerificationCode";
 import { redis } from "../utils/redis";
 import { CreateUser } from "../user/zod/user.zod";
 import { Login } from "./zod/login.zod";
 import { Vendor } from "../vendor/vendor.entity";
 import { RegisterVendor } from "./zod/register-vendor.zod";
-
+import { emailQueue } from "../bullmq/queues/emailQueue";
+import "../bullmq/workers/emailWorker";
+import { emailWorker } from "../bullmq/workers/emailWorker";
 config();
 
 @injectable()
@@ -81,8 +82,14 @@ export class AuthService {
     const user = await this.userRepo.findOne({ where: { email } });
     if (!user)
       throw new AppError("User not found", NOT_FOUND, NOT_FOUND_REASON);
-    const code = await sendVerificationCode(email, user.username);
-    await redis.set(code, email, "EX", 60 * 10); // Code valid for 10 minutes
+    await emailQueue.add("sendVerificationCode", {
+      email,
+      username: user.username,
+    }, {
+      attempts: 3,
+      backoff: { type: 'exponential', delay: 5000 },
+    });
+    emailWorker.run();
     return "Verification code sent to email";
   }
 
