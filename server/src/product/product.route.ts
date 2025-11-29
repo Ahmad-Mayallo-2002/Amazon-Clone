@@ -32,7 +32,7 @@ router.post(
 );
 
 router.put(
-  "/update-product/:id",
+  "/update-product/:id/:vendorId",
   upload.single("image"),
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
@@ -42,7 +42,7 @@ router.put(
 );
 
 router.delete(
-  "/delete-product/:id",
+  "/delete-product/:id/:vendorId",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
   adminOrProductOwner,
