@@ -66,7 +66,7 @@ app.get("/", async (_req: Request, res: Response) =>
   sendResponse(res, "Hello, World!", OK, OK_REASON)
 );
 
-app.use("*", (req: Request, _res: Response, next: NextFunction) => {
+app.use((req: Request, _res: Response, next: NextFunction) => {
   next(
     new AppError(
       `Can't find ${req.originalUrl} on this server!`,

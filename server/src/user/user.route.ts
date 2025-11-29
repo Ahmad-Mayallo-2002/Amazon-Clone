@@ -4,7 +4,7 @@ import { userContainer } from "./user.container";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
 import { checkToken } from "../middlewares/checkToken.middleware";
-import { adminOrOwnerProfileMiddleware } from "../middlewares/adminOrOwnerProfile.middleware";
+import { adminOrOwner } from "../middlewares/adminOrOwner.middleware";
 import { validateZod } from "../middlewares/validate-zod.middleware";
 import { UserSchema } from "./zod/user.zod";
 
@@ -22,14 +22,14 @@ router.get(
 router.get(
   "/get-users/:id",
   checkToken,
-  adminOrOwnerProfileMiddleware,
+  adminOrOwner((req) => req.params.id),
   controller.getUserById
 );
 
 router.put(
   "/update-user/:id",
   checkToken,
-  adminOrOwnerProfileMiddleware,
+  adminOrOwner((req) => req.params.id),
   validateZod(UserSchema.partial()),
   controller.updateUser
 );
@@ -37,7 +37,7 @@ router.put(
 router.delete(
   "/delete-user/:id",
   checkToken,
-  adminOrOwnerProfileMiddleware,
+  adminOrOwner((req) => req.params.id),
   controller.deleteUser
 );
 

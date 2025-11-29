@@ -32,7 +32,7 @@ export class CartController {
 
   getByUserId = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const cart = await this.cartService.getByUserId((req as any).user.id);
+      const cart = await this.cartService.getByUserId(req.params.userId);
       return sendResponse(res, cart, OK, OK_REASON);
     } catch (error) {
       next(error);

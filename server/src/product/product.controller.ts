@@ -60,7 +60,8 @@ export class ProductController {
       if (req.file) req.body.image = req.file;
       const message = await this.productService.updateProduct(
         req.params.id,
-        req.body
+        req.body,
+        (req as any).user.vendorId
       );
       return sendResponse(res, message, OK, OK_REASON);
     } catch (error) {
@@ -70,7 +71,10 @@ export class ProductController {
 
   deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const message = await this.productService.deleteProduct(req.params.id);
+      const message = await this.productService.deleteProduct(
+        req.params.id,
+        (req as any).user.vendorId
+      );
       return sendResponse(res, message, OK, OK_REASON);
     } catch (error) {
       next(error);

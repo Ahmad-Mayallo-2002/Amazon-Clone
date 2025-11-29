@@ -4,7 +4,7 @@ import { VendorController } from "./vendor.controller";
 import { checkToken } from "../middlewares/checkToken.middleware";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
-import { adminOrOwnerProfileMiddleware } from "../middlewares/adminOrOwnerProfile.middleware";
+import { adminOrOwner } from "../middlewares/adminOrOwner.middleware";
 import { validateZod } from "../middlewares/validate-zod.middleware";
 import { VendorSchema } from "./zod/vendor.zod";
 
@@ -23,7 +23,7 @@ router.get(
   "/get-vendors/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
-  adminOrOwnerProfileMiddleware,
+  adminOrOwner,
   container.getVendorById
 );
 
@@ -31,7 +31,7 @@ router.put(
   "/update-vendor/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
-  adminOrOwnerProfileMiddleware,
+  adminOrOwner,
   validateZod(VendorSchema.partial()),
   container.updateVendor
 );
@@ -40,7 +40,7 @@ router.delete(
   "/delete-vendor/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
-  adminOrOwnerProfileMiddleware,
+  adminOrOwner,
   container.deleteVendor
 );
 

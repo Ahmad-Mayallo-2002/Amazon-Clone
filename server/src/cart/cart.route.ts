@@ -4,6 +4,7 @@ import { CartController } from "./cart.controller";
 import { checkToken } from "../middlewares/checkToken.middleware";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
+import { adminOrOwner } from "../middlewares/adminOrOwner.middleware";
 
 const container = cartContainer.get<CartController>(CartController);
 const router = Router();
@@ -16,9 +17,10 @@ router.post(
 );
 
 router.get(
-  "/get-user-cart",
+  "/get-user-cart/:userId",
   checkToken,
-  authorizeRoles(Roles.USER),
+  authorizeRoles(Roles.ADMIN, Roles.USER),
+  adminOrOwner((req) => req.params.userId),
   container.getByUserId
 );
 

@@ -50,7 +50,7 @@ export class ProductService {
       throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);
     return {
       data: products,
-      counts
+      counts,
     };
   }
 
@@ -74,8 +74,14 @@ export class ProductService {
     return products;
   }
 
-  async updateProduct(id: string, data: UpdateProduct): Promise<string> {
-    const product = await this.getProductById(id);
+  async updateProduct(
+    id: string,
+    data: UpdateProduct,
+    vendorId: string
+  ): Promise<string> {
+    const product = await this.productRepo.findOne({where: { id, vendorId } });
+    if (!product)
+      throw new AppError("Product not found", NOT_FOUND, NOT_FOUND_REASON);
     const body: Record<any, any> = { ...data };
     if (body.categoryId) body.category = { id: data.categoryId };
     if (data.image) {
@@ -88,8 +94,10 @@ export class ProductService {
     return "Product updated successfully";
   }
 
-  async deleteProduct(id: string): Promise<string> {
-    const product = await this.getProductById(id);
+  async deleteProduct(id: string, vendorId: string): Promise<string> {
+    const product = await this.productRepo.findOne({ where: { id, vendorId } });
+    if (!product)
+      throw new AppError("Product not found", NOT_FOUND, NOT_FOUND_REASON);
     unlinkSync(join(__dirname, "../images/", product.image.url));
     await this.productRepo.remove(product);
     return "Product deleted successfully";

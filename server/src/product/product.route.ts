@@ -7,6 +7,7 @@ import { Roles } from "../enums/role.enum";
 import { validateZod } from "../middlewares/validate-zod.middleware";
 import { ProductSchema } from "./zod/product.zod";
 import { upload } from "../utils/multer";
+import { adminOrProductOwner } from "../middlewares/adminOrProductOwner.middleware";
 
 const router = Router();
 
@@ -23,7 +24,7 @@ router.get(
 
 router.post(
   "/create-product",
-  upload.single('image'),
+  upload.single("image"),
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
   validateZod(ProductSchema),
@@ -35,6 +36,7 @@ router.put(
   upload.single("image"),
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
+  adminOrProductOwner,
   validateZod(ProductSchema.partial()),
   container.updateProduct
 );
@@ -43,6 +45,7 @@ router.delete(
   "/delete-product/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
+  adminOrProductOwner,
   container.deleteProduct
 );
 

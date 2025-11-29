@@ -4,6 +4,7 @@ import { OrderController } from "./order.controller";
 import { checkToken } from "../middlewares/checkToken.middleware";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
+import { adminOrOwner } from "../middlewares/adminOrOwner.middleware";
 
 const controller = orderContainer.get(OrderController);
 const router = Router();
@@ -19,13 +20,14 @@ router.get(
   "/get-user-orders/:userId",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.USER),
+  adminOrOwner((req) => req.params.userId),
   controller.getUserOrders
 );
 
 router.get(
   "/get-orders/:orderId",
   checkToken,
-  authorizeRoles(Roles.ADMIN, Roles.USER),
+  authorizeRoles(Roles.ADMIN),
   controller.getOrder
 );
 
