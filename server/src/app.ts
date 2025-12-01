@@ -24,14 +24,15 @@ import reviewRoutes from "./review/review.route";
 import cartRoutes from "./cart/cart.route";
 import authRoutes from "./auth/auth.route";
 import wishRoutes from "./wish/wish.route";
+import paymentRoutes from "./payment/payment.route";
 import webhook from "./webhook/stripe.webhook";
 import orderRoutes from "./order/order.route";
 import { config } from "dotenv";
 import cors from "cors";
 config();
 
-const app = express();
 const port: number = parseInt(process.env.PORT as string);
+const app = express();
 
 app.use(logger("dev"));
 app.use((req, res, next) =>
@@ -48,7 +49,6 @@ app.use(
   })
 );
 
-// Routes
 app.use("/api", userRoutes);
 app.use("/api", vendorRoutes);
 app.use("/api", productRoutes);
@@ -59,6 +59,7 @@ app.use("/api", reviewRoutes);
 app.use("/api", cartRoutes);
 app.use("/api", authRoutes);
 app.use("/api", wishRoutes);
+app.use("/api", paymentRoutes);
 app.use("/api", webhook);
 app.use("/api", orderRoutes);
 

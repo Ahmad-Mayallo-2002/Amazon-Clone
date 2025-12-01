@@ -4,18 +4,28 @@ import { Review } from "./review.entity";
 import { AppDataSource } from "../data-source";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
+import { PaginatedDate } from "../interfaces/paginated-data.interface";
+import { IPagination } from "../interfaces/pagination.interface";
+import { calculatePagination } from "../utils/calculatePagination";
 
 @injectable()
 export class ReviewService {
   private reviewRepo: Repository<Review> = AppDataSource.getRepository(Review);
 
-  async getAllReviews(): Promise<Review[]> {
-    const reviews = await this.reviewRepo.find({
+  async getAllReviews(
+    skip: number = 0,
+    take: number = 10
+  ): Promise<PaginatedDate<Review>> {
+    const [reviews, count] = await this.reviewRepo.findAndCount({
       relations: ["product", "user"],
+      order: { createdAt: "DESC" },
+      take,
+      skip,
     });
     if (!reviews.length)
       throw new AppError("No reviews found", NOT_FOUND, NOT_FOUND_REASON);
-    return reviews;
+    const pagination = calculatePagination(count, skip, take);
+    return { data: reviews, pagination };
   }
 
   async getReviewById(id: string): Promise<Review> {

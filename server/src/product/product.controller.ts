@@ -24,8 +24,12 @@ export class ProductController {
 
   getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { data, counts } = await this.productService.getAllProducts();
-      return sendResponse(res, data, OK, OK_REASON);
+      const { skip, take } = req.query;
+      const { data, pagination } = await this.productService.getAllProducts(
+        Number(skip) || 0,
+        Number(take)
+      );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }
@@ -46,8 +50,11 @@ export class ProductController {
     next: NextFunction
   ) => {
     try {
+      const { skip, take } = req.query;
       const products = await this.productService.getProductsByCategory(
-        req.params.categoryId
+        req.params.categoryId,
+        Number(skip) || 0,
+        Number(take)
       );
       return sendResponse(res, products, OK, OK_REASON);
     } catch (error) {

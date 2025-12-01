@@ -5,6 +5,8 @@ import { AppDataSource } from "../data-source";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { CreateCategoryType, UpdateCategoryType } from "./zod/category.zod";
+import { calculatePagination } from "../utils/calculatePagination";
+import { PaginatedDate } from "../interfaces/paginated-data.interface";
 
 @injectable()
 export class CategoryService {
@@ -16,11 +18,13 @@ export class CategoryService {
     return await this.categoryRepo.save(category);
   }
 
-  async getAllCategories(): Promise<Category[]> {
+  async getAllCategories(skip: number, take: number): Promise<PaginatedDate<Category>> {
     const categories = await this.categoryRepo.find();
-    if (!categories.length)
+    const counts = await this.categoryRepo.count();
+    if (!counts)
       throw new AppError("No categories found", NOT_FOUND, NOT_FOUND_REASON);
-    return categories;
+    const pagination = calculatePagination(counts, skip, take);
+    return {data: categories, pagination};
   }
 
   async getCategoryById(id: string): Promise<Category> {

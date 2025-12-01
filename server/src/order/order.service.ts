@@ -19,6 +19,8 @@ import { config } from "dotenv";
 import { CreateOrder } from "./zod/order.zod";
 import { CartItem } from "../cart/cartItem.entity";
 import { stripe } from "../utils/stripe";
+import { calculatePagination } from "../utils/calculatePagination";
+import { PaginatedDate } from "../interfaces/paginated-data.interface";
 
 config();
 
@@ -27,7 +29,7 @@ export class OrderService {
   private orderRepo: Repository<Order> = AppDataSource.getRepository(Order);
   constructor(@inject(DataSource) private dataSource: DataSource) {}
 
-  async getAllOrders(): Promise<Order[]> {
+  async getAllOrders(skip: number, take: number): Promise<PaginatedDate<Order>> {
     const orders = await this.orderRepo.find({
       relations: {
         user: true,
@@ -35,16 +37,14 @@ export class OrderService {
         address: true,
         payment: true,
       },
-      order: { createdAt: "DESC" },
     });
-
-    if (!orders.length)
-      throw new AppError("No orders", NOT_FOUND, NOT_FOUND_REASON);
-
-    return orders;
+    const counts = await this.orderRepo.count();
+    if (!counts) throw new AppError("No orders", NOT_FOUND, NOT_FOUND_REASON);
+    const pagination = calculatePagination(counts, skip, take);
+    return {data: orders, pagination};
   }
 
-  async getUserOrders(userId: string): Promise<Order[]> {
+  async getUserOrders(userId: string, skip: number ,take: number): Promise<PaginatedDate<Order>> {
     const orders = await this.orderRepo.find({
       where: { userId },
       relations: {
@@ -52,13 +52,12 @@ export class OrderService {
         address: true,
         payment: true,
       },
-      order: { createdAt: "DESC" },
     });
-
-    if (!orders.length)
+    const counts = await this.orderRepo.count({ where: { userId } });
+    if (!counts)
       throw new AppError("No orders", NOT_FOUND, NOT_FOUND_REASON);
-
-    return orders;
+    const pagination = calculatePagination(counts, skip, take);
+    return {data: orders, pagination};
   }
 
   async getOrder(orderId: string): Promise<Order> {

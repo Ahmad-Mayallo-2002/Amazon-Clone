@@ -6,17 +6,28 @@ import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { PaymentStatus } from "../enums/payment-status.enum";
 import { CreatePayment } from "./zod/payment.zod";
+import { PaginatedDate } from "../interfaces/paginated-data.interface";
+import { IPagination } from "../interfaces/pagination.interface";
+import { calculatePagination } from "../utils/calculatePagination";
 
 @injectable()
 export class PaymentService {
   private paymentRepo: Repository<Payment> =
     AppDataSource.getRepository(Payment);
 
-  getAllPayments = async (): Promise<Payment[]> => {
-    const payments = await this.paymentRepo.find();
+  getAllPayments = async (
+    skip: number = 0,
+    take: number = 10
+  ): Promise<PaginatedDate<Payment>> => {
+    const [payments, count] = await this.paymentRepo.findAndCount({
+      order: { createdAt: "DESC" },
+      take,
+      skip,
+    });
     if (!payments.length)
       throw new AppError("No payments found", NOT_FOUND, NOT_FOUND_REASON);
-    return payments;
+    const pagination = calculatePagination(count, skip, take);
+    return { data: payments, pagination };
   };
 
   getPaymentById = async (id: string): Promise<Payment> => {

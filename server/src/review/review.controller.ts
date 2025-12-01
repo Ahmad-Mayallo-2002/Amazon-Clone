@@ -10,8 +10,12 @@ export class ReviewController {
 
   getAllReviews = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const reviews = await this.reviewService.getAllReviews();
-      return sendResponse(res, reviews, OK, OK_REASON);
+      const { skip, take } = req.query;
+      const { data, pagination } = await this.reviewService.getAllReviews(
+        Number(skip) || 0,
+        Number(take) || 10
+      );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }

@@ -41,8 +41,12 @@ export class CartController {
 
   getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const carts = await this.cartService.getAll();
-      return sendResponse(res, carts, OK, OK_REASON);
+      const { skip, take } = req.query;
+      const { data, pagination } = await this.cartService.getAll(
+        Number(skip) || 0,
+        Number(take)
+      );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }

@@ -6,18 +6,28 @@ import { Roles } from "../enums/role.enum";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { UpdateUser } from "./zod/user.zod";
+import { PaginatedDate } from "../interfaces/paginated-data.interface";
+import { IPagination } from "../interfaces/pagination.interface";
+import { calculatePagination } from "../utils/calculatePagination";
 
 @injectable()
 export class UserService {
   private userRepo: Repository<User> = AppDataSource.getRepository(User);
 
-  async getUsers(): Promise<User[]> {
-    const users: User[] = await this.userRepo.find({
+  async getUsers(
+    skip: number = 0,
+    take: number = 10
+  ): Promise<PaginatedDate<User>> {
+    const [users, count] = await this.userRepo.findAndCount({
       where: { role: Roles.USER },
+      order: { createdAt: "DESC" },
+      take,
+      skip,
     });
     if (!users.length)
       throw new AppError("No users found", NOT_FOUND, NOT_FOUND_REASON);
-    return users;
+    const pagination = calculatePagination(count, skip, take);
+    return { data: users, pagination };
   }
 
   async getUser(id: string): Promise<User> {

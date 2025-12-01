@@ -8,9 +8,13 @@ import { CREATED, CREATED_REASON, OK, OK_REASON } from "../utils/statusCodes";
 export class OrderController {
   constructor(@inject(OrderService) private orderService: OrderService) {}
 
-  getAllOrders = async (_req: Request, res: Response, next: NextFunction) => {
+  getAllOrders = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const orders = await this.orderService.getAllOrders();
+      const { skip, take } = req.query;
+      const orders = await this.orderService.getAllOrders(
+        Number(skip) || 0,
+        Number(take)
+      );
       return sendResponse(res, orders, OK, OK_REASON);
     } catch (error) {
       next(error);
@@ -20,7 +24,12 @@ export class OrderController {
   getUserOrders = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { userId } = req.params;
-      const orders = await this.orderService.getUserOrders(userId);
+      const { skip, take } = req.query;
+      const orders = await this.orderService.getUserOrders(
+        userId,
+        Number(skip) || 0,
+        Number(take)
+      );
       return sendResponse(res, orders, OK, OK_REASON);
     } catch (error) {
       next(error);

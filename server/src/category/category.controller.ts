@@ -25,8 +25,12 @@ export class CategoryController {
     next: NextFunction
   ) => {
     try {
-      const categories = await this.categoryService.getAllCategories();
-      return sendResponse(res, categories, OK, OK_REASON);
+      const { skip, take } = req.query;
+      const { data, pagination } = await this.categoryService.getAllCategories(
+        Number(skip) || 0,
+        Number(take)
+      );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }

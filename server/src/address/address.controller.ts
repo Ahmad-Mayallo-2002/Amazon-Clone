@@ -19,8 +19,12 @@ export class AddressController {
 
   getAllAddresses = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const addresses = await this.addressService.getAll();
-      return sendResponse(res, addresses, OK, OK_REASON);
+      const { skip, take } = req.query;
+      const { data, pagination } = await this.addressService.getAll(
+        Number(skip) || 0,
+        Number(take)
+      );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }
@@ -41,10 +45,13 @@ export class AddressController {
     next: NextFunction
   ) => {
     try {
-      const addresses = await this.addressService.getByUserId(
-        req.params.userId
+      const { skip, take } = req.query;
+      const { data, pagination } = await this.addressService.getByUserId(
+        req.params.userId,
+        Number(skip) || 0,
+        Number(take)
       );
-      return sendResponse(res, addresses, OK, OK_REASON);
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }

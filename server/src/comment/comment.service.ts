@@ -7,6 +7,8 @@ import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { Product } from "../product/product.entity";
 import { CreateCommentType } from "./zod/comment.zod";
 import { UpdateCategoryType } from "../category/zod/category.zod";
+import { calculatePagination } from "../utils/calculatePagination";
+import { PaginatedDate } from "../interfaces/paginated-data.interface";
 
 @injectable()
 export class CommentService {
@@ -38,23 +40,29 @@ export class CommentService {
     return await this.commentRepo.save(comment);
   }
 
-  async getAllComments(): Promise<Comment[]> {
+  async getAllComments(skip: number, take: number): Promise<PaginatedDate<Comment>> {
     const comments = await this.commentRepo.find({
       relations: ["product", "user"],
+      take, skip
     });
-    if (!comments.length)
+    const counts = await this.commentRepo.count();
+    if (!counts)
       throw new AppError("No comments found", NOT_FOUND, NOT_FOUND_REASON);
-    return comments;
+    const pagination = calculatePagination(counts, take, skip);
+    return { data: comments, pagination };
   }
 
-  async getProductComments(productId: string): Promise<Comment[]> {
+  async getProductComments(productId: string, skip: number, take: number): Promise<PaginatedDate<Comment>> {
     const comments = await this.commentRepo.find({
       where: { product: { id: productId } },
       relations: ["user"],
+      skip, take
     });
-    if (!comments.length)
-      throw new AppError("No comments found", NOT_FOUND, NOT_FOUND_REASON);
-    return comments;
+    const counts = await this.commentRepo.count({ where: { product: { id: productId } } });
+    if (!counts)
+      throw new AppError("No comments found for this product", NOT_FOUND, NOT_FOUND_REASON);
+    const pagination = calculatePagination(counts, take, skip);
+    return { data: comments, pagination };
   }
 
   async getCommentById(id: string): Promise<Comment> {

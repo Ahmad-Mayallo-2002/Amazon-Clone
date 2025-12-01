@@ -1,4 +1,6 @@
+import { IPagination } from "./pagination.interface";
+
 export interface PaginatedDate<T> {
     data: T[];
-    counts: number;
+    pagination: IPagination;
 }

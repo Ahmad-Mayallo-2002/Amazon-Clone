@@ -7,6 +7,8 @@ import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { ProductService } from "../product/product.service";
 import { Product } from "../product/product.entity";
+import { calculatePagination } from "../utils/calculatePagination";
+import { PaginatedDate } from "../interfaces/paginated-data.interface";
 
 @injectable()
 export class CartService {
@@ -15,13 +17,15 @@ export class CartService {
     AppDataSource.getRepository(CartItem);
   constructor(@inject(ProductService) private productService: ProductService) {}
 
-  async getAll(): Promise<Cart[]> {
+  async getAll(skip: number, take: number): Promise<PaginatedDate<Cart>> {
     const carts = await this.cartRepo.find({
       relations: ["user", "cartItems"],
     });
-    if (!carts.length)
+    const counts = await this.cartRepo.count();
+    if (!counts)
       throw new AppError("No carts found", NOT_FOUND, NOT_FOUND_REASON);
-    return carts;
+    const pagination = calculatePagination(counts, skip, take);
+    return {data: carts, pagination};
   }
 
   async getById(id: string): Promise<Cart> {

@@ -10,8 +10,12 @@ export class VendorController {
 
   getVendors = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const vendors = await this.vendorService.getVendors();
-      return sendResponse(res, vendors, OK, OK_REASON);
+      const { skip, take } = req.query;
+      const { data, pagination } = await this.vendorService.getVendors(
+        Number(skip) || 0,
+        Number(take) || 10
+      );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }
@@ -48,7 +52,11 @@ export class VendorController {
     }
   };
 
-  verifyVendorExists = async (req: Request, res: Response, next: NextFunction) => {
+  verifyVendorExists = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { id } = req.params;
       const { status } = req.body;

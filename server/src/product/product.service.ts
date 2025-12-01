@@ -12,6 +12,8 @@ import { unlinkSync } from "fs";
 import { join } from "path";
 import { log } from "console";
 import { PaginatedDate } from "../interfaces/paginated-data.interface";
+import { IPagination } from "../interfaces/pagination.interface";
+import { calculatePagination } from "../utils/calculatePagination";
 
 @injectable()
 export class ProductService {
@@ -41,17 +43,17 @@ export class ProductService {
     return await this.productRepo.save(product);
   }
 
-  async getAllProducts(): Promise<PaginatedDate<Product>> {
+  async getAllProducts(skip: number, take: number): Promise<PaginatedDate<Product>> {
     const products: Product[] = await this.productRepo.find({
       relations: ["category"],
+      take,
+      skip,
     });
     const counts = await this.productRepo.count();
-    if (!products.length)
+    if (!counts)
       throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);
-    return {
-      data: products,
-      counts,
-    };
+    const pagination = calculatePagination(counts, skip, take);
+    return { data: products, pagination };
   }
 
   async getProductById(id: string): Promise<Product> {
@@ -64,14 +66,17 @@ export class ProductService {
     return product;
   }
 
-  async getProductsByCategory(categoryId: string): Promise<Product[]> {
+  async getProductsByCategory(categoryId: string, skip: number, take: number): Promise<PaginatedDate<Product>> {
     const products = await this.productRepo.find({
       where: { categoryId },
       relations: ["category"],
+      take,skip
     });
-    if (!products.length)
+    const counts = await this.productRepo.count({ where: { categoryId } });
+    if (!counts)
       throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);
-    return products;
+    const pagination = calculatePagination(counts, skip, take);
+    return { data: products, pagination };
   }
 
   async updateProduct(
@@ -79,7 +84,7 @@ export class ProductService {
     data: UpdateProduct,
     vendorId: string
   ): Promise<string> {
-    const product = await this.productRepo.findOne({where: { id, vendorId } });
+    const product = await this.productRepo.findOne({ where: { id, vendorId } });
     if (!product)
       throw new AppError("Product not found", NOT_FOUND, NOT_FOUND_REASON);
     const body: Record<any, any> = { ...data };

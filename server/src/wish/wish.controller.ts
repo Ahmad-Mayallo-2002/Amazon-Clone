@@ -8,10 +8,14 @@ import { CREATED, CREATED_REASON, OK, OK_REASON } from "../utils/statusCodes";
 export class WishController {
   constructor(@inject(WishService) private wishService: WishService) {}
 
-  getAll = async (_req: Request, res: Response, next: NextFunction) => {
+  getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const wishes = await this.wishService.getAll();
-      return sendResponse(res, wishes, OK, OK_REASON);
+      const { skip, take } = req.query;
+      const { data, pagination } = await this.wishService.getAll(
+        Number(skip) || 0,
+        Number(take) || 10
+      );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }

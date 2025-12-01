@@ -10,8 +10,12 @@ export class UserController {
 
   getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const users = await this.userService.getUsers();
-      return sendResponse(res, users, OK, OK_REASON);
+      const { skip, take } = req.query;
+      const { data, pagination } = await this.userService.getUsers(
+        Number(skip) || 0,
+        Number(take) || 10
+      );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }

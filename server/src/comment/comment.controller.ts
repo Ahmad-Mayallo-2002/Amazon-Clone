@@ -27,9 +27,14 @@ export class CommentController {
     next: NextFunction
   ) => {
     try {
+      const { skip, take } = req.query;
       const { productId } = req.params;
-      const comments = await this.commentService.getProductComments(productId);
-      return sendResponse(res, comments, OK, OK_REASON);
+      const { data, pagination } = await this.commentService.getProductComments(
+        productId,
+        Number(skip) || 0,
+        Number(take)
+      );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }
@@ -37,8 +42,12 @@ export class CommentController {
 
   getAllComments = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const comments = await this.commentService.getAllComments();
-      return sendResponse(res, comments, OK, OK_REASON);
+      const { skip, take } = req.query;
+      const { data, pagination } = await this.commentService.getAllComments(
+        Number(skip) || 0,
+        Number(take)
+      );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }
