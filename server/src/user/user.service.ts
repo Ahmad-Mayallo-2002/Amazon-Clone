@@ -14,10 +14,7 @@ import { calculatePagination } from "../utils/calculatePagination";
 export class UserService {
   private userRepo: Repository<User> = AppDataSource.getRepository(User);
 
-  async getUsers(
-    skip: number = 0,
-    take: number = 10
-  ): Promise<PaginatedDate<User>> {
+  async getUsers(skip: number = 0, take: number): Promise<PaginatedDate<User>> {
     const [users, count] = await this.userRepo.findAndCount({
       where: { role: Roles.USER },
       order: { createdAt: "DESC" },

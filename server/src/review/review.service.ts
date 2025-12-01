@@ -14,7 +14,7 @@ export class ReviewService {
 
   async getAllReviews(
     skip: number = 0,
-    take: number = 10
+    take: number
   ): Promise<PaginatedDate<Review>> {
     const [reviews, count] = await this.reviewRepo.findAndCount({
       relations: ["product", "user"],

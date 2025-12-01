@@ -17,7 +17,7 @@ export class PaymentService {
 
   getAllPayments = async (
     skip: number = 0,
-    take: number = 10
+    take: number
   ): Promise<PaginatedDate<Payment>> => {
     const [payments, count] = await this.paymentRepo.findAndCount({
       order: { createdAt: "DESC" },

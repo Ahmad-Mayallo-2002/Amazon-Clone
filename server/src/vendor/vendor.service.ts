@@ -14,7 +14,7 @@ export class VendorService {
 
   async getVendors(
     skip: number = 0,
-    take: number = 10
+    take: number
   ): Promise<PaginatedDate<Vendor>> {
     const [vendors, count] = await this.vendorRepo.findAndCount({
       relations: {

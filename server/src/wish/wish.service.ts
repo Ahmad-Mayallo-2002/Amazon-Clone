@@ -11,7 +11,6 @@ import {
   NOT_FOUND_REASON,
 } from "../utils/statusCodes";
 import { PaginatedDate } from "../interfaces/paginated-data.interface";
-import { IPagination } from "../interfaces/pagination.interface";
 import { calculatePagination } from "../utils/calculatePagination";
 
 @injectable()
@@ -20,10 +19,7 @@ export class WishService {
   private wishItemRepo: Repository<WishItem> =
     AppDataSource.getRepository(WishItem);
 
-  async getAll(
-    skip: number = 0,
-    take: number = 10
-  ): Promise<PaginatedDate<Wish>> {
+  async getAll(skip: number = 0, take: number): Promise<PaginatedDate<Wish>> {
     const [wishes, count] = await this.wishRepo.findAndCount({
       relations: ["user", "wishItems"],
       order: { createdAt: "DESC" },
