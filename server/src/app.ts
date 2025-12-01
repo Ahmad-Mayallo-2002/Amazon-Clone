@@ -27,8 +27,11 @@ import wishRoutes from "./wish/wish.route";
 import paymentRoutes from "./payment/payment.route";
 import webhook from "./webhook/stripe.webhook";
 import orderRoutes from "./order/order.route";
+import googleAuth from "./passport/passport.route";
 import { config } from "dotenv";
 import cors from "cors";
+import session from "express-session";
+import passport from "passport";
 config();
 
 const port: number = parseInt(process.env.PORT as string);
@@ -48,6 +51,9 @@ app.use(
     origin: "http://localhost:5173",
   })
 );
+app.use(session({ secret: "secret", resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/api", userRoutes);
 app.use("/api", vendorRoutes);
@@ -62,6 +68,7 @@ app.use("/api", wishRoutes);
 app.use("/api", paymentRoutes);
 app.use("/api", webhook);
 app.use("/api", orderRoutes);
+app.use(googleAuth);
 
 app.get("/", async (_req: Request, res: Response) =>
   sendResponse(res, "Hello, World!", OK, OK_REASON)
