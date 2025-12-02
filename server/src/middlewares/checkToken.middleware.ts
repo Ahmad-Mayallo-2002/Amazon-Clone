@@ -53,7 +53,7 @@ export const checkToken = async (
     } catch (err) {
       return next(
         new AppError(
-          "Invalid or expired Google token.",
+          "Invalid or expired token.",
           UNAUTHORIZED,
           UNAUTHORIZED_REASON
         )

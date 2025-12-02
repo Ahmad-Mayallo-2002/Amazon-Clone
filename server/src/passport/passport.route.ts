@@ -5,10 +5,6 @@ import { checkToken } from "../middlewares/checkToken.middleware";
 
 const router = Router();
 
-function isLoggedIn(req: Request, res: Response, next: NextFunction) {
-  req.user ? next() : res.sendStatus(401);
-}
-
 router.get("/google-login", async (req, res) =>
   res.status(200).send("<a href='/auth/google'>Authenticate with Google</a>")
 );
