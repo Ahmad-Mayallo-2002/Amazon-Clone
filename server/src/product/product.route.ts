@@ -22,6 +22,8 @@ router.get(
   container.getProductsByCategory
 );
 
+router.get("/search-products", container.searchProducts);
+
 router.post(
   "/create-product",
   upload.single("image"),

@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { Repository } from "typeorm";
+import { Raw, Repository } from "typeorm";
 import { Product } from "./product.entity";
 import { AppDataSource } from "../data-source";
 import AppError from "../utils/appError";
@@ -43,7 +43,10 @@ export class ProductService {
     return await this.productRepo.save(product);
   }
 
-  async getAllProducts(skip: number, take: number): Promise<PaginatedDate<Product>> {
+  async getAllProducts(
+    skip: number,
+    take: number
+  ): Promise<PaginatedDate<Product>> {
     const products: Product[] = await this.productRepo.find({
       relations: ["category"],
       take,
@@ -66,13 +69,36 @@ export class ProductService {
     return product;
   }
 
-  async getProductsByCategory(categoryId: string, skip: number, take: number): Promise<PaginatedDate<Product>> {
+  async getProductsByCategory(
+    categoryId: string,
+    skip: number,
+    take: number
+  ): Promise<PaginatedDate<Product>> {
     const products = await this.productRepo.find({
       where: { categoryId },
       relations: ["category"],
-      take,skip
+      take,
+      skip,
     });
     const counts = await this.productRepo.count({ where: { categoryId } });
+    if (!counts)
+      throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);
+    const pagination = calculatePagination(counts, skip, take);
+    return { data: products, pagination };
+  }
+
+  async searchProducts(
+    search: string,
+    skip: number,
+    take: number
+  ): Promise<PaginatedDate<Product>> {
+    const [products, counts] = await this.productRepo.findAndCount({
+      skip,
+      take,
+      where: {
+        title: Raw((alias) => `${alias} ~* :pattern`, { pattern: search }),
+      },
+    });
     if (!counts)
       throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);
     const pagination = calculatePagination(counts, skip, take);

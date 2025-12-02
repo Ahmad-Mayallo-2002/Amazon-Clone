@@ -51,15 +51,26 @@ export class ProductController {
   ) => {
     try {
       const { skip, take } = req.query;
-      const products = await this.productService.getProductsByCategory(
-        req.params.categoryId,
-        Number(skip) || 0,
-        Number(take)
-      );
-      return sendResponse(res, products, OK, OK_REASON);
+      const { data, pagination } =
+        await this.productService.getProductsByCategory(
+          req.params.categoryId,
+          Number(skip) || 0,
+          Number(take)
+        );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }
+  };
+
+  searchProducts = async (req: Request, res: Response, next: NextFunction) => {
+    const { search, skip, take } = req.query;
+    const { data, pagination } = await this.productService.searchProducts(
+      String(search) || "",
+      Number(skip) || 0,
+      Number(take)
+    );
+    return sendResponse(res, data, OK, OK_REASON, pagination);
   };
 
   updateProduct = async (req: Request, res: Response, next: NextFunction) => {
