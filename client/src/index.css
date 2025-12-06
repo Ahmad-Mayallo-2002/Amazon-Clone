@@ -1,0 +1,46 @@
+:root {
+  --color-neutral-600: #37475a;
+  --color-neutral-700: #485769;
+  --color-neutral-800: #232f3e;
+  --color-neutral-900: #131921;
+  --color-gray-400: #9ca3af;
+}
+
+body {
+  background-color: #fafafa;
+}
+
+.panel {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.main-button {
+  color: #111827;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border: 1px solid #fcd200;
+  background-color: #fcd200;
+  transition: color 0.15s;
+}
+
+.main-button:hover {
+  background-color: #f7ca00;
+}
+
+.field {
+  padding: 0.5px 0.75px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border: 1px solid var(--color-gray-400);
+  border-radius: 0.375rem;
+  width: 100%;
+}
+
+.field:focus {
+  border-color: #e77600;
+  box-shadow: 0 0 3px 2px #e77600;
+}
