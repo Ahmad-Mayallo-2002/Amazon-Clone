@@ -1,6 +1,6 @@
 :root {
-  --color-neutral-600: #37475a;
-  --color-neutral-700: #485769;
+  --color-neutral-600: #485769;
+  --color-neutral-700: #37475a;
   --color-neutral-800: #232f3e;
   --color-neutral-900: #131921;
   --color-gray-400: #9ca3af;
@@ -8,6 +8,28 @@
 
 body {
   background-color: #fafafa;
+}
+
+ul {
+  list-style-type: none;
+}
+
+button,
+a {
+  outline: none;
+  cursor: pointer;
+}
+
+a:active,
+a:hover {
+  text-decoration: none;
+}
+
+.chakra-container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .panel {
@@ -43,4 +65,10 @@ body {
 .field:focus {
   border-color: #e77600;
   box-shadow: 0 0 3px 2px #e77600;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
