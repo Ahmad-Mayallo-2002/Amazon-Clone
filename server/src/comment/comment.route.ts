@@ -30,7 +30,7 @@ router.get(
   authorizeRoles(Roles.ADMIN),
   container.getCommentById
 );
-router.put(
+router.patch(
   "/update-comment/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.USER),

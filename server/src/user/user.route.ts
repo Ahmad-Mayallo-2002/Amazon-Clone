@@ -26,7 +26,7 @@ router.get(
   controller.getUserById
 );
 
-router.put(
+router.patch(
   "/update-user/:id",
   checkToken,
   adminOrOwner((req) => req.params.id),

@@ -18,7 +18,7 @@ router.get("/get-products", container.getAllProducts);
 router.get("/get-products/:id", container.getProductById);
 
 router.get(
-  "/get-products-by-category/:categoryId",
+  "/get-products-by-category",
   container.getProductsByCategory
 );
 
@@ -33,7 +33,7 @@ router.post(
   container.createProduct
 );
 
-router.put(
+router.patch(
   "/update-product/:id/:vendorId",
   upload.single("image"),
   checkToken,

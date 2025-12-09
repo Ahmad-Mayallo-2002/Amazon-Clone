@@ -27,7 +27,7 @@ router.get(
   container.getVendorById
 );
 
-router.put(
+router.patch(
   "/update-vendor/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
@@ -44,7 +44,7 @@ router.delete(
   container.deleteVendor
 );
 
-router.put(
+router.patch(
   "/verify-vendor/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN),

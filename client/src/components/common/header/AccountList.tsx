@@ -1,4 +1,4 @@
-import { userAccountLinks, userListLinks } from "@/assets/assets";
+import { userAccountLinks, userListLinks } from "@/assets/data/navItems";
 import {
   Button,
   GridItem,

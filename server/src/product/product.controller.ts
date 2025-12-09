@@ -50,10 +50,10 @@ export class ProductController {
     next: NextFunction
   ) => {
     try {
-      const { skip, take } = req.query;
+      const { skip, take, category } = req.query;
       const { data, pagination } =
         await this.productService.getProductsByCategory(
-          req.params.categoryId,
+          String(category),
           Number(skip) || 0,
           Number(take)
         );

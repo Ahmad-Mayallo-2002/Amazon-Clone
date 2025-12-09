@@ -18,7 +18,7 @@ router.post(
 router.post("/login", validateZod(LoginShema), container.login);
 router.post("/forgot-password", container.forgotPassword);
 router.post("/verify-code", container.verifyCode);
-router.put("/reset-password", container.resetPassword);
+router.patch("/reset-password", container.resetPassword);
 router.get("/seed-admin", container.seedAdmin);
 
 export default router;

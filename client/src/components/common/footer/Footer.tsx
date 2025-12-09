@@ -1,4 +1,4 @@
-import { footerSections } from "@/assets/assets";
+import { footerSections } from "@/assets/data/footerSection";
 import { Box, Flex, VStack, Text, Link, Button } from "@chakra-ui/react";
 
 export default function Footer() {
@@ -13,6 +13,7 @@ export default function Footer() {
         _hover={{ bgColor: "var(--color-neutral-600)" }}
         rounded="0"
         fontSize={{ base: "14px", md: "16px" }}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >
         Back to top
       </Button>

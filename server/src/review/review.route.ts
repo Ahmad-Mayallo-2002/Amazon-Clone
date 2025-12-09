@@ -32,7 +32,7 @@ router.get(
   "/get-product-avg-review/:productId",
   container.getAvarageReviewByProductId
 );
-router.put(
+router.patch(
   "/add-review/:productId",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.USER),

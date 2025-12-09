@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { Raw, Repository } from "typeorm";
+import { ILike, Raw, Repository } from "typeorm";
 import { Product } from "./product.entity";
 import { AppDataSource } from "../data-source";
 import AppError from "../utils/appError";
@@ -70,17 +70,19 @@ export class ProductService {
   }
 
   async getProductsByCategory(
-    categoryId: string,
+    category: string,
     skip: number,
     take: number
   ): Promise<PaginatedDate<Product>> {
     const products = await this.productRepo.find({
-      where: { categoryId },
+      where: { category: { name: ILike(category) } },
       relations: ["category"],
       take,
       skip,
     });
-    const counts = await this.productRepo.count({ where: { categoryId } });
+    const counts = await this.productRepo.count({
+      where: { category: { name: ILike(category) } },
+    });
     if (!counts)
       throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);
     const pagination = calculatePagination(counts, skip, take);

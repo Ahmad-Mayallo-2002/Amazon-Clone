@@ -6,6 +6,10 @@ export interface Product extends IdAndDate {
   description: string;
   price: number;
   stock: number;
+  image: {
+    url: string;
+    public_id: string;
+  };
   discount: number;
   vendorId: string;
   categoryId: string;

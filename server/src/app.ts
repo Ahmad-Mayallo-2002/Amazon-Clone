@@ -32,6 +32,7 @@ import { config } from "dotenv";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
+import { compare, hash } from "bcryptjs";
 config();
 
 const port: number = parseInt(process.env.PORT as string);
@@ -66,8 +67,8 @@ app.use("/api", cartRoutes);
 app.use("/api", authRoutes);
 app.use("/api", wishRoutes);
 app.use("/api", paymentRoutes);
-app.use("/api", webhook);
 app.use("/api", orderRoutes);
+app.use("/api", webhook);
 app.use(googleAuth);
 
 app.get("/", async (_req: Request, res: Response) =>

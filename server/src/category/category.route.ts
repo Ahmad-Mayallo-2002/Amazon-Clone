@@ -23,7 +23,7 @@ router.post(
   container.createCategory
 );
 
-router.put(
+router.patch(
   "/update-category/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN),

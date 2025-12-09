@@ -27,7 +27,7 @@ router.get(
   authorizeRoles(Roles.ADMIN, Roles.USER),
   container.getAddressesByUserId
 );
-router.put(
+router.patch(
   "/update-address/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN),
