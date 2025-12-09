@@ -6,6 +6,7 @@ import {
   SimpleGrid,
   Text,
   Container,
+  Heading,
 } from "@chakra-ui/react";
 
 export const FeaturesSection = () => {
@@ -32,9 +33,9 @@ export const FeaturesSection = () => {
                 mb={4}
               />
 
-              <Text fontSize="xl" fontWeight="bold" mb={2}>
+              <Heading fontSize="xl" fontWeight={700} mb={2}>
                 {feature.title}
-              </Text>
+              </Heading>
 
               <Text fontSize="sm" color="gray.600" mb={4}>
                 {feature.description}

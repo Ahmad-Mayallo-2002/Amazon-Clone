@@ -1,7 +1,7 @@
 import { Box, Container } from "@chakra-ui/react";
 import banner from "@/assets/images/banner.jpg";
-import ProductCategorySlide from "@/components/ui/ProductCategorySlide";
-import { FeaturesSection } from "@/components/ui/featuresSection";
+import ProductCategorySlide from "@/components/home/ProductCategorySlide";
+import { FeaturesSection } from "@/components/help/featuresSection";
 
 export default function Home() {
   return (

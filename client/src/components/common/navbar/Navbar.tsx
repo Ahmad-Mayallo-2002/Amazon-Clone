@@ -18,7 +18,7 @@ export default function Navbar() {
             </Item>
             <Item asChild>
               <Link
-                href="/contact"
+                href="/help"
                 color="#fff"
                 _hover={{ textDecor: "underline" }}
               >
