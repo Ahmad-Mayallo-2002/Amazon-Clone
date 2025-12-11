@@ -3,6 +3,8 @@ import { ProductService } from "./product.service";
 import { NextFunction, Request, Response } from "express";
 import { sendResponse } from "../utils/sendResponse";
 import { CREATED, CREATED_REASON, OK, OK_REASON } from "../utils/statusCodes";
+import { OrderBy } from "../enums/order-by.enum";
+import { SortBy } from "../types/sortBy.type";
 
 @injectable()
 export class ProductController {
@@ -24,10 +26,25 @@ export class ProductController {
 
   getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { skip, take } = req.query;
+      const {
+        skip,
+        take,
+        category,
+        rating,
+        minPrice,
+        maxPrice,
+        sortBy,
+        sortOrder,
+      } = req.query;
       const { data, pagination } = await this.productService.getAllProducts(
         Number(skip ?? 0),
-        Number(take)
+        Number(take),
+        category as string,
+        Number(rating),
+        Number(minPrice),
+        Number(maxPrice),
+        sortBy as SortBy,
+        sortOrder as OrderBy
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {

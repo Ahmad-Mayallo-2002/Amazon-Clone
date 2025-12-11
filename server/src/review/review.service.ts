@@ -5,12 +5,13 @@ import { AppDataSource } from "../data-source";
 import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { PaginatedDate } from "../interfaces/paginated-data.interface";
-import { IPagination } from "../interfaces/pagination.interface";
 import { calculatePagination } from "../utils/calculatePagination";
+import { Product } from "../product/product.entity";
 
 @injectable()
 export class ReviewService {
   private reviewRepo: Repository<Review> = AppDataSource.getRepository(Review);
+  private productRepo: Repository<Product> = AppDataSource.getRepository(Product);
 
   async getAllReviews(
     skip: number = 0,
@@ -83,6 +84,8 @@ export class ReviewService {
       review.value = value;
       await this.reviewRepo.save(review);
     }
+    const avgReview = await this.getAvarageReviewByProductId(productId);
+    await this.productRepo.update({ id: productId }, { rating: avgReview });
     return "Review added successfully";
   }
 

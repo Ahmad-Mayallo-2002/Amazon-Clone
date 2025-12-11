@@ -13,6 +13,8 @@ import { join } from "path";
 import { log } from "console";
 import { PaginatedDate } from "../interfaces/paginated-data.interface";
 import { calculatePagination } from "../utils/calculatePagination";
+import { SortBy } from "../types/sortBy.type";
+import { OrderBy } from "../enums/order-by.enum";
 
 @injectable()
 export class ProductService {
@@ -44,18 +46,36 @@ export class ProductService {
 
   async getAllProducts(
     skip: number,
-    take: number
+    take: number,
+    category: string,
+    rating: number,
+    minPrice: number,
+    maxPrice: number,
+    sortBy: SortBy,
+    orderBy: OrderBy
   ): Promise<PaginatedDate<Product>> {
-    const products: Product[] = await this.productRepo
+    const query = this.productRepo
       .createQueryBuilder("product")
-      .innerJoinAndSelect("product.category", "category")
-      .limit(take)
-      .offset(skip)
-      .getMany();
+      .innerJoinAndSelect("product.category", "category");
 
-    const counts = await this.productRepo.count();
+    if (category) query.andWhere(`category.name = :category`, { category });
+
+    if (rating) query.andWhere(`product.rating >= :rating `, { rating });
+
+    if (!isNaN(minPrice))
+      query.andWhere(`product.price >= :minPrice`, { minPrice });
+
+    if (!isNaN(maxPrice))
+      query.andWhere(`product.price <= :maxPrice`, { maxPrice });
+
+    if (sortBy) query.orderBy(`product.${sortBy}`, "DESC");
+
+    const counts = await query.getCount();
+
     if (!counts)
       throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);
+
+    const products = await query.take(take).skip(skip).getMany();
     const pagination = calculatePagination(counts, skip, take);
     return { data: products, pagination };
   }

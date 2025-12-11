@@ -1,0 +1,1 @@
+export type SortBy = "price" | "rating" | "title" | 'created_at';

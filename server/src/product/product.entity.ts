@@ -35,6 +35,9 @@ export class Product extends AbstractEntity {
   @Column({ type: "float", default: 0 })
   discount: number;
 
+  @Column({ type: "float", default: 0 })
+  rating: number;
+
   @Column({ type: "varchar", length: 255 })
   vendorId: string;
 
