@@ -8,9 +8,9 @@ export const calculatePagination = (
   take: number
 ): IPagination => {
   const totalPages: number =
-    counts % take === 0 ? counts / take : Math.floor(counts / take) + 1;
+    counts % take === 0 ? counts / take : Math.ceil(counts / take);
 
-  const currentPage: number = skip + 1;
+  const currentPage: number = counts ? Math.floor(skip / take) + 1 : 0;
 
   if (currentPage > totalPages)
     throw new AppError("Page not found", NOT_FOUND, NOT_FOUND_REASON);

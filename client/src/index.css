@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: #fafafa;
+  background-color: #f6f6f6;
 }
 
 ul {
@@ -34,7 +34,7 @@ a:hover {
 
 .panel {
   background-color: #fff;
-  padding: 1.5rem;
+  padding: 1.25rem;
   border-radius: 0.5rem;
 }
 

@@ -3,7 +3,7 @@ import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
 
 interface FetchOptions<T> {
-  queryKey: string[];
+  queryKey: any[];
   url: string;
   enabled?: boolean;
   select?: (data: T) => any;
@@ -24,5 +24,6 @@ export function useFetch<T>({
     enabled,
     select,
     retry: 0,
+    staleTime: 1000 * 60 * 10,
   });
 }

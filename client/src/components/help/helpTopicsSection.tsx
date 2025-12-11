@@ -16,7 +16,7 @@ export const HelpTopicsSection = () => {
   return (
     <Box>
       <Container>
-        <Heading fontSize="2xl" fontWeight="bold" mb={4}>
+        <Heading fontSize="2xl" fontWeight="bold" mt={12} mb={4}>
           Browse Help Topics
         </Heading>
 

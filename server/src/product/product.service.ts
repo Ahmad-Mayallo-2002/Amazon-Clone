@@ -12,7 +12,6 @@ import { unlinkSync } from "fs";
 import { join } from "path";
 import { log } from "console";
 import { PaginatedDate } from "../interfaces/paginated-data.interface";
-import { IPagination } from "../interfaces/pagination.interface";
 import { calculatePagination } from "../utils/calculatePagination";
 
 @injectable()
@@ -47,11 +46,13 @@ export class ProductService {
     skip: number,
     take: number
   ): Promise<PaginatedDate<Product>> {
-    const products: Product[] = await this.productRepo.find({
-      relations: ["category"],
-      take,
-      skip,
-    });
+    const products: Product[] = await this.productRepo
+      .createQueryBuilder("product")
+      .innerJoinAndSelect("product.category", "category")
+      .limit(take)
+      .offset(skip)
+      .getMany();
+
     const counts = await this.productRepo.count();
     if (!counts)
       throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);

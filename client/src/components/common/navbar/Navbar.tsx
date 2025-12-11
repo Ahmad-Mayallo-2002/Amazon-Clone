@@ -1,4 +1,5 @@
 import { Box, Container, Link, List } from "@chakra-ui/react";
+import { navLinks } from "../../../assets/data/navItems";
 
 export default function Navbar() {
   const { Root, Item } = List;
@@ -7,33 +8,17 @@ export default function Navbar() {
       <Box as="nav" color="#fff" py={3} bgColor="var(--color-neutral-800)">
         <Container>
           <Root flexDir="row" gapX={4}>
-            <Item asChild>
-              <Link
-                color="#fff"
-                _hover={{ textDecor: "underline" }}
-                href="/products"
-              >
-                All
-              </Link>
-            </Item>
-            <Item asChild>
-              <Link
-                href="/help"
-                color="#fff"
-                _hover={{ textDecor: "underline" }}
-              >
-                Customer Service
-              </Link>
-            </Item>
-            <Item asChild>
-              <Link
-                href="/about"
-                color="#fff"
-                _hover={{ textDecor: "underline" }}
-              >
-                About
-              </Link>
-            </Item>
+            {navLinks.map((link) => (
+              <Item asChild key={link.label}>
+                <Link
+                  color="#fff"
+                  _hover={{ textDecor: "underline" }}
+                  href={link.href}
+                >
+                  {link.label}
+                </Link>
+              </Item>
+            ))}
           </Root>
         </Container>
       </Box>

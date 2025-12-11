@@ -12,3 +12,8 @@ export const userAccountLinks: NavItem[] = [
   { label: "Account", href: "/account" },
   { label: "Orders", href: "/orders" },
 ];
+
+export const navLinks: NavItem[] = [
+  { label: "All", href: "/shop" },
+  { label: "Customer Service", href: "/help" },
+];

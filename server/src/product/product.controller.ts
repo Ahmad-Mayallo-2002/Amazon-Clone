@@ -26,7 +26,7 @@ export class ProductController {
     try {
       const { skip, take } = req.query;
       const { data, pagination } = await this.productService.getAllProducts(
-        Number(skip) || 0,
+        Number(skip ?? 0),
         Number(take)
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);

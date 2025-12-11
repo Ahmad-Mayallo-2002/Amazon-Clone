@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^3.29.0",
     "@emotion/react": "^11.14.0",
     "@stripe/react-stripe-js": "^5.4.0",

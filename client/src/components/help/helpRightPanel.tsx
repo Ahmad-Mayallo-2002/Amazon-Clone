@@ -8,7 +8,9 @@ import {
   List,
   Link,
 } from "@chakra-ui/react";
-import { ChatIcon, EmailIcon, PhoneIcon, InfoIcon } from "@chakra-ui/icons";
+import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
+import { FaPhone, FaInfoCircle } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 const quickLinks: string[] = [
   "Shipping Policies",
@@ -42,17 +44,17 @@ export const HelpRightPanel = () => {
 
         <VStack gap={3}>
           <Button w="100%" colorPalette="yellow" fontWeight="medium">
-            <ChatIcon />
+            <IoChatbubbleEllipsesSharp />
             Start Live Chat
           </Button>
 
           <Button w="100%" variant="outline">
-            <PhoneIcon />
+            <FaPhone />
             Call Us
           </Button>
 
           <Button w="100%" variant="outline">
-            <EmailIcon />
+            <MdEmail />
             Email Support
           </Button>
         </VStack>
@@ -68,7 +70,7 @@ export const HelpRightPanel = () => {
         className="more-help"
       >
         <VStack align="start" gap={3}>
-          <Icon as={InfoIcon} boxSize={6} />
+          <Icon as={FaInfoCircle} boxSize={6} />
 
           <Box>
             <Text fontSize="lg" fontWeight="bold">
