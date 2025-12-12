@@ -34,7 +34,7 @@ export class ProductController {
         minPrice,
         maxPrice,
         sortBy,
-        sortOrder,
+        orderBy,
       } = req.query;
       const { data, pagination } = await this.productService.getAllProducts(
         Number(skip ?? 0),
@@ -44,7 +44,7 @@ export class ProductController {
         Number(minPrice),
         Number(maxPrice),
         sortBy as SortBy,
-        sortOrder as OrderBy
+        orderBy as OrderBy
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {

@@ -1,5 +1,11 @@
 import { injectable } from "inversify";
-import { ILike, Raw, Repository } from "typeorm";
+import {
+  ILike,
+  Raw,
+  Repository,
+  MoreThanOrEqual,
+  LessThanOrEqual,
+} from "typeorm";
 import { Product } from "./product.entity";
 import { AppDataSource } from "../data-source";
 import AppError from "../utils/appError";
@@ -54,28 +60,28 @@ export class ProductService {
     sortBy: SortBy,
     orderBy: OrderBy
   ): Promise<PaginatedDate<Product>> {
-    const query = this.productRepo
-      .createQueryBuilder("product")
-      .innerJoinAndSelect("product.category", "category");
+    const options: any = {
+      take,
+      skip,
+      relations: { category: true },
+      where: {},
+      order: {},
+    };
 
-    if (category) query.andWhere(`category.name = :category`, { category });
+    if (category) options.where.category = { name: category };
+    if (rating) options.where.rating = MoreThanOrEqual(rating);
+    if (!isNaN(minPrice)) options.where.price = MoreThanOrEqual(minPrice);
+    if (!isNaN(maxPrice)) options.where.price = LessThanOrEqual(maxPrice);
+    if (sortBy) {
+      options.order = { [sortBy]: orderBy };
+      log({ [sortBy]: orderBy });
+    }
 
-    if (rating) query.andWhere(`product.rating >= :rating `, { rating });
-
-    if (!isNaN(minPrice))
-      query.andWhere(`product.price >= :minPrice`, { minPrice });
-
-    if (!isNaN(maxPrice))
-      query.andWhere(`product.price <= :maxPrice`, { maxPrice });
-
-    if (sortBy) query.orderBy(`product.${sortBy}`, "DESC");
-
-    const counts = await query.getCount();
+    const [products, counts] = await this.productRepo.findAndCount(options);
 
     if (!counts)
       throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);
 
-    const products = await query.take(take).skip(skip).getMany();
     const pagination = calculatePagination(counts, skip, take);
     return { data: products, pagination };
   }
