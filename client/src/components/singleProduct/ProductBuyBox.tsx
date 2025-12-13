@@ -58,7 +58,7 @@ function ProductBuyBox() {
 
       {/* Buttons */}
       <Stack mt={4} gap={2}>
-        <Button colorPalette="yellow" size="sm">
+        <Button className="main-button" size="sm">
           Add to Cart
         </Button>
         <Button colorPalette="orange" size="sm">

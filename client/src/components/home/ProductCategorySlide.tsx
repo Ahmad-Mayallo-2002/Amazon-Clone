@@ -11,7 +11,7 @@ import {
   Box,
   Center,
 } from "@chakra-ui/react";
-import MainSpinner from "../common/MainSpinner";
+import MainSpinner from "../ui/MainSpinner";
 
 export default function ProductCategorySlide({
   category,

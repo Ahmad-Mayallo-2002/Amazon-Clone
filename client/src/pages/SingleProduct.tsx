@@ -1,4 +1,4 @@
-import MainSpinner from "@/components/common/MainSpinner";
+import MainSpinner from "@/components/ui/MainSpinner";
 import ProductBuyBox from "@/components/singleProduct/ProductBuyBox";
 import ProductDetails from "@/components/singleProduct/ProductDetails";
 import { useFetch } from "@/hooks/useFetch";

@@ -10,6 +10,11 @@ import SingleOrder from "./pages/SingleOrder";
 import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
 import Shop from "./pages/Shop";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import VerifyEmail from "./pages/VerifyEmail";
+import ResetPassword from "./pages/ResetPassword";
+import PasswordAssistance from "./pages/PasswordAssistance";
 
 const routerObject: RouteObject[] = [
   {
@@ -25,6 +30,11 @@ const routerObject: RouteObject[] = [
       { path: "product/:id", Component: SingleProduct },
       { path: "orders", Component: Orders },
       { path: "order/:id", Component: SingleOrder },
+      { path: "login", Component: Login },
+      { path: "sign-up", Component: SignUp },
+      { path: "verify-email", Component: VerifyEmail },
+      { path: "reset-password", Component: ResetPassword },
+      { path: "password-assistance", Component: PasswordAssistance },
       { path: "*", Component: NotFound },
     ],
   },
