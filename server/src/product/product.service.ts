@@ -5,6 +5,8 @@ import {
   Repository,
   MoreThanOrEqual,
   LessThanOrEqual,
+  Between,
+  Equal,
 } from "typeorm";
 import { Product } from "./product.entity";
 import { AppDataSource } from "../data-source";
@@ -69,7 +71,9 @@ export class ProductService {
     };
 
     if (category) options.where.category = { name: category };
-    if (rating) options.where.rating = MoreThanOrEqual(rating);
+    if (rating)
+      options.where.rating =
+        rating < 5 ? Between(rating, rating + 1) : Equal(5);
     if (!isNaN(minPrice)) options.where.price = MoreThanOrEqual(minPrice);
     if (!isNaN(maxPrice)) options.where.price = LessThanOrEqual(maxPrice);
     if (sortBy) {

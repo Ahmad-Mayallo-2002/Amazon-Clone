@@ -1,14 +1,18 @@
-import { Box, Flex, Image, Text, Badge, Button } from "@chakra-ui/react";
-
+import {
+  Box,
+  Flex,
+  Image,
+  Text,
+  Badge,
+  Button,
+  Link,
+  RatingGroup,
+  Span,
+} from "@chakra-ui/react";
 import type { Product } from "@/interfaces/product";
 
-interface ProductCardProps {
-  product: Product;
-  onClick?: (product: Product) => void;
-}
-
-export function ProductCard({ product, onClick }: ProductCardProps) {
-  const { title, price, discount, stock, image, category } = product;
+export function ProductCard({ product }: { product: Product }) {
+  const { title, price, discount, stock, image, category, rating } = product;
   const finalPrice = discount > 0 ? price * (1 - discount) : price;
 
   return (
@@ -20,7 +24,6 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
       cursor="pointer"
       _hover={{ shadow: "md", transform: "scale(1.02)" }}
       transition="all 0.2s ease-in-out"
-      onClick={() => onClick?.(product)}
     >
       {/* Image */}
       <Image
@@ -42,8 +45,27 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
         {category?.name}
       </Badge>
 
+      {/* Product Rating */}
+      <RatingGroup.Root
+        display="flex"
+        alignItems="center"
+        allowHalf
+        readOnly
+        count={5}
+        defaultValue={rating}
+        colorPalette="orange"
+        my={3}
+        size="sm"
+      >
+        <RatingGroup.HiddenInput />
+        <RatingGroup.Control />
+        <Span ms={1} color="#888" fontSize="sm">
+          ({rating})
+        </Span>
+      </RatingGroup.Root>
+
       {/* Price section */}
-      <Flex mt={3} align="center" gap={2}>
+      <Flex align="center" gap={2}>
         <Text fontWeight="bold" fontSize="lg">
           ${Number(finalPrice).toFixed(2)}
         </Text>
@@ -70,8 +92,15 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
       </Text>
 
       {/* Button */}
-      <Button mt={3} w="full" colorPalette="blue" variant="outline" size="sm">
-        View Product
+      <Button
+        asChild
+        mt={3}
+        w="full"
+        colorPalette="blue"
+        variant="outline"
+        size="sm"
+      >
+        <Link href={`/product/${product.id}`}>View Product</Link>
       </Button>
     </Box>
   );

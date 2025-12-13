@@ -9,7 +9,7 @@ interface PriceRangeState {
 
 export const usePriceRange = create<PriceRangeState>((set) => ({
   min: 0,
-  max: 1000,
+  max: 0,
   setMin: (value) => set({ min: value }),
   setMax: (value) => set({ max: value }),
 }));

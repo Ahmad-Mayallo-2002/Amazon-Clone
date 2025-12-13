@@ -14,4 +14,5 @@ export interface Product extends IdAndDate {
   vendorId: string;
   categoryId: string;
   category: Category;
+  rating: number;
 }
