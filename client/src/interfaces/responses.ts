@@ -4,6 +4,12 @@ export interface ErrorMessage {
   error: any;
 };
 
+export interface CustomError extends Error {
+  response: {
+    data: ErrorMessage;
+  };
+}
+
 interface Pagination {
   prev: boolean;
   next: boolean;

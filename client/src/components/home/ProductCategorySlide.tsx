@@ -9,9 +9,9 @@ import {
   SimpleGrid,
   GridItem,
   Box,
-  Spinner,
   Center,
 } from "@chakra-ui/react";
+import MainSpinner from "../common/MainSpinner";
 
 export default function ProductCategorySlide({
   category,
@@ -84,16 +84,10 @@ export default function ProductCategorySlide({
         )}
         {isLoading && (
           <Center h={150}>
-            <Spinner
-              w={70}
-              h={70}
-              borderWidth={6}
-              borderColor="orange orange transparent transparent"
-            />
+            <MainSpinner w={70} h={70} />
           </Center>
         )}
       </Box>
-
     </>
   );
 }
