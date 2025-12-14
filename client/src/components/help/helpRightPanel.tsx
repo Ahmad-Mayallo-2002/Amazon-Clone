@@ -42,7 +42,7 @@ export const HelpRightPanel = () => {
           concerns.
         </Text>
 
-        <VStack gap={3}>
+        <VStack gap={2}>
           <Button w="100%" colorPalette="yellow" fontWeight="medium">
             <IoChatbubbleEllipsesSharp />
             Start Live Chat

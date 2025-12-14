@@ -2,7 +2,7 @@ import { Box, Link, Text, HStack, Center, Separator } from "@chakra-ui/react";
 
 function AuthFooter() {
   return (
-    <Box as="footer" py={6} bg="gray.50" width="full">
+    <Box as="footer" py={4} bg="#fff" width="full">
       <Separator borderColor="gray.300" />
 
       <Center mt={8} flexDirection="column">

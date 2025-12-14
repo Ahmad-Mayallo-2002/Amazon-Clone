@@ -38,16 +38,16 @@ function PasswordAssistance() {
   };
 
   return (
-    <Center minH="100vh" px={6} py={24} bgColor="#fff">
+    <Center minH="100vh" px={6} py={12} bgColor="#fff">
       <Box
-        p={8}
-        maxWidth="350px"
+        p={6}
+        maxWidth="400px"
         w="full"
         borderWidth={1}
         borderRadius="lg"
         boxShadow="xl"
       >
-        <VStack gap={6} align="stretch">
+        <VStack gap={3} align="stretch">
           <Center bg="yellow.400" rounded="full" boxSize={12} mx="auto">
             {/* Lock Icon */}
             <Icon as={FiLock} color="white" fontSize="3xl" />

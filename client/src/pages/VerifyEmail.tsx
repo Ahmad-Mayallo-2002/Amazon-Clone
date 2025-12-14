@@ -26,17 +26,16 @@ function VerifyEmail() {
   const { Root, HiddenInput, Control, Input } = PinInput;
 
   return (
-    <Center minH="100vh" px={6} py={24}>
+    <Center minH="100vh" px={6} py={12} bg="white">
       <Box
-        bg="white"
-        p={8}
+        p={6}
         rounded="md"
         shadow="md"
         w="100%"
-        maxW="350px"
+        maxW="400px"
         textAlign="center"
       >
-        <VStack gap={6}>
+        <VStack gap={3}>
           {/* Icon */}
           <Center bg="yellow.400" rounded="full" boxSize={12}>
             <Icon as={MdOutlineMailOutline} color="white" fontSize="3xl" />

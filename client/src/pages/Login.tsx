@@ -36,16 +36,15 @@ function Login() {
   };
 
   return (
-    <Center minH="100vh" py={24}>
+    <Center minH="100vh" py={12} bg="white">
       <Box
-        p={8}
-        maxWidth="350px" // Slightly smaller box for Sign In form
+        p={6}
+        maxWidth="400px" // Slightly smaller box for Sign In form
         borderWidth={1}
         borderRadius={8}
         boxShadow="lg"
-        bg="white"
       >
-        <VStack gap={4} as="form" onSubmit={handleSubmit(onSubmit)}>
+        <VStack gap={3} as="form" onSubmit={handleSubmit(onSubmit)}>
           <Heading as="h1" size="2xl" mb={2} fontWeight={700}>
             Login
           </Heading>
@@ -149,7 +148,7 @@ function Login() {
         </VStack>
 
         {/* Divider and Create Account Button */}
-        <Box pt={8} mt={6}>
+        <Box pt={1} mt={6}>
           <Separator mb={4} />
           <Text fontSize="sm" color="gray.600" textAlign="center" mb={2}>
             New to Amazon?

@@ -1,4 +1,8 @@
 import { PasswordInput } from "@/components/ui/password-input";
+import { usePost } from "@/hooks/usePost";
+import type { CustomError, Response } from "@/interfaces/responses";
+import type { User } from "@/interfaces/user";
+import { createToaster } from "@/utils/createToaster";
 import {
   Box,
   Button,
@@ -11,10 +15,12 @@ import {
   Field,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
-interface SignUpFormInputs {
+interface SignUpRequest {
   username: string;
   email: string;
+  phone: string;
   password: string;
   reEnterPassword: string;
 }
@@ -25,34 +31,46 @@ function SignUp() {
     register,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpFormInputs>();
+  } = useForm<SignUpRequest>();
+  const navigate = useNavigate();
   const { Root, Label, ErrorIcon, ErrorText, RequiredIndicator, HelperText } =
     Field;
 
   const password = watch("password", "");
 
-  const onSubmit = async (data: SignUpFormInputs) => {
-    console.log("Form Data Submitted:", data);
+  const signUpMutation = usePost<SignUpRequest, Response<User>>({
+    url: "register",
+    onSuccess: (_data) => createToaster("Done", "Sign Up is Done", "success"),
+    onError: (error) => {
+      const errorReason = (error as CustomError).response.data.error;
+      if (typeof errorReason !== "string") {
+        for (const key in errorReason)
+          for (const validationMessage in errorReason[key])
+            createToaster("Error", validationMessage, "error");
+      } else {
+        createToaster("Error", errorReason, "error");
+      }
+    },
+  });
+  const onSubmit = (data: SignUpRequest) => {
     try {
-      // Simulate an API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // You would typically redirect the user here
+      signUpMutation.mutate(data);
+      navigate("/auth/login");
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <Center minH="100vh" py={24}>
+    <Center minH="100vh" py={12} bg="#fff">
       <Box
-        p={8}
-        maxWidth="350px" // Adjusted to match typical form width
+        p={6}
+        maxWidth="400px"
         borderWidth={1}
         borderRadius={8}
         boxShadow="lg"
-        bg="#fff"
       >
-        <VStack gap={6} as="form" onSubmit={handleSubmit(onSubmit)}>
+        <VStack gap={3} as="form" onSubmit={handleSubmit(onSubmit)}>
           <Heading as="h1" size="2xl" fontWeight={700} mb={4}>
             Create account
           </Heading>
@@ -96,7 +114,28 @@ function SignUp() {
             </ErrorText>
           </Root>
 
-          {/* 3. Password Input */}
+          {/* 3. Phone Input */}
+          <Root invalid={!!errors.phone}>
+            <Label htmlFor="phone">
+              Phone Number <RequiredIndicator>*</RequiredIndicator>
+            </Label>
+            <Input
+              id="phone"
+              {...register("phone", {
+                required: "Your Phone Number is required.",
+                pattern: {
+                  value: /^\+[1-9]\d{1,14}$/,
+                  message: "Invalid Phone Number Syntax",
+                },
+              })}
+            />
+            <ErrorText>
+              <ErrorIcon size="sm" />
+              {errors.phone && errors.phone.message}
+            </ErrorText>
+          </Root>
+
+          {/* 4. Password Input */}
           <Root invalid={!!errors.password}>
             <Label htmlFor="password">
               Password <RequiredIndicator>*</RequiredIndicator>
@@ -117,7 +156,7 @@ function SignUp() {
             />
             {/* Custom help text below password field */}
             {!errors.password ? (
-              <HelperText>Passwords must be at least 6 characters.</HelperText>
+              <HelperText>Passwords must be at least 8 characters.</HelperText>
             ) : (
               <ErrorText>
                 <ErrorIcon size="sm" />
@@ -131,9 +170,8 @@ function SignUp() {
             <Label htmlFor="reEnterPassword">
               Re-enter password <RequiredIndicator>*</RequiredIndicator>
             </Label>
-            <Input
+            <PasswordInput
               id="reEnterPassword"
-              type="password"
               {...register("reEnterPassword", {
                 required: "Please re-enter your password.",
                 validate: (value) =>
@@ -155,7 +193,7 @@ function SignUp() {
             className="main-button"
             width="full"
             mt={4}
-            py={2} // Padding to match the look
+            py={2}
           >
             Sign Up
           </Button>
