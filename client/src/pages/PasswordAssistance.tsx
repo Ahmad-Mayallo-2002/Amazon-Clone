@@ -78,7 +78,7 @@ function PasswordAssistance() {
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
-                    value: /^\S+@\S+$/i,
+                    value: /^[A-Za-z0-9][A-Za-z0-9._%+-]*@gmail\.com$/,
                     message: "Invalid email address",
                   },
                 })}

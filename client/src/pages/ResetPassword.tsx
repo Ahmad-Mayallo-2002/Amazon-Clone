@@ -26,7 +26,7 @@ function ResetPassword() {
     formState: { errors, isSubmitting },
   } = useForm<IResetPassword>();
 
-  const password = watch("password"); // watch password for confirm validation
+  const password = watch("password");
 
   const onSubmit = (data: IResetPassword) => {
     console.log("Reset password:", data.password);

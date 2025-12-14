@@ -1,3 +1,171 @@
-export default function Login() {
-  return <div>Login</div>;
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  Input,
+  Link,
+  Text,
+  VStack,
+  Field,
+  Separator,
+} from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+
+interface SignInFormInputs {
+  email: string;
+  password: string;
 }
+
+function Login() {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInFormInputs>();
+  const { ErrorIcon, ErrorText, Label, Root, RequiredIndicator } = Field;
+  const onSubmit = async (data: SignInFormInputs) => {
+    console.log("Attempting Sign In with:", data);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <Center minH="100vh" bg="#fff" py={24}>
+      <Box
+        p={8}
+        maxWidth="350px" // Slightly smaller box for Sign In form
+        borderWidth={1}
+        borderRadius={8}
+        boxShadow="lg"
+        bg="white"
+      >
+        <VStack gap={4} as="form" onSubmit={handleSubmit(onSubmit)}>
+          <Heading as="h1" size="2xl" mb={2} fontWeight={700}>
+            Sign in
+          </Heading>
+
+          {/* 1. Email or Mobile Phone Number Input */}
+          <Root invalid={!!errors.email}>
+            <Label htmlFor="email">
+              Email
+              <RequiredIndicator />
+            </Label>
+            <Input
+              id="email"
+              {...register("email", {
+                required: "Enter your email",
+                pattern: {
+                  value: /^[A-Za-z0-9][A-Za-z0-9._%+-]*@gmail\.com$/,
+                  message: 'Invalid Email Syntax'
+                },
+              })}
+            />
+            {errors.email && (
+              <ErrorText>
+                <ErrorIcon size="sm" />
+                {errors.email.message}
+              </ErrorText>
+            )}
+          </Root>
+
+          {/* 2. Password Input with Forgot Password Link */}
+          <Root invalid={!!errors.password} mt={4}>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Label htmlFor="password" mb={1}>
+                Password
+                <RequiredIndicator />
+              </Label>
+            </Box>
+            <Input
+              id="password"
+              type="password"
+              {...register("password", {
+                required: "Enter your password.",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Password must not exceed 20 characters",
+                },
+              })}
+            />
+            {errors.password && (
+              <ErrorText>
+                <ErrorIcon size="sm" />
+                {errors.password.message}
+              </ErrorText>
+            )}
+          </Root>
+
+          {/* Sign In Button */}
+          <Button
+            type="submit"
+            loading={isSubmitting}
+            className="main-button"
+            width="full"
+            mt={4}
+          >
+            Sign in
+          </Button>
+
+          <Link fontSize="xs" color="blue.500" href="/password-assistance">
+            Forgot password?
+          </Link>
+
+          {/* Terms and Privacy Text */}
+          <Text fontSize="xs" color="gray.600" textAlign="left" pt={1}>
+            By continuing, you agree to Amazon's{" "}
+            <Link color="blue.500" href="#">
+              Conditions of Use
+            </Link>{" "}
+            and{" "}
+            <Link color="blue.500" href="#">
+              Privacy Notice
+            </Link>
+            .
+          </Text>
+
+          {/* Need help Link */}
+          <Link
+            fontSize="sm"
+            color="blue.500"
+            href="#"
+            alignSelf="flex-start"
+            pt={2}
+          >
+            Need help?
+          </Link>
+        </VStack>
+
+        {/* Divider and Create Account Button */}
+        <Box pt={8} mt={6}>
+          <Separator mb={4} />
+          <Text fontSize="sm" color="gray.600" textAlign="center" mb={2}>
+            New to Amazon?
+          </Text>
+          <Button
+            variant="outline"
+            colorScheme="gray"
+            width="full"
+            onClick={() => console.log("Navigate to Sign Up page")}
+          >
+            Create your Amazon account
+          </Button>
+        </Box>
+      </Box>
+    </Center>
+  );
+}
+
+export default Login;
