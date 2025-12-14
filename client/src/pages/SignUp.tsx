@@ -1,3 +1,4 @@
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   Box,
   Button,
@@ -42,14 +43,14 @@ function SignUp() {
   };
 
   return (
-    <Center minH="100vh" py={24} bg="#fff">
+    <Center minH="100vh" py={24}>
       <Box
         p={8}
-        maxWidth="450px" // Adjusted to match typical form width
+        maxWidth="350px" // Adjusted to match typical form width
         borderWidth={1}
         borderRadius={8}
         boxShadow="lg"
-        bg="white"
+        bg="#fff"
       >
         <VStack gap={6} as="form" onSubmit={handleSubmit(onSubmit)}>
           <Heading as="h1" size="2xl" fontWeight={700} mb={4}>
@@ -100,9 +101,8 @@ function SignUp() {
             <Label htmlFor="password">
               Password <RequiredIndicator>*</RequiredIndicator>
             </Label>
-            <Input
+            <PasswordInput
               id="password"
-              type="password"
               {...register("password", {
                 required: "Password is required.",
                 minLength: {
@@ -173,12 +173,12 @@ function SignUp() {
             .
           </Text>
 
-          {/* Sign In Link */}
+          {/* Login Link */}
           <Box pt={4} width="full" borderTop="1px solid" borderColor="gray.200">
             <Text fontSize="sm" textAlign="left">
               Already have an account?{" "}
-              <Link color="blue.500" href="#">
-                Sign in
+              <Link color="blue.500" href="/auth/login">
+                Login
               </Link>
             </Text>
 

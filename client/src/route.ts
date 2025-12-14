@@ -15,6 +15,7 @@ import SignUp from "./pages/SignUp";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import PasswordAssistance from "./pages/PasswordAssistance";
+import AuthCenter from "./pages/AuthCenter";
 
 const routerObject: RouteObject[] = [
   {
@@ -36,6 +37,17 @@ const routerObject: RouteObject[] = [
       { path: "reset-password", Component: ResetPassword },
       { path: "password-assistance", Component: PasswordAssistance },
       { path: "*", Component: NotFound },
+    ],
+  },
+  {
+    path: "/auth",
+    Component: AuthCenter,
+    children: [
+      { path: "login", Component: Login },
+      { path: "sign-up", Component: SignUp },
+      { path: "verify-email", Component: VerifyEmail },
+      { path: "reset-password", Component: ResetPassword },
+      { path: "password-assistance", Component: PasswordAssistance },
     ],
   },
 ];

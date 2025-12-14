@@ -41,7 +41,7 @@ function PasswordAssistance() {
     <Center minH="100vh" px={6} py={24} bgColor="#fff">
       <Box
         p={8}
-        maxWidth="md"
+        maxWidth="350px"
         w="full"
         borderWidth={1}
         borderRadius="lg"

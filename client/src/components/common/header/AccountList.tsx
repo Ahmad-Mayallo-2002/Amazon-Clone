@@ -45,7 +45,7 @@ export default function AccountList() {
                 <Arrow />
                 <Body p={4}>
                   <Button asChild className="main-button" w="full">
-                    <Link href="/sign-up">Sign in</Link>
+                    <Link href="auth/sign-up">Sign in</Link>
                   </Button>
                   <Text mt={3} textAlign="center" fontSize="xs">
                     New Customer ?{" "}

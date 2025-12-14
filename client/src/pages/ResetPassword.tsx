@@ -35,9 +35,9 @@ function ResetPassword() {
   const { Root, Label, RequiredIndicator, ErrorIcon, ErrorText } = Field;
 
   return (
-    <Center px={6} py={24} minH="100vh" bg="gray.50">
+    <Center px={6} py={24} minH="100vh">
       <VStack gap={6} w="100%">
-        <Box bg="white" p={8} rounded="md" shadow="md" w="100%" maxW="420px">
+        <Box p={8} rounded="md" shadow="md" w="100%" maxW="350px" bg="#fff">
           <VStack gap={6}>
             {/* Icon */}
             <Center bg="yellow.400" rounded="full" boxSize={12}>

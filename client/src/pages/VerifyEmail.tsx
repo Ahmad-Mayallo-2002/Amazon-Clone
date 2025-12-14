@@ -17,7 +17,6 @@ function VerifyEmail() {
 
   const handleVerify = () => {
     console.log("OTP:", otp);
-    // call verify API
   };
 
   const handleResend = () => {
@@ -27,14 +26,14 @@ function VerifyEmail() {
   const { Root, HiddenInput, Control, Input } = PinInput;
 
   return (
-    <Center minH="100vh" px={6} py={24} bg="gray.50">
+    <Center minH="100vh" px={6} py={24}>
       <Box
         bg="white"
         p={8}
         rounded="md"
         shadow="md"
         w="100%"
-        maxW="420px"
+        maxW="350px"
         textAlign="center"
       >
         <VStack gap={6}>
@@ -87,7 +86,7 @@ function VerifyEmail() {
           {/* Back */}
           <Link
             fontSize="sm"
-            href="/login"
+            href="/auth/login"
             color="blue.500"
             _hover={{ color: "blue.600" }}
           >

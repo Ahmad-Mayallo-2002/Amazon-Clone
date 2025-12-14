@@ -1,3 +1,4 @@
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   Box,
   Button,
@@ -35,7 +36,7 @@ function Login() {
   };
 
   return (
-    <Center minH="100vh" bg="#fff" py={24}>
+    <Center minH="100vh" py={24}>
       <Box
         p={8}
         maxWidth="350px" // Slightly smaller box for Sign In form
@@ -46,7 +47,7 @@ function Login() {
       >
         <VStack gap={4} as="form" onSubmit={handleSubmit(onSubmit)}>
           <Heading as="h1" size="2xl" mb={2} fontWeight={700}>
-            Sign in
+            Login
           </Heading>
 
           {/* 1. Email or Mobile Phone Number Input */}
@@ -61,7 +62,7 @@ function Login() {
                 required: "Enter your email",
                 pattern: {
                   value: /^[A-Za-z0-9][A-Za-z0-9._%+-]*@gmail\.com$/,
-                  message: 'Invalid Email Syntax'
+                  message: "Invalid Email Syntax",
                 },
               })}
             />
@@ -85,9 +86,8 @@ function Login() {
                 <RequiredIndicator />
               </Label>
             </Box>
-            <Input
+            <PasswordInput
               id="password"
-              type="password"
               {...register("password", {
                 required: "Enter your password.",
                 minLength: {
@@ -154,13 +154,8 @@ function Login() {
           <Text fontSize="sm" color="gray.600" textAlign="center" mb={2}>
             New to Amazon?
           </Text>
-          <Button
-            variant="outline"
-            colorScheme="gray"
-            width="full"
-            onClick={() => console.log("Navigate to Sign Up page")}
-          >
-            Create your Amazon account
+          <Button variant="outline" colorPalette="gray" w="full" asChild>
+            <Link href="/auth/sign-up">Create your Amazon account</Link>
           </Button>
         </Box>
       </Box>
