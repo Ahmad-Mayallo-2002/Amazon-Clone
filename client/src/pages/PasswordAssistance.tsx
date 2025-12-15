@@ -12,11 +12,14 @@ import {
 } from "@chakra-ui/react";
 import { FiLock } from "react-icons/fi";
 import { useForm } from "react-hook-form";
+import { usePost } from "@/hooks/usePost";
+import type { Response } from "@/interfaces/responses";
+import { useNavigate } from "react-router-dom";
 
 // Define the shape of the form data
-type FormInputs = {
+interface EmailRequest {
   email: string;
-};
+}
 
 function PasswordAssistance() {
   // Hooks for form management
@@ -24,18 +27,24 @@ function PasswordAssistance() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormInputs>();
+  } = useForm<EmailRequest>();
 
   const { ErrorIcon, ErrorText, Label, Root, RequiredIndicator } = Field;
+  const navigate = useNavigate();
+  const passwordAssistanceMutation = usePost<
+    EmailRequest,
+    Response<{ email: string }>
+  >({
+    url: "forgot-password",
+    onSuccess: (data) => {
+      console.log(data);
+      navigate("/auth/verify-email");
+    },
+    onError: (error) => console.log(error),
+  });
 
-  const onSubmit = async (data: FormInputs) => {
-    console.log("Attempting password reset for:", data.email);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const onSubmit = async (data: EmailRequest) =>
+    passwordAssistanceMutation.mutate(data);
 
   return (
     <Center minH="100vh" px={6} py={12} bgColor="#fff">

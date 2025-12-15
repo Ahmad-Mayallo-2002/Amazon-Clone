@@ -1,3 +1,5 @@
+import { usePost } from "@/hooks/usePost";
+import type { Response } from "@/interfaces/responses";
 import {
   Box,
   Button,
@@ -11,17 +13,26 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { MdOutlineMailOutline } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+
+interface CodeRequest {
+  code: string;
+}
 
 function VerifyEmail() {
   const [otp, setOtp] = useState("");
+  const navigate = useNavigate();
+  const codeRequest = usePost<CodeRequest, Response<string>>({
+    url: "verify-code",
+    onSuccess: (data) => {
+      console.log(data);
+      navigate("/auth/reset-password");
+    },
+    onError: (error) => console.log(error),
+  });
 
-  const handleVerify = () => {
-    console.log("OTP:", otp);
-  };
-
-  const handleResend = () => {
-    console.log("Resend OTP");
-  };
+  const handleVerify = () => codeRequest.mutate({ code: otp });
+  const handleResend = () => console.log("Resend OTP");
 
   const { Root, HiddenInput, Control, Input } = PinInput;
 

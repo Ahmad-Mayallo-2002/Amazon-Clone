@@ -103,8 +103,8 @@ function SignUp() {
               {...register("email", {
                 required: "Email is required.",
                 pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address.",
+                  value: /^[A-Za-z0-9][A-Za-z0-9._%+-]*@gmail\.com$/i,
+                  message: "Invalid email syntax.",
                 },
               })}
             />

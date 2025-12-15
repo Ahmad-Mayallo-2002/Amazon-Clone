@@ -1,4 +1,6 @@
 import { PasswordInput } from "@/components/ui/password-input";
+import { usePatch } from "@/hooks/usePatch";
+import type { Response } from "@/interfaces/responses";
 import {
   Box,
   Button,
@@ -12,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FaLock } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 interface IResetPassword {
   password: string;
@@ -25,12 +28,18 @@ function ResetPassword() {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<IResetPassword>();
-
+  const navigate = useNavigate();
   const password = watch("password");
+  const resetPasswordMutation = usePatch<IResetPassword, Response<string>>({
+    url: "reset-password",
+    onSuccess: (data) => {
+      console.log(data);
+      navigate("/auth/login");
+    },
+    onError: (error) => console.log(error),
+  });
 
-  const onSubmit = (data: IResetPassword) => {
-    console.log("Reset password:", data.password);
-  };
+  const onSubmit = (data: IResetPassword) => resetPasswordMutation.mutate(data);
 
   const { Root, Label, RequiredIndicator, ErrorIcon, ErrorText } = Field;
 

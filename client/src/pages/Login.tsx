@@ -1,4 +1,7 @@
 import { PasswordInput } from "@/components/ui/password-input";
+import { usePost } from "@/hooks/usePost";
+import type { ILogin } from "@/interfaces/login";
+import type { Response } from "@/interfaces/responses";
 import {
   Box,
   Button,
@@ -13,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
-interface SignInFormInputs {
+interface SignInRequest {
   email: string;
   password: string;
 }
@@ -23,13 +26,19 @@ function Login() {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<SignInFormInputs>();
+  } = useForm<SignInRequest>();
   const { ErrorIcon, ErrorText, Label, Root, RequiredIndicator } = Field;
-  const onSubmit = async (data: SignInFormInputs) => {
-    console.log("Attempting Sign In with:", data);
+  const loginMutation = usePost<SignInRequest, Response<ILogin>>({
+    url: "login",
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => console.log(error),
+  });
 
+  const onSubmit = async (data: SignInRequest) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      loginMutation.mutate(data);
     } catch (error) {
       console.log(error);
     }
