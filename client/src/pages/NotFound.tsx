@@ -2,9 +2,9 @@ import { Center, Box, Heading, Link } from "@chakra-ui/react";
 
 export default function NotFound() {
   return (
-    <Center h={400}>
+    <Center h="100vh">
       <Box textAlign="center">
-        <Heading fontWeight={700} fontSize="3xl" mb={4}>
+        <Heading fontWeight={800} fontSize="4xl" mb={4}>
           404 Page not Found
         </Heading>
         <Link href="/" color="blue.500" _hover={{ textDecor: "underline" }}>
