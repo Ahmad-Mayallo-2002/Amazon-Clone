@@ -8,20 +8,20 @@ const Home = lazy(() => import("./Home"));
 const About = lazy(() => import("./About"));
 const Help = lazy(() => import("./Help"));
 const ProtectedRoute = lazy(() => import("./ProtectedRoute"));
-const Cart = lazy(() => import("./Cart"));
-const Wish = lazy(() => import("./Wish"));
+const Cart = lazy(() => import("./user/Cart"));
+const Wish = lazy(() => import("./user/Wish"));
 const Shop = lazy(() => import("./Shop"));
 const SingleProduct = lazy(() => import("./SingleProduct"));
 const Orders = lazy(() => import("./Orders"));
 const SingleOrder = lazy(() => import("./SingleOrder"));
-const Profile = lazy(() => import("./Profile"));
-const Login = lazy(() => import("./Login"));
-const SignUp = lazy(() => import("./SignUp"));
-const VerifyEmail = lazy(() => import("./VerifyEmail"));
-const ResetPassword = lazy(() => import("./ResetPassword"));
-const PasswordAssistance = lazy(() => import("./PasswordAssistance"));
+const Profile = lazy(() => import("./user/Profile"));
+const Login = lazy(() => import("./auth/Login"));
+const SignUp = lazy(() => import("./auth/SignUp"));
+const VerifyEmail = lazy(() => import("./auth/VerifyEmail"));
+const ResetPassword = lazy(() => import("./auth/ResetPassword"));
+const PasswordAssistance = lazy(() => import("./auth/PasswordAssistance"));
 const NotFound = lazy(() => import("./NotFound"));
-const AuthCenter = lazy(() => import("./AuthCenter"));
+const AuthCenter = lazy(() => import("./auth/AuthCenter"));
 
 export default function AppRouter() {
   return (
@@ -45,15 +45,6 @@ export default function AppRouter() {
 
           <Route path="shop" element={<Shop />} />
           <Route path="product/:id" element={<SingleProduct />} />
-
-          {/* Auth pages */}
-          <Route path="login" element={<Login />} />
-          <Route path="sign-up" element={<SignUp />} />
-          <Route path="verify-email" element={<VerifyEmail />} />
-          <Route path="reset-password" element={<ResetPassword />} />
-          <Route path="password-assistance" element={<PasswordAssistance />} />
-
-          <Route path="*" element={<NotFound />} />
         </Route>
 
         {/* Auth center */}
@@ -64,6 +55,8 @@ export default function AppRouter() {
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="password-assistance" element={<PasswordAssistance />} />
         </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

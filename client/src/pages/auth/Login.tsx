@@ -2,6 +2,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { usePost } from "@/hooks/usePost";
 import type { ILogin } from "@/interfaces/login";
 import type { Response } from "@/interfaces/responses";
+import { setPayload } from "@/utils/payloadCookie";
 import {
   Box,
   Button,
@@ -15,6 +16,7 @@ import {
   Separator,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 interface SignInRequest {
   email: string;
@@ -28,10 +30,13 @@ function Login() {
     formState: { errors, isSubmitting },
   } = useForm<SignInRequest>();
   const { ErrorIcon, ErrorText, Label, Root, RequiredIndicator } = Field;
+  const navigate = useNavigate();
   const loginMutation = usePost<SignInRequest, Response<ILogin>>({
     url: "login",
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: async (data) => {
+      const payload = data.data;
+      setPayload(payload);
+      navigate("/");
     },
     onError: (error) => console.log(error),
   });

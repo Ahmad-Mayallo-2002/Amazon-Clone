@@ -1,3 +1,6 @@
+import { Roles } from "@/enums/roles";
+import type { ILogin } from "@/interfaces/login";
+
 export const mainApiEndPoint: string = "http://localhost:3000/api/";
 
 export const sortBy = [
@@ -9,3 +12,9 @@ export const sortBy = [
   { label: "Newest", value: "ASC-created-new", key: "created_at" },
   { label: "Oldest", value: "DESC-created-old", key: "created_at" },
 ];
+
+export let payload: ILogin = {
+  id: "",
+  token: "",
+  role: Roles.USER,
+};
