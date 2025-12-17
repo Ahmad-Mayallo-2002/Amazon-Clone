@@ -39,7 +39,7 @@ export default function Header() {
                   </Link>
                   <Link
                     color="#fff"
-                    href="/profile"
+                    href="/user-dashboard"
                     _hover={{ textDecor: "underline" }}
                     fontWeight={700}
                   >

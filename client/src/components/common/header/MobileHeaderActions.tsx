@@ -89,7 +89,7 @@ export default function MobileHeaderActions() {
                 </SimpleGrid>
                 <Separator my={3} w="calc(100% + 32px)" ms={-4} />
                 <Link
-                  href="/orders"
+                  href="/user-dashboard/orders"
                   _hover={{
                     color: "orange",
                     textDecor: "underline",

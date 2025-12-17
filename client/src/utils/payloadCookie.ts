@@ -7,18 +7,18 @@ interface PayloadCookie {
   role: Roles;
 }
 
-const cookie = new Cookies();
+const cookies = new Cookies();
 
 export const getPayload = (): PayloadCookie | null => {
-  return cookie.get("payload");
+  return cookies.get("payload");
 };
 
 export const setPayload = (payload: PayloadCookie | null): void => {
-  cookie.set("payload", payload, {
-    path: "http://localhost:5173",
+  cookies.set("payload", payload, {
+    path: "/",
   });
 };
 
 export const removeCookie = (cookieName: string): void => {
-  cookie.remove(cookieName);
+  cookies.remove(cookieName);
 };

@@ -1,12 +1,13 @@
 import { mainApiEndPoint } from "@/assets/assets";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { type AxiosRequestConfig } from "axios";
 
 interface FetchOptions<T> {
   queryKey: any[];
   url: string;
   enabled?: boolean;
   select?: (data: T) => any;
+  config?: AxiosRequestConfig<any> | undefined;
 }
 
 export function useFetch<T>({
@@ -14,11 +15,12 @@ export function useFetch<T>({
   url,
   enabled = true,
   select,
+  config = {},
 }: FetchOptions<T>): UseQueryResult<T> {
   return useQuery<T>({
     queryKey,
     queryFn: async () => {
-      const response = await axios.get<T>(mainApiEndPoint + url);
+      const response = await axios.get<T>(mainApiEndPoint + url, config);
       return response.data;
     },
     enabled,

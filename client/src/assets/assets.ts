@@ -1,5 +1,8 @@
 import { Roles } from "@/enums/roles";
 import type { ILogin } from "@/interfaces/login";
+import { FiHeart, FiShoppingBag, FiShoppingCart, FiUser } from "react-icons/fi";
+import type { NavItem } from "./data/navItems";
+import type { IconType } from "react-icons";
 
 export const mainApiEndPoint: string = "http://localhost:3000/api/";
 
@@ -18,3 +21,14 @@ export let payload: ILogin = {
   token: "",
   role: Roles.USER,
 };
+
+interface DashboardLinks extends NavItem {
+  icon: IconType;
+}
+
+export const userDashboardLinks: DashboardLinks[] = [
+  { label: "Profile", href: "/user-dashboard", icon: FiUser },
+  { label: "Wish", href: "/user-dashboard/wish", icon: FiHeart },
+  { label: "Cart", href: "/user-dashboard/cart", icon: FiShoppingCart },
+  { label: "Orders", href: "/user-dashboard/orders", icon: FiShoppingBag },
+];

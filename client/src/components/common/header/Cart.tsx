@@ -8,7 +8,7 @@ export default function Cart() {
     <div className="cart">
       <Link
         pos="relative"
-        href="/cart"
+        href="/user-dashboard/cart"
         justifyContent="center"
         alignItems="center"
       >

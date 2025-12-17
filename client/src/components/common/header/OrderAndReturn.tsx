@@ -3,7 +3,7 @@ import { Box, Heading, Link, Text } from "@chakra-ui/react";
 export default function OrderAndReturn() {
   return (
     <Box className="orders">
-      <Link href="/orders" flexDir="column" alignItems="start">
+      <Link href="/user-dashboard/orders" flexDir="column" alignItems="start">
         <Text as="small" color="#fff">
           Returns
         </Text>

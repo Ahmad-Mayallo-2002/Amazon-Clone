@@ -8,13 +8,10 @@ const Home = lazy(() => import("./Home"));
 const About = lazy(() => import("./About"));
 const Help = lazy(() => import("./Help"));
 const ProtectedRoute = lazy(() => import("./ProtectedRoute"));
-const Cart = lazy(() => import("./user/Cart"));
-const Wish = lazy(() => import("./user/Wish"));
 const Shop = lazy(() => import("./Shop"));
 const SingleProduct = lazy(() => import("./SingleProduct"));
-const Orders = lazy(() => import("./Orders"));
-const SingleOrder = lazy(() => import("./SingleOrder"));
-const Profile = lazy(() => import("./user/Profile"));
+
+// Auth
 const Login = lazy(() => import("./auth/Login"));
 const SignUp = lazy(() => import("./auth/SignUp"));
 const VerifyEmail = lazy(() => import("./auth/VerifyEmail"));
@@ -22,6 +19,13 @@ const ResetPassword = lazy(() => import("./auth/ResetPassword"));
 const PasswordAssistance = lazy(() => import("./auth/PasswordAssistance"));
 const NotFound = lazy(() => import("./NotFound"));
 const AuthCenter = lazy(() => import("./auth/AuthCenter"));
+
+// User Dashboard
+const UserDashboard = lazy(() => import("./user/UserDashboard"));
+const UserCart = lazy(() => import("./user/UserCart"));
+const UserWish = lazy(() => import("./user/UserWish"));
+const UserProfile = lazy(() => import("./user/UserProfile"));
+const UserOrders = lazy(() => import("./user/UserOrders"));
 
 export default function AppRouter() {
   return (
@@ -35,17 +39,18 @@ export default function AppRouter() {
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute currentRole={Roles.USER} />}>
-            <Route path="cart" element={<Cart />} />
-            <Route path="wish" element={<Wish />} />
-            <Route path="profile" element={<Profile />} />
+            {/* User Dashboard */}
+            <Route path="user-dashboard" element={<UserDashboard />}>
+              <Route index element={<UserProfile />} />
+              <Route path="wish" element={<UserWish />} />
+              <Route path="cart" element={<UserCart />} />
+              <Route path="orders" element={<UserOrders />} />
+            </Route>
           </Route>
-
-          <Route path="orders" element={<Orders />} />
-          <Route path="order/:id" element={<SingleOrder />} />
-
-          <Route path="shop" element={<Shop />} />
-          <Route path="product/:id" element={<SingleProduct />} />
         </Route>
+
+        <Route path="shop" element={<Shop />} />
+        <Route path="product/:id" element={<SingleProduct />} />
 
         {/* Auth center */}
         <Route path="/auth" element={<AuthCenter />}>
