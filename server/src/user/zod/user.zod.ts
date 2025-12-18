@@ -11,7 +11,13 @@ export const UserSchema = object({
   phone: string().regex(/^\+[1-9]\d{1,14}$/),
 });
 
-const updateUser = UserSchema.partial();
+export const UpdateUserSchema = UserSchema.partial().refine(
+  (data) => Object.keys(data).length > 0,
+  {
+    message: "At least one field must be provided",
+    path: ['body']
+  }
+);
 
 export type CreateUser = zInfer<typeof UserSchema>;
-export type UpdateUser = zInfer<typeof updateUser>;
+export type UpdateUser = zInfer<typeof UpdateUserSchema>;

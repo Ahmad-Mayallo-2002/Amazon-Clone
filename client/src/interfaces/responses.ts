@@ -1,9 +1,7 @@
-import type { ErrorReason } from "@/types/errorReason";
-
 export interface ErrorMessage {
   status: number;
   message: string;
-  error: ErrorReason;
+  error: any;
 }
 
 export interface CustomError extends Error {

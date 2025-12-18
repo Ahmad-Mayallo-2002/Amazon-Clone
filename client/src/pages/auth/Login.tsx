@@ -125,7 +125,7 @@ function Login() {
           <Button
             type="submit"
             loading={isSubmitting}
-            className="main-button"
+            colorPalette="yellow"
             width="full"
             mt={4}
           >

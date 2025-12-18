@@ -119,7 +119,7 @@ function ResetPassword() {
                 mt={6}
                 type="submit"
                 loading={isSubmitting}
-                className="main-button"
+                colorPalette="yellow"
               >
                 Reset password
               </Button>

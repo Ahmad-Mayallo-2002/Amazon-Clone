@@ -7,7 +7,6 @@ import { useLocation } from "react-router-dom";
 export default function UserSidebar() {
   const { pathname } = useLocation();
   const handleLogout = () => removeCookie("payload");
-  console.log(pathname);
 
   return (
     <>
@@ -32,13 +31,14 @@ export default function UserSidebar() {
                 bgColor={pathname === link.href ? "orange" : "transparent"}
                 rounded={6}
                 display="flex"
-                p="8px 16px"
+                justifyContent={{ base: "center", lg: "start" }}
+                p={2}
                 color={pathname === link.href ? "#fff" : "initial"}
                 _hover={{ color: "#fff", bgColor: "orange" }}
                 href={link.href}
                 transition="background 300ms ease, color 300ms ease"
               >
-                <Icon size="lg" as={link.icon} me={1.5} />
+                <Icon size="lg" as={link.icon} me={{ base: 0, lg: 1.5 }} />
                 <Span display={{ base: "none", lg: "inline" }}>
                   {link.label}
                 </Span>

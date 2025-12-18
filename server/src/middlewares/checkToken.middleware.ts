@@ -22,42 +22,53 @@ export const checkToken = async (
   _res: Response,
   next: NextFunction
 ) => {
-  const token: string | undefined = req.headers.authorization?.split(" ")[1];
-  const tokenId: string | undefined = (req.user as any).tokenId;
+  try {
+    const authHeader = req.headers.authorization;
+    const googleToken = req.headers["x-google-token"] as string | undefined;
 
-  if (!token && !tokenId)
-    throw new AppError("Token is not found", UNAUTHORIZED, UNAUTHORIZED_REASON);
+    if (!authHeader && !googleToken)
+      throw new AppError(
+        "Token is not found",
+        UNAUTHORIZED,
+        UNAUTHORIZED_REASON
+      );
 
-  if (token)
-    verify(token, jwt, (error, user) => {
-      if (error)
-        throw new AppError(
-          "Invalid or expired token",
-          FORBIDDEN,
-          FORBIDDEN_REASON
-        );
-      (req as any).user = user;
-      next();
-    });
-
-  if (tokenId) {
-    try {
-      const ticket = await client.verifyIdToken({
-        idToken: tokenId,
-        audience: GOOGLE_CLIENT_ID,
+    if (authHeader) {
+      const token = authHeader.split(" ")[1];
+      verify(token, jwt, (error, user) => {
+        if (error) {
+          throw new AppError(
+            "Invalid or expired token",
+            FORBIDDEN,
+            FORBIDDEN_REASON
+          );
+        }
+        (req as any).user = user;
+        next();
       });
-      const payload = ticket.getPayload();
-      req.user = payload;
-      (req.user as any).token = tokenId;
-      next();
-    } catch (err) {
-      return next(
-        new AppError(
-          "Invalid or expired token.",
+      return;
+    }
+
+    if (googleToken) {
+      try {
+        const ticket = await client.verifyIdToken({
+          idToken: googleToken,
+          audience: GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        req.user = payload;
+        (req.user as any).provider = "google";
+        next();
+      } catch (error) {
+        throw new AppError(
+          "Invalid or expired Google token",
           UNAUTHORIZED,
           UNAUTHORIZED_REASON
-        )
-      );
+        );
+      }
     }
+  } catch (error) {
+    console.log(error);
   }
 };

@@ -190,7 +190,7 @@ function SignUp() {
           <Button
             type="submit"
             loading={isSubmitting}
-            className="main-button"
+            colorPalette="yellow"
             width="full"
             mt={4}
             py={2}

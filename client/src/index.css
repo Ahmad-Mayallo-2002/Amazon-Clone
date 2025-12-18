@@ -72,3 +72,16 @@ a:hover {
   align-items: center;
   justify-content: center;
 }
+
+.dashboard-heading {
+  margin-bottom: 1rem;
+  font-weight: 700;
+  font-size: 1.875rem;
+  text-align: center;
+}
+
+@media (min-width: 48rem) {
+  .dashboard-heading {
+    text-align: start;
+  }
+}

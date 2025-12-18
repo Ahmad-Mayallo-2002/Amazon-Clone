@@ -65,7 +65,7 @@ export class AuthService {
       relations: ["vendor"],
     });
     if (!user)
-      throw new AppError("User not found", NOT_FOUND, NOT_FOUND_REASON);
+      throw new AppError("Invalid Email", NOT_FOUND, NOT_FOUND_REASON);
     const isPasswordValid = await compare(data.password, user.password);
     if (!isPasswordValid)
       throw new AppError("Invalid password", BAD_REQUEST, BAD_REQUEST_REASON);

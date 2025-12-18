@@ -102,7 +102,7 @@ function PasswordAssistance() {
 
               {/* Continue Button */}
               <Button
-                className="main-button"
+                colorPalette="yellow"
                 loading={isSubmitting}
                 type="submit"
                 w="full"
@@ -126,24 +126,11 @@ function PasswordAssistance() {
             </Text>
           </Box>
 
-          {/* Security Notice Alert */}
-          {/* <Alert status="info" borderRadius="md" py={3} colorScheme="blue">
-            <AlertIcon />
-            <Box fontSize="sm">
-              <Text fontWeight="semibold">Security notice:</Text>
-              <Text>
-                We will never ask you for your password via email or phone. If
-                you receive a suspicious message, please report it to our
-                security team.
-              </Text>
-            </Box>
-          </Alert> */}
-
           {/* Back to Sign In Link */}
           <Center pt={2}>
             <Link
               color="blue.500"
-              href="/login" // Replace with your sign-in route
+              href="/auth/login"
               fontSize="sm"
               _hover={{ color: "blue.600" }}
             >

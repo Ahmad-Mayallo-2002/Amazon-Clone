@@ -80,7 +80,7 @@ function VerifyEmail() {
 
           {/* Verify Button */}
           <Button
-            className="main-button"
+            colorPalette="yellow"
             w="100%"
             onClick={handleVerify}
             disabled={otp.length !== 6}

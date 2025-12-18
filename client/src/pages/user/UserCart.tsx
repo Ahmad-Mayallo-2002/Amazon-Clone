@@ -16,21 +16,18 @@ export default function UserCart() {
     },
   });
 
-  if (isLoading)
+  if (!data) {
     return (
       <Center h="400px">
-        <MainSpinner w="100px" h="100px" />;
+        {isLoading && <MainSpinner w="100px" h="100px" />}
+        {error && (
+          <Heading fontSize="3xl" fontWeight={700}>
+            {(error as CustomError).response.data.message}
+          </Heading>
+        )}
       </Center>
     );
-
-  if (error)
-    return (
-      <Center h="400px">
-        <Heading fontSize="3xl" fontWeight={700}>
-          {(error as CustomError).response.data.message}
-        </Heading>
-      </Center>
-    );
+  }
 
   return <div>Cart</div>;
 }
