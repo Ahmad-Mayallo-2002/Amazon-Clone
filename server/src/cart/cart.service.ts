@@ -25,7 +25,7 @@ export class CartService {
     if (!counts)
       throw new AppError("No carts found", NOT_FOUND, NOT_FOUND_REASON);
     const pagination = calculatePagination(counts, skip, take);
-    return {data: carts, pagination};
+    return { data: carts, pagination };
   }
 
   async getById(id: string): Promise<Cart> {
@@ -74,7 +74,7 @@ export class CartService {
       cart = this.cartRepo.create({ userId, user: { id: userId } });
       await this.cartRepo.save(cart);
     }
-    const discount: number = 1 - product.discount / 100;
+    const discount: number = 1 - product.discount;
     // Calculate the price at payment of product
     const price: number = product.price * discount * amount;
     // Check if cart item is exist or not
@@ -89,9 +89,9 @@ export class CartService {
       // Update amount and price at payment
       currentItem.amount += amount;
       // Update price at payment of cart item
-      currentItem.priceAtPayment += price;
+      currentItem.priceAtPayment = +currentItem.priceAtPayment + price;
       // Update total price of cart
-      cart.totalPrice += price;
+      cart.totalPrice = +cart.totalPrice + price;
       // Save all of these
       await this.cartRepo.save(cart);
       await this.cartItemRepo.save(currentItem);
@@ -110,7 +110,7 @@ export class CartService {
       // Save new cart item
       await this.cartItemRepo.save(newItem);
       // Update cart total price and save it
-      cart.totalPrice += newItem.priceAtPayment;
+      cart.totalPrice = +cart.totalPrice + newItem.priceAtPayment;
       await this.cartRepo.save(cart);
     }
     return "Product added to cart successfully";

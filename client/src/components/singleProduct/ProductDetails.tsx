@@ -13,6 +13,7 @@ import {
 import { FaCheckCircle } from "react-icons/fa";
 
 export default function ProductDetails({ product }: { product: Product }) {
+  const discountedPrice: number = +((1 - product.discount) * product.price).toFixed(2);
   return (
     <div className="panel">
       {/* Header */}
@@ -45,7 +46,7 @@ export default function ProductDetails({ product }: { product: Product }) {
           Price:{" "}
         </Span>
         <Span color="orange.700" fontSize="3xl" fontWeight={500}>
-          ${product.price}
+          ${discountedPrice}
         </Span>
       </p>
       {product.discount > 0 && (

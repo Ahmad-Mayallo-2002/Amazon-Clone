@@ -37,6 +37,9 @@ export default function AppRouter() {
           <Route path="about" element={<About />} />
           <Route path="help" element={<Help />} />
 
+          <Route path="shop" element={<Shop />} />
+          <Route path="product/:id" element={<SingleProduct />} />
+
           {/* Protected routes */}
           <Route element={<ProtectedRoute currentRole={Roles.USER} />}>
             {/* User Dashboard */}
@@ -48,9 +51,6 @@ export default function AppRouter() {
             </Route>
           </Route>
         </Route>
-
-        <Route path="shop" element={<Shop />} />
-        <Route path="product/:id" element={<SingleProduct />} />
 
         {/* Auth center */}
         <Route path="/auth" element={<AuthCenter />}>

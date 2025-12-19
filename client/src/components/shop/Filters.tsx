@@ -16,7 +16,7 @@ import SkeletonCategoryList from "./SkeletonCategoryList";
 export default function Fitlers() {
   const { data, isLoading } = useFetch<Response<Category[]>>({
     queryKey: ["categories"],
-    url: "/get-categories",
+    url: "get-categories",
   });
   const { Root, Item, ItemIndicator, ItemText, ItemHiddenInput } = RadioGroup;
   const priceRange = usePriceRange((state) => state);

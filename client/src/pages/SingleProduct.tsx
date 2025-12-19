@@ -35,7 +35,7 @@ export default function SingleProduct() {
               >
                 <Box
                   h="fit"
-                  pos="sticky"
+                  pos={{ base: "static", lg: "sticky" }}
                   top={4}
                   left={0}
                   w="full"
@@ -43,13 +43,14 @@ export default function SingleProduct() {
                 >
                   <Image
                     src={data.data.image.url}
-                    maxW="400px"
+                    h="400px"
+                    w="full"
                     rounded={"lg"}
                   />
                 </Box>
                 <ProductDetails product={data.data} />
 
-                <ProductBuyBox />
+                <ProductBuyBox product={data.data} />
               </Grid>
             </>
           )}

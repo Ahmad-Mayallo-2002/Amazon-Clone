@@ -1,3 +1,9 @@
+import { usePost } from "@/hooks/usePost";
+import type { Product } from "@/interfaces/product";
+import type { CustomError, Response } from "@/interfaces/responses";
+import { createToaster } from "@/utils/createToaster";
+import { isLogged } from "@/utils/isLogged";
+import { getPayload } from "@/utils/payloadCookie";
 import {
   Box,
   Text,
@@ -7,23 +13,78 @@ import {
   Icon,
   Flex,
   Separator,
+  NumberInput,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 
-function ProductBuyBox() {
+function ProductBuyBox({ product }: { product: Product }) {
+  const payload = getPayload();
+  const [amount, setAmount] = useState<number>(1);
+  const discountedPrice: number = +(
+    (1 - product.discount) *
+    product.price
+  ).toFixed(2);
+
+  const handleAmount = (value: number) => setAmount(value);
+
+  const mutationAddToCart = usePost<{ amount: number }, Response<string>>({
+    url: `add-to-cart/${product.id}`,
+    onSuccess: (data) => createToaster("Done", data.data, "success"),
+    onError: (error) => {
+      const customError = error as CustomError;
+      createToaster("Error", customError.response.data.message, "error");
+    },
+    config: {
+      headers: {
+        Authorization: `Bearer ${payload?.token}`,
+      },
+    },
+  });
+
+  const mutationAddToWish = usePost<{}, Response<string>>({
+    url: `add-to-wish/${product.id}`,
+    onSuccess: (data) => createToaster("Done", data.data, "success"),
+    onError: (error) => {
+      const customError = error as CustomError;
+      createToaster("Error", customError.response.data.message, "error");
+    },
+    config: {
+      headers: {
+        Authorization: `Bearer ${payload?.token}`,
+      },
+    },
+  });
+
+  const handleAddToCart = () => {
+    if (!isLogged(payload)) return;
+    mutationAddToCart.mutate({ amount });
+  };
+
+  const handleAddToWish = () => {
+    if (!isLogged(payload)) return;
+    mutationAddToWish.mutate({});
+  };
   return (
-    <Box className="panel" pos="sticky" top={4} left={0} w="full" h="fit">
+    <Box
+      className="panel"
+      pos={{ base: "static", lg: "sticky" }}
+      top={4}
+      left={0}
+      w="full"
+      h="fit"
+    >
       {/* Price */}
       <Stack gap={1}>
         <Text fontSize="2xl" fontWeight="bold" color="red.500">
-          $100
+          ${discountedPrice}
         </Text>
 
-        {100 && (
+        {product.discount > 0 && (
           <Text fontSize="sm" color="gray.500">
             List Price:{" "}
             <Text as="span" textDecoration="line-through">
-              $100
+              ${product.price}
             </Text>
           </Text>
         )}
@@ -50,21 +111,27 @@ function ProductBuyBox() {
       </Text>
 
       {/* Quantity */}
-      <Box mt={3}>
+      <Flex alignItems="center" gap={4} mt={3}>
         <Text fontSize="sm" mb={1}>
           Quantity:
         </Text>
-      </Box>
+        <NumberInput.Root
+          onValueChange={(details) => handleAmount(details.valueAsNumber)}
+          size="xs"
+          min={1}
+          defaultValue="1"
+        >
+          <NumberInput.Control />
+          <NumberInput.Input placeholder="Enter Quantity" />
+        </NumberInput.Root>
+      </Flex>
 
       {/* Buttons */}
       <Stack mt={4} gap={2}>
-        <Button className="main-button" size="sm">
+        <Button onClick={handleAddToCart} className="main-button" size="sm">
           Add to Cart
         </Button>
-        <Button colorPalette="orange" size="sm">
-          Buy Now
-        </Button>
-        <Button colorPalette="red" size="sm">
+        <Button onClick={handleAddToWish} colorPalette="red" size="sm">
           Add to wish
         </Button>
       </Stack>

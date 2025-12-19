@@ -1,7 +1,7 @@
 import type { Roles } from "@/enums/roles";
 import Cookies from "universal-cookie";
 
-interface PayloadCookie {
+export interface PayloadCookie {
   id: string;
   token: string;
   role: Roles;
