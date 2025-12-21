@@ -52,19 +52,15 @@ export class CartController {
     }
   };
 
-  getById = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const cart = await this.cartService.getById(req.params.cartId);
-      return sendResponse(res, cart, OK, OK_REASON);
-    } catch (error) {
-      next(error);
-    }
-  };
-
   removeFromCart = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { productId, cartId } = req.params;
-      const result = await this.cartService.removeFromCart(cartId, productId);
+      const { productId } = req.params;
+      const { cartId } = req.headers;
+      const result = await this.cartService.removeFromCart(
+        cartId as string,
+        productId
+      );
+      return sendResponse(res, result, OK, OK_REASON);
     } catch (error) {
       next(error);
     }

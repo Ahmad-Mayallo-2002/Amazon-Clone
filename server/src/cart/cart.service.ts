@@ -28,7 +28,7 @@ export class CartService {
     return { data: carts, pagination };
   }
 
-  async getById(id: string): Promise<Cart> {
+  private async getById(id: string): Promise<Cart> {
     const cart = await this.cartRepo.findOne({
       where: { id },
       relations: ["user", "cartItems"],
@@ -36,6 +36,16 @@ export class CartService {
     if (!cart)
       throw new AppError("Cart not found", NOT_FOUND, NOT_FOUND_REASON);
     return cart;
+  }
+
+  private async getItemByProductId(productId: string): Promise<CartItem> {
+    const item = await this.cartItemRepo.findOne({
+      where: { productId },
+      relations: ["product"],
+    });
+    if (!item)
+      throw new AppError("Item not found", NOT_FOUND, NOT_FOUND_REASON);
+    return item;
   }
 
   async getByUserId(userId: string): Promise<Cart> {
@@ -76,7 +86,7 @@ export class CartService {
     }
     const discount: number = 1 - product.discount;
     // Calculate the price at payment of product
-    const price: number = product.price * discount * amount;
+    const price: number = +product.price * discount * amount;
     // Check if cart item is exist or not
     const currentItem = await this.cartItemRepo.findOne({
       where: {
@@ -89,9 +99,9 @@ export class CartService {
       // Update amount and price at payment
       currentItem.amount += amount;
       // Update price at payment of cart item
-      currentItem.priceAtPayment = +currentItem.priceAtPayment + price;
+      currentItem.priceAtPayment = `${+currentItem.priceAtPayment + price}`;
       // Update total price of cart
-      cart.totalPrice = +cart.totalPrice + price;
+      cart.totalPrice = `${+cart.totalPrice + price}`;
       // Save all of these
       await this.cartRepo.save(cart);
       await this.cartItemRepo.save(currentItem);
@@ -105,19 +115,23 @@ export class CartService {
         product: { id: productId },
         cart: { id: cart.id },
         amount,
-        priceAtPayment: price,
+        priceAtPayment: `${price}`,
       });
       // Save new cart item
       await this.cartItemRepo.save(newItem);
       // Update cart total price and save it
-      cart.totalPrice = +cart.totalPrice + newItem.priceAtPayment;
+      cart.totalPrice = `${+cart.totalPrice + +newItem.priceAtPayment}`;
       await this.cartRepo.save(cart);
     }
     return "Product added to cart successfully";
   }
 
   async removeFromCart(cartId: string, productId: string): Promise<string> {
-    await this.cartItemRepo.delete({ cartId, productId });
+    const item = await this.getItemByProductId(productId);
+    const cart = await this.getById(cartId);
+    cart.totalPrice = `${+cart.totalPrice - +item?.priceAtPayment}`;
+    await this.cartRepo.save(cart);
+    await this.cartItemRepo.remove(item);
     return "Item removed from cart successfully";
   }
 }

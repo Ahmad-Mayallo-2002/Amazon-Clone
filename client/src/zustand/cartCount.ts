@@ -2,12 +2,12 @@ import { create } from "zustand";
 
 interface CartCountState {
   count: number;
-  increase: () => void;
-  decrease: () => void;
+  increase: (value: number) => void;
+  decrease: (value: number) => void;
 }
 
 export const useCartCount = create<CartCountState>((set) => ({
   count: 0,
-  increase: () => set((state) => ({ count: state.count + 1 })),
-  decrease: () => set((state) => ({ count: state.count - 1 })),
+  increase: (value: number) => set((state) => ({ count: state.count + value })),
+  decrease: (value: number) => set((state) => ({ count: state.count - value })),
 }));

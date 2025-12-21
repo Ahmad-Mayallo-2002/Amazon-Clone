@@ -147,7 +147,7 @@ export class OrderService {
 
       // Create Payment
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(totalPrice * 100),
+        amount: Math.round(+totalPrice * 100),
         currency: "usd",
         metadata: {
           orderId: order.id,
@@ -163,7 +163,7 @@ export class OrderService {
       const payment = await manager.getRepository(Payment).save(newPayment);
 
       // Clear Cart
-      cart.totalPrice = 0;
+      cart.totalPrice = `0`;
       await manager.getRepository(CartItem).delete({ cartId: cart.id });
       await manager.getRepository(Cart).save(cart);
 

@@ -9,7 +9,7 @@ export class CartItem extends AbstractEntity {
   amount: number;
 
   @Column({ type: "decimal", default: 0, name: "price_at_payment" })
-  priceAtPayment: number;
+  priceAtPayment: string;
 
   @Column({ type: "varchar", length: 255, name: "product_id" })
   productId: string;

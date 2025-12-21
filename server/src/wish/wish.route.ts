@@ -24,13 +24,6 @@ router.get(
   container.getByUserId
 );
 
-router.delete(
-  "/delete-wish-item/:id",
-  checkToken,
-  authorizeRoles(Roles.ADMIN),
-  container.deleteById
-);
-
 router.post(
   "/add-to-wish/:productId",
   checkToken,
@@ -39,7 +32,7 @@ router.post(
 );
 
 router.delete(
-  "/remove-from-wish/:productId/:wishId",
+  "/remove-from-wish/:productId",
   checkToken,
   container.removeFromWish
 );

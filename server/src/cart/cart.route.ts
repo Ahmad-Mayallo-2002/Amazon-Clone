@@ -31,13 +31,6 @@ router.get(
   container.getAll
 );
 
-router.get(
-  "/get-carts/:id",
-  checkToken,
-  authorizeRoles(Roles.ADMIN),
-  container.getById
-);
-
 router.delete(
   "/delete-cart/:id",
   checkToken,
@@ -46,7 +39,7 @@ router.delete(
 );
 
 router.delete(
-  "/remove-from-cart/:productId/:cartId",
+  "/remove-from-cart/:productId",
   checkToken,
   authorizeRoles(Roles.USER, Roles.ADMIN),
   container.removeFromCart

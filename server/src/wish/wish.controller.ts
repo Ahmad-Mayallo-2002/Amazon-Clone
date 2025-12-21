@@ -41,16 +41,6 @@ export class WishController {
     }
   };
 
-  deleteById = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      const result = await this.wishService.deleteById(id);
-      return sendResponse(res, result, OK, OK_REASON);
-    } catch (error) {
-      next(error);
-    }
-  };
-
   addToWish = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await this.wishService.addToWish(
@@ -65,8 +55,12 @@ export class WishController {
 
   removeFromWish = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { wishId, productId } = req.params;
-      const result = await this.wishService.removeFromWish(productId, wishId);
+      const { productId } = req.params;
+      const { wishId } = req.headers;
+      const result = await this.wishService.removeFromWish(
+        productId,
+        wishId as string
+      );
       return sendResponse(res, result, OK, OK_REASON);
     } catch (error) {
       next(error);

@@ -56,12 +56,6 @@ export class WishService {
     return wish;
   }
 
-  async deleteById(id: string): Promise<string> {
-    const wish = await this.getById(id);
-    await this.wishRepo.remove(wish);
-    return "Wish deleted successfully";
-  }
-
   async addToWish(productId: string, userId: string): Promise<string> {
     // 1. Check if user already has a wishlist
     let wish = await this.wishRepo.findOne({

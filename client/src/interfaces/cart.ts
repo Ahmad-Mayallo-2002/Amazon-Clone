@@ -14,4 +14,5 @@ export interface Cart extends IdAndDate {
   userId: string;
   user: User;
   totalPrice: number;
+  cartItems: CartItem[];
 }

@@ -17,7 +17,7 @@ import { Payment } from "../payment/payment.entity";
 @Entity({ name: "orders" })
 export class Order extends AbstractEntity {
   @Column({ type: "decimal", default: 0, name: "total_price" })
-  totalPrice: number;
+  totalPrice: string;
 
   @Column({
     type: "enum",
