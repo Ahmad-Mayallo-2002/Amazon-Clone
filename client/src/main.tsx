@@ -2,10 +2,11 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { Provider } from "./components/ui/provider.tsx";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster.tsx";
 import AppRouter from "./pages/AppRouter.tsx";
+import { QueryClient } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient();
 

@@ -6,7 +6,7 @@ interface PostOptions<TRequest, TResponse> {
   url: string;
   onSuccess?: (data: TResponse) => void;
   onError?: (error: unknown) => void;
-    config?: AxiosRequestConfig<any>;
+  config?: AxiosRequestConfig<any>;
 }
 
 export function usePost<TRequest, TResponse>({

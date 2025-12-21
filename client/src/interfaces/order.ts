@@ -4,10 +4,11 @@ import type { Product } from "./product";
 import type { User } from "./user";
 
 export interface OrderItem extends IdAndDate {
-    totalPrice: number;
-    productId: string;
-    product: Product;
-    orderId: string;
+  totalPrice: number;
+  productId: string;
+  product: Product;
+  orderId: string;
+  amount: number;
 }
 
 export interface Order extends IdAndDate {
@@ -15,4 +16,5 @@ export interface Order extends IdAndDate {
   user: User;
   totalPrice: number;
   status: OrderStatus;
+  orderItems: OrderItem[];
 }

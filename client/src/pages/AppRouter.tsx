@@ -10,6 +10,7 @@ const Help = lazy(() => import("./Help"));
 const ProtectedRoute = lazy(() => import("./ProtectedRoute"));
 const Shop = lazy(() => import("./Shop"));
 const SingleProduct = lazy(() => import("./SingleProduct"));
+const Checkout = lazy(() => import("./Checkout"));
 
 // Auth
 const Login = lazy(() => import("./auth/Login"));
@@ -49,6 +50,8 @@ export default function AppRouter() {
               <Route path="cart" element={<UserCart />} />
               <Route path="orders" element={<UserOrders />} />
             </Route>
+
+            <Route path="checkout" element={<Checkout />} />
           </Route>
         </Route>
 
