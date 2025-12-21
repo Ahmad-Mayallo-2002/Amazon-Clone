@@ -24,27 +24,34 @@ export default function OrderSummary() {
 
       <VStack align="stretch" gap={4}>
         {/* Products Summary */}
-        <ProductSummary />
-
-        <Separator />
-
-        <ProductSummary />
-
-        <Separator />
-
+        <Box
+          display="flex"
+          flexDir="column"
+          className="products"
+          overflowY="auto"
+          gap={2}
+          h="300px"
+          pe={4}
+        >
+          <ProductSummary />
+          <Separator />
+          <ProductSummary />
+          <Separator />
+          <ProductSummary />
+          <Separator />
+          <ProductSummary />
+          <Separator />
+        </Box>
         <HStack justify="space-between" fontWeight="bold" fontSize="lg">
           <Text>Order Total:</Text>
           <Text color="orange.500">$205.17</Text>
         </HStack>
-
         <Button className="main-button" size="lg" width="full">
           Place Your Order
         </Button>
-
         <Text fontSize="sm" color="gray.600">
           By placing your order, you agree to our Terms & Conditions
         </Text>
-
         <Stack gap={2} fontSize="sm" color="gray.600">
           <Text>• Secure checkout with SSL encryption</Text>
           <Text>• 30-day return policy</Text>

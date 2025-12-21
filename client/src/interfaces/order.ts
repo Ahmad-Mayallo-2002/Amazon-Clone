@@ -18,3 +18,16 @@ export interface Order extends IdAndDate {
   status: OrderStatus;
   orderItems: OrderItem[];
 }
+
+export interface CreateOrderRequest {
+  fullName: string;
+  state: string;
+  country: string;
+  city: string;
+  postalCode: string;
+}
+
+export interface CreateOrderResponse {
+  clientSecret: string;
+  orderId: string;
+}

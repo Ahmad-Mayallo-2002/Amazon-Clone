@@ -1,10 +1,20 @@
+import { usePost } from "@/hooks/usePost";
+import type {
+  CreateOrderRequest,
+  CreateOrderResponse,
+} from "@/interfaces/order";
+import type { Response } from "@/interfaces/responses";
+import { getPayload } from "@/utils/payloadCookie";
+import { useCountry } from "@/zustand/selectCountry";
 import { Box, Grid, Heading, Input, Field, Button } from "@chakra-ui/react";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useForm } from "react-hook-form";
 
 interface ShippingAddressForm {
   fullName: string;
   street: string;
   city: string;
+  country: string;
   state: string;
   postalCode: string;
   phone: string;
@@ -17,8 +27,61 @@ export default function ShippingAddress() {
     formState: { errors },
   } = useForm<ShippingAddressForm>();
 
-  const onSubmit = (data: ShippingAddressForm) => {
-    console.log("Form submitted:", data);
+  const payload = getPayload();
+
+  const country = useCountry((state) => state.country);
+
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const mutationCreateOrder = usePost<
+    CreateOrderRequest,
+    Response<CreateOrderResponse>
+  >({
+    url: "create-order",
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error: any) => {
+      console.log(error);
+    },
+    config: {
+      headers: {
+        Authorization: `Bearer ${payload?.token}`,
+      },
+    },
+  });
+
+  const onSubmit = async (data: ShippingAddressForm) => {
+    data.country = country;
+
+    if (!stripe || !elements) return;
+
+    const { data: response } = await mutationCreateOrder.mutateAsync(data);
+
+    const result = await stripe.confirmCardPayment(response.clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement)!,
+        billing_details: {
+          address: {
+            city: data.city,
+            state: data.state,
+            country: "EG",
+            postal_code: data.postalCode,
+          },
+        },
+      },
+    });
+
+    console.log(result);
+
+    if (result.error) {
+      console.error(result.error.message);
+    } else {
+      if (result.paymentIntent?.status === "succeeded") {
+        console.log("Done");
+      }
+    }
   };
 
   const { ErrorIcon, ErrorText, Label, RequiredIndicator, Root } = Field;
@@ -119,10 +182,10 @@ export default function ShippingAddress() {
             <Input
               {...register("postalCode", {
                 required: "Postal code is required",
-                pattern: {
-                  value: /^\d{5}(-\d{4})?$/,
-                  message: "Invalid postal code format",
-                },
+                // pattern: {
+                //   value: /^\d{5}(-\d{4})?$/,
+                //   message: "Invalid postal code format",
+                // },
               })}
               placeholder="Enter your postal code"
             />
@@ -142,10 +205,10 @@ export default function ShippingAddress() {
             <Input
               {...register("phone", {
                 required: "Phone number is required",
-                pattern: {
-                  value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
-                  message: "Invalid phone number format",
-                },
+                // pattern: {
+                //   value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
+                //   message: "Invalid phone number format",
+                // },
               })}
               placeholder="Enter your phone number"
             />

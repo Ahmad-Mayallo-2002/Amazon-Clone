@@ -19,6 +19,8 @@ export default function Payment() {
     console.log("Payment data:", data);
   };
 
+  const { ErrorIcon, ErrorText, Root, Label } = Field;
+
   return (
     <Box borderWidth="1px" className="panel payment">
       <Heading size="md" mb={4}>
@@ -28,10 +30,8 @@ export default function Payment() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
           {/* Card Number */}
-          <Field.Root required gridColumn={{ md: "span 2" }}>
-            <Field.Label>
-              Card Number <Field.RequiredIndicator />
-            </Field.Label>
+          <Root>
+            <Label>Card Number</Label>
             <Input
               {...register("cardNumber", {
                 required: "Card number is required",
@@ -44,15 +44,16 @@ export default function Payment() {
               placeholder="1234 5678 9012 3456"
             />
             {errors.cardNumber && (
-              <Field.ErrorText>{errors.cardNumber.message}</Field.ErrorText>
+              <ErrorText>
+                <ErrorIcon boxSize="15px" />
+                {errors.cardNumber.message}
+              </ErrorText>
             )}
-          </Field.Root>
+          </Root>
 
           {/* Expiry Date */}
-          <Field.Root required>
-            <Field.Label>
-              Expiry Date <Field.RequiredIndicator />
-            </Field.Label>
+          <Root>
+            <Label>Expiry Date</Label>
             <Input
               {...register("expiryDate", {
                 required: "Expiry date is required",
@@ -64,15 +65,16 @@ export default function Payment() {
               placeholder="MM/YY"
             />
             {errors.expiryDate && (
-              <Field.ErrorText>{errors.expiryDate.message}</Field.ErrorText>
+              <ErrorText>
+                <ErrorIcon boxSize="15px" />
+                {errors.expiryDate.message}
+              </ErrorText>
             )}
-          </Field.Root>
+          </Root>
 
           {/* CVV */}
-          <Field.Root required>
-            <Field.Label>
-              CVV <Field.RequiredIndicator />
-            </Field.Label>
+          <Root>
+            <Label>CVV</Label>
             <Input
               {...register("cvv", {
                 required: "CVV is required",
@@ -85,15 +87,16 @@ export default function Payment() {
               maxLength={4}
             />
             {errors.cvv && (
-              <Field.ErrorText>{errors.cvv.message}</Field.ErrorText>
+              <ErrorText>
+                <ErrorIcon boxSize="15px" />
+                {errors.cvv.message}
+              </ErrorText>
             )}
-          </Field.Root>
+          </Root>
 
           {/* Cardholder Name */}
-          <Field.Root required gridColumn={{ md: "span 2" }}>
-            <Field.Label>
-              Cardholder Name <Field.RequiredIndicator />
-            </Field.Label>
+          <Root>
+            <Label>Cardholder Name</Label>
             <Input
               {...register("cardholderName", {
                 required: "Cardholder name is required",
@@ -105,13 +108,13 @@ export default function Payment() {
               placeholder="John Doe"
             />
             {errors.cardholderName && (
-              <Field.ErrorText>{errors.cardholderName.message}</Field.ErrorText>
+              <ErrorText>
+                <ErrorIcon boxSize="15px" />
+                {errors.cardholderName.message}
+              </ErrorText>
             )}
-          </Field.Root>
+          </Root>
         </Grid>
-
-        {/* Hidden submit button - actual submission usually triggered by "Place Order" in parent */}
-        <button type="submit" style={{ display: "none" }} />
       </form>
     </Box>
   );
