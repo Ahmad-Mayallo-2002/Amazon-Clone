@@ -66,7 +66,8 @@ export class CommentController {
   updateComment = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const updated = await this.commentService.updateComment(id, req.body);
+      const { content } = req.body;
+      const updated = await this.commentService.updateComment(id, content);
       return sendResponse(res, updated, OK, OK_REASON);
     } catch (error) {
       next(error);

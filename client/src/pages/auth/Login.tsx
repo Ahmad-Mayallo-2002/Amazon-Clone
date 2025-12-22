@@ -2,6 +2,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { usePost } from "@/hooks/usePost";
 import type { ILogin } from "@/interfaces/login";
 import type { Response } from "@/interfaces/responses";
+import { createToaster } from "@/utils/createToaster";
 import { setPayload } from "@/utils/payloadCookie";
 import {
   Box,
@@ -38,11 +39,13 @@ function Login() {
       setPayload(payload);
       navigate("/");
     },
-    onError: (error) => console.log(error),
+    onError: (error: any) =>
+      createToaster("Error", error.response.data.message, "error"),
   });
 
   const onSubmit = async (data: SignInRequest) => {
     try {
+      console.log(data);
       loginMutation.mutate(data);
     } catch (error) {
       console.log(error);

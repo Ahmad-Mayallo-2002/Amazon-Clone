@@ -7,11 +7,13 @@ import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { PaginatedDate } from "../interfaces/paginated-data.interface";
 import { calculatePagination } from "../utils/calculatePagination";
 import { Product } from "../product/product.entity";
+import { IAvgAndCount } from "../interfaces/review.interface";
 
 @injectable()
 export class ReviewService {
   private reviewRepo: Repository<Review> = AppDataSource.getRepository(Review);
-  private productRepo: Repository<Product> = AppDataSource.getRepository(Product);
+  private productRepo: Repository<Product> =
+    AppDataSource.getRepository(Product);
 
   async getAllReviews(
     skip: number = 0,
@@ -53,11 +55,15 @@ export class ReviewService {
     return reviews;
   }
 
-  async getAvarageReviewByProductId(productId: string): Promise<number> {
+  async getAvarageReviewByProductId(productId: string): Promise<IAvgAndCount> {
     const avg = await this.reviewRepo.average("value", {
-      product: { id: productId },
+      productId,
     });
-    return avg || 0;
+    const count = await this.reviewRepo.count({ where: { productId } });
+    return {
+      count,
+      avg: avg || 0,
+    };
   }
 
   async addReview(
@@ -84,8 +90,6 @@ export class ReviewService {
       review.value = value;
       await this.reviewRepo.save(review);
     }
-    const avgReview = await this.getAvarageReviewByProductId(productId);
-    await this.productRepo.update({ id: productId }, { rating: avgReview });
     return "Review added successfully";
   }
 

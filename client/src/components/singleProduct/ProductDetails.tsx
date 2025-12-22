@@ -1,4 +1,7 @@
+import { useFetch } from "@/hooks/useFetch";
+import type { AvgAndCountReview } from "@/interfaces/avgAndCountReview";
 import type { Product } from "@/interfaces/product";
+import type { Response } from "@/interfaces/responses";
 import {
   Flex,
   Heading,
@@ -13,6 +16,11 @@ import {
 import { FaCheckCircle } from "react-icons/fa";
 
 export default function ProductDetails({ product }: { product: Product }) {
+  const { data } = useFetch<Response<AvgAndCountReview>>({
+    queryKey: ["avg-count-review"],
+    url: `get-product-avg-review/${product.id}`,
+  });
+
   const discountedPrice: number = +((1 - product.discount) * product.price).toFixed(2);
   return (
     <div className="panel">
@@ -24,10 +32,10 @@ export default function ProductDetails({ product }: { product: Product }) {
         {product.title}
       </Heading>
       <Flex alignItems="center" gap={2} color="#777">
-        <Span>({product.rating})</Span>
+        <Span>({data?.data.avg})</Span>
         <RatingGroup.Root
           count={5}
-          defaultValue={product.rating}
+          defaultValue={data?.data.avg}
           readOnly
           size="sm"
           colorPalette="orange"
@@ -35,7 +43,7 @@ export default function ProductDetails({ product }: { product: Product }) {
           <RatingGroup.HiddenInput />
           <RatingGroup.Control />
         </RatingGroup.Root>
-        <Span color="blue.500">1000 Ratings</Span>
+        <Span color="blue.500">{data?.data.count} Ratings</Span>
       </Flex>
 
       <Separator w="calc(100% + 40px)" my={4} ms={-5} />

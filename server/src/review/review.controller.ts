@@ -13,7 +13,7 @@ export class ReviewController {
       const { skip, take } = req.query;
       const { data, pagination } = await this.reviewService.getAllReviews(
         Number(skip) || 0,
-        Number(take) || 10
+        Number(take)
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
@@ -51,10 +51,10 @@ export class ReviewController {
     next: NextFunction
   ) => {
     try {
-      const avg = await this.reviewService.getAvarageReviewByProductId(
+      const result = await this.reviewService.getAvarageReviewByProductId(
         req.params.productId
       );
-      return sendResponse(res, avg, OK, OK_REASON);
+      return sendResponse(res, result, OK, OK_REASON);
     } catch (error) {
       next(error);
     }

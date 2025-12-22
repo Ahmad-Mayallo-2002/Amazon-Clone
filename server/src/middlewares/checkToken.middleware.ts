@@ -9,6 +9,7 @@ import {
 import { verify } from "jsonwebtoken";
 import { config } from "dotenv";
 import { OAuth2Client } from "google-auth-library";
+import { sendResponse } from "../utils/sendResponse";
 
 config();
 
@@ -19,7 +20,7 @@ const client = new OAuth2Client(GOOGLE_CLIENT_ID!);
 
 export const checkToken = async (
   req: Request,
-  _res: Response,
+  res: Response,
   next: NextFunction
 ) => {
   try {
@@ -27,7 +28,8 @@ export const checkToken = async (
     const googleToken = req.headers["x-google-token"] as string | undefined;
 
     if (!authHeader && !googleToken)
-      throw new AppError(
+      return sendResponse(
+        res,
         "Token is not found",
         UNAUTHORIZED,
         UNAUTHORIZED_REASON
@@ -36,13 +38,14 @@ export const checkToken = async (
     if (authHeader) {
       const token = authHeader.split(" ")[1];
       verify(token, jwt, (error, user) => {
-        if (error) {
-          throw new AppError(
+        if (error)
+          return sendResponse(
+            res,
             "Invalid or expired token",
             FORBIDDEN,
             FORBIDDEN_REASON
           );
-        }
+
         (req as any).user = user;
         next();
       });
@@ -61,7 +64,8 @@ export const checkToken = async (
         (req.user as any).provider = "google";
         next();
       } catch (error) {
-        throw new AppError(
+        return sendResponse(
+          res,
           "Invalid or expired Google token",
           UNAUTHORIZED,
           UNAUTHORIZED_REASON

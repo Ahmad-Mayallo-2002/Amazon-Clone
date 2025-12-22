@@ -5,7 +5,7 @@ import axios, { type AxiosRequestConfig } from "axios";
 interface PostOptions<TRequest, TResponse> {
   url: string;
   onSuccess?: (data: TResponse) => void;
-  onError?: (error: unknown) => void;
+  onError?: (error: any) => void;
   config?: AxiosRequestConfig<any>;
 }
 

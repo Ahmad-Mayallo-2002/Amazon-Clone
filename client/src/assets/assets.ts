@@ -1,5 +1,3 @@
-import { Roles } from "@/enums/roles";
-import type { ILogin } from "@/interfaces/login";
 import { FiHeart, FiShoppingBag, FiShoppingCart, FiUser } from "react-icons/fi";
 import type { NavItem } from "./data/navItems";
 import type { IconType } from "react-icons";
@@ -15,12 +13,6 @@ export const sortBy = [
   { label: "Newest", value: "ASC-created-new", key: "created_at" },
   { label: "Oldest", value: "DESC-created-old", key: "created_at" },
 ];
-
-export let payload: ILogin = {
-  id: "",
-  token: "",
-  role: Roles.USER,
-};
 
 interface DashboardLinks extends NavItem {
   icon: IconType;
