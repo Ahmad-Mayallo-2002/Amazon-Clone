@@ -75,12 +75,14 @@ export default function SingleProduct() {
             </Box>
             <ProductDetails product={data.data} />
 
-            <ProductBuyBox product={data.data} />
+            <ProductBuyBox
+              product={data.data}
+            />
           </Grid>
 
           {/* Comments Section */}
           <ProductCommentForm productId={data.data.id} />
-    
+
           <ProductCommentsList productId={data.data.id} />
         </Container>
       </Box>

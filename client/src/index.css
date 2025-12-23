@@ -85,3 +85,9 @@ a:hover {
     text-align: start;
   }
 }
+
+.chakra-rating-group__root:focus,
+.chakra-rating-group__root {
+  border: none;
+  outline: none;
+}

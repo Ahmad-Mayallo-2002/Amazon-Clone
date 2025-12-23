@@ -66,6 +66,17 @@ export class ReviewService {
     };
   }
 
+  async getAvarageReviewByProductIdAndUserId(
+    productId: string,
+    userId: string
+  ): Promise<number> {
+    const avg = await this.reviewRepo.average("value", {
+      productId,
+      userId,
+    });
+    return avg || 0;
+  }
+
   async addReview(
     productId: string,
     value: number,

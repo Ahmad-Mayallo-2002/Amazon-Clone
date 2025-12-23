@@ -21,7 +21,10 @@ export default function ProductDetails({ product }: { product: Product }) {
     url: `get-product-avg-review/${product.id}`,
   });
 
-  const discountedPrice: number = +((1 - product.discount) * product.price).toFixed(2);
+  const discountedPrice: number = +(
+    (1 - product.discount) *
+    product.price
+  ).toFixed(2);
   return (
     <div className="panel">
       {/* Header */}
@@ -31,20 +34,22 @@ export default function ProductDetails({ product }: { product: Product }) {
       <Heading fontWeight={700} fontSize="3xl" my={2}>
         {product.title}
       </Heading>
-      <Flex alignItems="center" gap={2} color="#777">
-        <Span>({data?.data.avg})</Span>
-        <RatingGroup.Root
-          count={5}
-          defaultValue={data?.data.avg}
-          readOnly
-          size="sm"
-          colorPalette="orange"
-        >
-          <RatingGroup.HiddenInput />
-          <RatingGroup.Control />
-        </RatingGroup.Root>
-        <Span color="blue.500">{data?.data.count} Ratings</Span>
-      </Flex>
+      {data && (
+        <Flex alignItems="center" gap={2}>
+          <Span color="#777">({data?.data.count})</Span>
+          <RatingGroup.Root
+            count={5}
+            defaultValue={data?.data.avg}
+            readOnly
+            size="sm"
+            colorPalette="orange"
+          >
+            <RatingGroup.HiddenInput />
+            <RatingGroup.Control />
+          </RatingGroup.Root>
+          <Span color="blue.500">{data?.data.count} Ratings</Span>
+        </Flex>
+      )}
 
       <Separator w="calc(100% + 40px)" my={4} ms={-5} />
 
@@ -97,5 +102,4 @@ export default function ProductDetails({ product }: { product: Product }) {
       <Text color="#777">{product.description}</Text>
     </div>
   );
-
 }

@@ -60,6 +60,24 @@ export class ReviewController {
     }
   };
 
+  getAvarageReviewByProductIdAndUserId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { productId, userId } = req.params;
+      const result =
+        await this.reviewService.getAvarageReviewByProductIdAndUserId(
+          productId,
+          userId
+        );
+      return sendResponse(res, result, OK, OK_REASON);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   addReview = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const message = await this.reviewService.addReview(

@@ -5,7 +5,7 @@ import { User } from "../user/user.entity";
 
 @Entity({ name: "reviews" })
 export class Review extends AbstractEntity {
-  @Column({ type: "int", default: 0 })
+  @Column({ type: "float", default: 0 })
   value: number;
 
   @Column({ type: "varchar", length: 255 })

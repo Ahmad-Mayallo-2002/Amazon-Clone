@@ -75,9 +75,9 @@ export class CommentService {
     return comment;
   }
 
-  async updateComment(id: string, data: UpdateCategoryType): Promise<string> {
+  async updateComment(id: string, content: string): Promise<string> {
     const comment = await this.getCommentById(id);
-    await this.commentRepo.save(Object.assign(comment, data));
+    await this.commentRepo.save(Object.assign(comment, { content }));
     return "Comment updated successfully";
   }
 

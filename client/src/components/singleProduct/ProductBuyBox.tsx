@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
+import RateProduct from "./RateProduct";
 
 function ProductBuyBox({ product }: { product: Product }) {
   const payload = getPayload();
@@ -67,6 +68,7 @@ function ProductBuyBox({ product }: { product: Product }) {
   };
   return (
     <Box
+      as="aside"
       className="panel"
       pos={{ base: "static", lg: "sticky" }}
       top={4}
@@ -92,10 +94,10 @@ function ProductBuyBox({ product }: { product: Product }) {
 
       {/* Delivery */}
       <Box mt={3}>
-        <Badge colorScheme="blue" mb={1}>
+        <Badge colorPalette="blue" mb={1}>
           Prime
         </Badge>
-        <Text fontSize="sm">
+        <Text color="gray.500" fontSize="sm">
           FREE delivery <b>Tomorrow</b>
         </Text>
       </Box>
@@ -105,9 +107,9 @@ function ProductBuyBox({ product }: { product: Product }) {
         mt={3}
         fontSize="md"
         fontWeight="semibold"
-        color={true ? "green.500" : "red.500"}
+        color={product.stock > 0 ? "green.500" : "red.500"}
       >
-        {true ? "In Stock" : "Out of Stock"}
+        {product.stock > 0 ? "In Stock" : "Out of Stock"}
       </Text>
 
       {/* Quantity */}
@@ -140,23 +142,27 @@ function ProductBuyBox({ product }: { product: Product }) {
 
       {/* Seller Info */}
       <Stack gap={2} fontSize="sm">
-        <Flex align="center">
+        <Flex color="gray.500" align="center">
           <Icon as={FaCheckCircle} color="green.500" mr={2} />
           Secure transaction
         </Flex>
 
-        <Text>
-          Ships from <b>Amazon.com</b>
-        </Text>
+        <Flex color="gray.500" align="center">
+          <Icon as={FaCheckCircle} color="green.500" mr={2} />
+          Ships from&nbsp;<b>Amazon.com</b>
+        </Flex>
 
-        <Text>
-          Sold by <b>vendor</b>
-        </Text>
+        <Flex color="gray.500" align="center">
+          <Icon as={FaCheckCircle} color="green.500" mr={2} />
+          Sold by&nbsp;<b>vendor</b>
+        </Flex>
 
         <Text color="blue.600" cursor="pointer">
           Return policy: 30-day return
         </Text>
       </Stack>
+
+      <RateProduct productId={product.id} payload={payload} />
     </Box>
   );
 }
