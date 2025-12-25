@@ -3,6 +3,7 @@ import { usePatch } from "@/hooks/usePatch";
 import type { AvgAndCountReview } from "@/interfaces/avgAndCountReview";
 import type { Response } from "@/interfaces/responses";
 import { queryClient } from "@/main";
+import { createToaster } from "@/utils/createToaster";
 import type { PayloadCookie } from "@/utils/payloadCookie";
 import { Box, Heading, RatingGroup } from "@chakra-ui/react";
 
@@ -23,13 +24,13 @@ export default function RateProduct({ productId, payload }: Props) {
     },
   });
 
-  const { mutate } = usePatch({
+  const { mutate } = usePatch<{ value: number }, Response<string>>({
     url: `add-review/${productId}`,
     onSuccess(data) {
-      console.log(data);
+      createToaster("Done", data.data, "success");
     },
     onError(error) {
-      console.log(error.response.data);
+      createToaster("Error", error.response.data.message, "error");
     },
     config: {
       headers: {

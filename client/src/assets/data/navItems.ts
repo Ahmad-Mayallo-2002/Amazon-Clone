@@ -9,7 +9,7 @@ export const userListLinks: NavItem[] = [
 ];
 
 export const userAccountLinks: NavItem[] = [
-  { label: "Account", href: "/account" },
+  { label: "Account", href: "/user-dashboard" },
   { label: "Orders", href: "/user-dashboard/orders" },
 ];
 

@@ -20,6 +20,7 @@ const ResetPassword = lazy(() => import("./auth/ResetPassword"));
 const PasswordAssistance = lazy(() => import("./auth/PasswordAssistance"));
 const NotFound = lazy(() => import("./NotFound"));
 const AuthCenter = lazy(() => import("./auth/AuthCenter"));
+const SignUpVendor = lazy(() => import("./auth/SignUpVendor"));
 
 // User Dashboard
 const UserDashboard = lazy(() => import("./user/UserDashboard"));
@@ -27,6 +28,12 @@ const UserCart = lazy(() => import("./user/UserCart"));
 const UserWish = lazy(() => import("./user/UserWish"));
 const UserProfile = lazy(() => import("./user/UserProfile"));
 const UserOrders = lazy(() => import("./user/UserOrders"));
+
+// Vendor Dashboard
+const VendorDashboard = lazy(() => import("./vendor/VendorDashboard"));
+const VendorOrders = lazy(() => import("./vendor/VendorOrders"));
+const VendorProducts = lazy(() => import("./vendor/VendorProducts"));
+const VendorProfile = lazy(() => import("./vendor/VendorProfile"));
 
 export default function AppRouter() {
   return (
@@ -41,7 +48,7 @@ export default function AppRouter() {
           <Route path="shop" element={<Shop />} />
           <Route path="product/:id" element={<SingleProduct />} />
 
-          {/* Protected routes */}
+          {/* Protected user routes */}
           <Route element={<ProtectedRoute currentRole={Roles.USER} />}>
             {/* User Dashboard */}
             <Route path="user-dashboard" element={<UserDashboard />}>
@@ -55,6 +62,15 @@ export default function AppRouter() {
           </Route>
         </Route>
 
+        {/* Prodtected vendor routes */}
+        <Route element={<ProtectedRoute currentRole={Roles.VENDOR} />}>
+          <Route path="vendor-dashboard" element={<VendorDashboard />}>
+            <Route index element={<VendorProfile />} />
+            <Route path="orders" element={<VendorOrders />} />
+            <Route path="products" element={<VendorProducts />} />
+          </Route>
+        </Route>
+
         {/* Auth center */}
         <Route path="/auth" element={<AuthCenter />}>
           <Route path="login" element={<Login />} />
@@ -62,6 +78,7 @@ export default function AppRouter() {
           <Route path="verify-email" element={<VerifyEmail />} />
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="password-assistance" element={<PasswordAssistance />} />
+          <Route path="sign-up-vendor" element={<SignUpVendor />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

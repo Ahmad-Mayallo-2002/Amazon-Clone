@@ -5,6 +5,7 @@ export interface PayloadCookie {
   id: string;
   token: string;
   role: Roles;
+  vendorId?: string;
 }
 
 const cookies = new Cookies();

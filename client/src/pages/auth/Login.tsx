@@ -1,4 +1,5 @@
 import { PasswordInput } from "@/components/ui/password-input";
+import { Roles } from "@/enums/roles";
 import { usePost } from "@/hooks/usePost";
 import type { ILogin } from "@/interfaces/login";
 import type { Response } from "@/interfaces/responses";
@@ -37,7 +38,9 @@ function Login() {
     onSuccess: async (data) => {
       const payload = data.data;
       setPayload(payload);
-      navigate("/");
+      if (payload.role === Roles.USER) navigate("/");
+      else if (payload.role === Roles.VENDOR) navigate("/vendor-dashboard");
+      else if (payload.role === Roles.ADMIN) navigate("/admin-dashboard");
     },
     onError: (error: any) =>
       createToaster("Error", error.response.data.message, "error"),

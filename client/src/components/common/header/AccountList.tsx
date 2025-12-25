@@ -50,7 +50,7 @@ export default function AccountList() {
                   <Text mt={3} textAlign="center" fontSize="xs">
                     New Customer ?{" "}
                     <Link
-                      href="/sign-up"
+                      href="/auth/sign-up"
                       color="blue.700"
                       _hover={{ color: "blue.600" }}
                     >

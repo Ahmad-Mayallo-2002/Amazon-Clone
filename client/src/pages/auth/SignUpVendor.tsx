@@ -1,7 +1,7 @@
 import { PasswordInput } from "@/components/ui/password-input";
 import { usePost } from "@/hooks/usePost";
 import type { CustomError, Response } from "@/interfaces/responses";
-import type { SignUpUserRequest } from "@/interfaces/signUp";
+import type { SignUpVendorRequest } from "@/interfaces/signUp";
 import type { User } from "@/interfaces/user";
 import { createToaster } from "@/utils/createToaster";
 import {
@@ -18,21 +18,20 @@ import {
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-function SignUp() {
+function SignUpVendor() {
   const {
     handleSubmit,
     register,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpUserRequest>();
+  } = useForm<SignUpVendorRequest>();
   const navigate = useNavigate();
-  const { Root, Label, ErrorIcon, ErrorText, RequiredIndicator, HelperText } =
-    Field;
+  const { Root, Label, ErrorIcon, ErrorText, HelperText } = Field;
 
   const password = watch("password");
 
-  const signUpMutation = usePost<SignUpUserRequest, Response<User>>({
-    url: "register",
+  const signUpMutation = usePost<SignUpVendorRequest, Response<User>>({
+    url: "register-vendor",
     onSuccess: (_data) => createToaster("Done", "Sign Up is Done", "success"),
     onError: (error) => {
       const errorReason = (error as CustomError).response.data.error;
@@ -45,7 +44,7 @@ function SignUp() {
       }
     },
   });
-  const onSubmit = (data: SignUpUserRequest) => {
+  const onSubmit = (data: SignUpVendorRequest) => {
     try {
       signUpMutation.mutate(data);
       navigate("/auth/login");
@@ -65,14 +64,12 @@ function SignUp() {
       >
         <VStack gap={3} as="form" onSubmit={handleSubmit(onSubmit)}>
           <Heading as="h1" size="2xl" fontWeight={700} mb={4}>
-            Create account
+            Create vendor account
           </Heading>
 
           {/* 1. Name Input */}
           <Root invalid={!!errors.username}>
-            <Label htmlFor="username">
-              Username <RequiredIndicator>*</RequiredIndicator>
-            </Label>
+            <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               {...register("username", {
@@ -87,9 +84,7 @@ function SignUp() {
 
           {/* 2. Email Input */}
           <Root invalid={!!errors.email}>
-            <Label htmlFor="email">
-              Email <RequiredIndicator>*</RequiredIndicator>
-            </Label>
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
@@ -109,9 +104,7 @@ function SignUp() {
 
           {/* 3. Phone Input */}
           <Root invalid={!!errors.phone}>
-            <Label htmlFor="phone">
-              Phone Number <RequiredIndicator>*</RequiredIndicator>
-            </Label>
+            <Label htmlFor="phone">Phone Number</Label>
             <Input
               id="phone"
               {...register("phone", {
@@ -128,11 +121,39 @@ function SignUp() {
             </ErrorText>
           </Root>
 
+          {/* 1. Store Name Input */}
+          <Root invalid={!!errors.storeName}>
+            <Label htmlFor="storeName">Store Name</Label>
+            <Input
+              id="storeName"
+              {...register("storeName", {
+                required: "Your store name is required.",
+              })}
+            />
+            <ErrorText>
+              <ErrorIcon size="sm" />
+              {errors.storeName && errors.storeName.message}
+            </ErrorText>
+          </Root>
+
+          {/* 1. Store Description Input */}
+          <Root invalid={!!errors.storeDescription}>
+            <Label htmlFor="storeDescription">Store Description</Label>
+            <Input
+              id="storeDescription"
+              {...register("storeDescription", {
+                required: "Your store description is required.",
+              })}
+            />
+            <ErrorText>
+              <ErrorIcon size="sm" />
+              {errors.storeDescription && errors.storeDescription.message}
+            </ErrorText>
+          </Root>
+
           {/* 4. Password Input */}
           <Root invalid={!!errors.password}>
-            <Label htmlFor="password">
-              Password <RequiredIndicator>*</RequiredIndicator>
-            </Label>
+            <Label htmlFor="password">Password</Label>
             <PasswordInput
               id="password"
               {...register("password", {
@@ -160,9 +181,7 @@ function SignUp() {
 
           {/* 4. Re-enter Password Input */}
           <Root invalid={!!errors.reEnterPassword}>
-            <Label htmlFor="reEnterPassword">
-              Re-enter password <RequiredIndicator>*</RequiredIndicator>
-            </Label>
+            <Label htmlFor="reEnterPassword">Re-enter password</Label>
             <PasswordInput
               id="reEnterPassword"
               {...register("reEnterPassword", {
@@ -227,4 +246,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default SignUpVendor;

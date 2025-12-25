@@ -1,4 +1,10 @@
-import { FiHeart, FiShoppingBag, FiShoppingCart, FiUser } from "react-icons/fi";
+import {
+  FiHeart,
+  FiShoppingBag,
+  FiShoppingCart,
+  FiUser,
+  FiBox,
+} from "react-icons/fi";
 import type { NavItem } from "./data/navItems";
 import type { IconType } from "react-icons";
 
@@ -14,7 +20,7 @@ export const sortBy = [
   { label: "Oldest", value: "DESC-created-old", key: "created_at" },
 ];
 
-interface DashboardLinks extends NavItem {
+export interface DashboardLinks extends NavItem {
   icon: IconType;
 }
 
@@ -24,3 +30,12 @@ export const userDashboardLinks: DashboardLinks[] = [
   { label: "Cart", href: "/user-dashboard/cart", icon: FiShoppingCart },
   { label: "Orders", href: "/user-dashboard/orders", icon: FiShoppingBag },
 ];
+
+export const vendorDashboardLinks: DashboardLinks[] = [
+  { label: "Profile", href: "/vendor-dashboard", icon: FiUser },
+  { label: "Products", href: "/vendor-dashboard/products", icon: FiBox },
+  { label: "Orders", href: "/vendor-dashboard/orders", icon: FiShoppingCart },
+];
+
+// Test vendor email
+// CWeoeVh4@gmail.com

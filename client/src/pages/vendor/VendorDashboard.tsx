@@ -1,12 +1,12 @@
-import { userDashboardLinks } from "@/assets/assets";
+import { vendorDashboardLinks } from "@/assets/assets";
 import Sidebar from "@/components/dashboards/sidebars/Sidebar";
 import { Box, Flex } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 
-export default function UserDashboard() {
+export default function VendorDashboard() {
   return (
-    <Flex p={4} gap={4}>
-      <Sidebar links={userDashboardLinks} />
+    <Flex gap={4} p={4}>
+      <Sidebar links={vendorDashboardLinks} />
       <Box className="content panel" flexGrow={1}>
         <Outlet />
       </Box>
