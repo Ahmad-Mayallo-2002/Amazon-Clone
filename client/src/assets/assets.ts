@@ -5,6 +5,7 @@ import {
   FiUser,
   FiBox,
 } from "react-icons/fi";
+import { MdOutlineDashboard } from "react-icons/md";
 import type { NavItem } from "./data/navItems";
 import type { IconType } from "react-icons";
 
@@ -32,9 +33,10 @@ export const userDashboardLinks: DashboardLinks[] = [
 ];
 
 export const vendorDashboardLinks: DashboardLinks[] = [
-  { label: "Profile", href: "/vendor-dashboard", icon: FiUser },
+  { label: "Overview", href: "/vendor-dashboard", icon: MdOutlineDashboard },
   { label: "Products", href: "/vendor-dashboard/products", icon: FiBox },
   { label: "Orders", href: "/vendor-dashboard/orders", icon: FiShoppingCart },
+  { label: "Profile", href: "/vendor-dashboard/profile", icon: FiUser },
 ];
 
 // Test vendor email

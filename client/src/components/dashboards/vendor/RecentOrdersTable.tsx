@@ -59,7 +59,7 @@ const statusColor = (status: OrderStatus) => {
   }
 };
 
-const RecentOrdersTable = () => {
+function RecentOrdersTable() {
   const { Root, Body, Cell, ColumnHeader, Header, Footer, Row, ScrollArea } =
     Table;
 
@@ -75,7 +75,7 @@ const RecentOrdersTable = () => {
       </HStack>
 
       <ScrollArea maxW="calc(100vw - 15rem)">
-        <Root borderWidth="1px">
+        <Root borderWidth="1px" showColumnBorder>
           <Header>
             <Row>
               <ColumnHeader>No.</ColumnHeader>
@@ -113,6 +113,6 @@ const RecentOrdersTable = () => {
       </ScrollArea>
     </Box>
   );
-};
+}
 
 export default RecentOrdersTable;

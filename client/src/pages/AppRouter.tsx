@@ -33,6 +33,7 @@ const UserOrders = lazy(() => import("./user/UserOrders"));
 const VendorDashboard = lazy(() => import("./vendor/VendorDashboard"));
 const VendorOrders = lazy(() => import("./vendor/VendorOrders"));
 const VendorProducts = lazy(() => import("./vendor/VendorProducts"));
+const VendorOverview = lazy(() => import("./vendor/VendorOverview"));
 const VendorProfile = lazy(() => import("./vendor/VendorProfile"));
 
 export default function AppRouter() {
@@ -65,9 +66,10 @@ export default function AppRouter() {
         {/* Prodtected vendor routes */}
         <Route element={<ProtectedRoute currentRole={Roles.VENDOR} />}>
           <Route path="vendor-dashboard" element={<VendorDashboard />}>
-            <Route index element={<VendorProfile />} />
+            <Route index element={<VendorOverview />} />
             <Route path="orders" element={<VendorOrders />} />
             <Route path="products" element={<VendorProducts />} />
+            <Route path="profile" element={<VendorProfile />} />
           </Route>
         </Route>
 

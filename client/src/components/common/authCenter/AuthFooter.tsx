@@ -1,11 +1,16 @@
-import { Box, Link, Text, HStack, Center, Separator } from "@chakra-ui/react";
+import { Box, Link, Text, HStack, Center } from "@chakra-ui/react";
 
 function AuthFooter() {
   return (
-    <Box as="footer" py={4} bg="#fff" width="full">
-      <Separator borderColor="gray.300" />
-
-      <Center mt={8} flexDirection="column">
+    <Box
+      as="footer"
+      pb={4}
+      bg="#fff"
+      width="full"
+      borderTop="1px solid"
+      borderColor="gray.300"
+    >
+      <Center mt={6} flexDirection="column">
         <HStack gap={6} fontSize="xs" color="blue.500" mb={2}>
           <Link href="/">Conditions of Use</Link>
           <Link href="/">Privacy Notice</Link>
