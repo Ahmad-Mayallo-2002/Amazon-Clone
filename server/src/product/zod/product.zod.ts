@@ -1,4 +1,4 @@
-import { infer as zInfer, any, number, object, string, uuid, coerce } from "zod";
+import { infer as zInfer, any, object, string, uuid, coerce } from "zod";
 
 export const ProductSchema = object({
   title: string().max(255),

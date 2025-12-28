@@ -10,6 +10,7 @@ import type { NavItem } from "./data/navItems";
 import type { IconType } from "react-icons";
 
 export const mainApiEndPoint: string = "http://localhost:3000/api/";
+export const localImagesLink: string = "http://localhost:3000/";
 
 export const sortBy = [
   { label: "All", value: "", key: "" },

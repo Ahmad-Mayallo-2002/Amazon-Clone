@@ -17,9 +17,11 @@ router.get("/get-products", container.getAllProducts);
 
 router.get("/get-products/:id", container.getProductById);
 
+router.get("/get-products-by-category", container.getProductsByCategory);
+
 router.get(
-  "/get-products-by-category",
-  container.getProductsByCategory
+  "/get-products-by-vendorId/:vendorId",
+  container.getProductsByVendorId
 );
 
 router.get("/search-products", container.searchProducts);

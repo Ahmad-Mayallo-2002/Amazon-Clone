@@ -32,7 +32,6 @@ import { config } from "dotenv";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
-import { compare, hash } from "bcryptjs";
 config();
 
 const port: number = parseInt(process.env.PORT as string);

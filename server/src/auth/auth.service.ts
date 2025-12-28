@@ -44,10 +44,17 @@ export class AuthService {
   }
 
   async registerVendor(data: RegisterVendor): Promise<Vendor> {
-    const { email, password, phone, storeDescription, storeName, username } =
-      data;
+    const {
+      email,
+      password,
+      phone,
+      storeDescription,
+      storeName,
+      username,
+      reEnterPassword,
+    } = data;
     const user = await this.register(
-      { username, email, password, phone },
+      { username, email, password, phone, reEnterPassword },
       Roles.VENDOR
     );
     const vendor = this.vendorRepo.create({

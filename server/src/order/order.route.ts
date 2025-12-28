@@ -31,6 +31,13 @@ router.get(
   controller.getOrder
 );
 
+router.get(
+  "/get-vendor-orders/:vendorId",
+  checkToken,
+  authorizeRoles(Roles.ADMIN, Roles.VENDOR),
+  controller.getOrdersItemsByVendorId
+);
+
 router.delete(
   "/delete-order/:id",
   checkToken,

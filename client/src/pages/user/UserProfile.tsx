@@ -71,7 +71,7 @@ export default function UserProfile() {
             />
             {errors.username && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.username?.message}
               </ErrorText>
             )}
@@ -92,7 +92,7 @@ export default function UserProfile() {
             />
             {errors.email && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.email?.message}
               </ErrorText>
             )}
@@ -112,7 +112,7 @@ export default function UserProfile() {
             />
             {errors.phone && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.phone?.message}
               </ErrorText>
             )}

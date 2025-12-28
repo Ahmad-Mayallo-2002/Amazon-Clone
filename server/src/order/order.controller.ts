@@ -3,6 +3,7 @@ import { OrderService } from "./order.service";
 import { NextFunction, Request, Response } from "express";
 import { sendResponse } from "../utils/sendResponse";
 import { CREATED, CREATED_REASON, OK, OK_REASON } from "../utils/statusCodes";
+import { OrderStatus } from "../enums/order-status.enum";
 
 @injectable()
 export class OrderController {
@@ -41,6 +42,27 @@ export class OrderController {
       const { id } = req.params;
       const order = await this.orderService.getOrder(id);
       return sendResponse(res, order, OK, OK_REASON);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getOrdersItemsByVendorId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { vendorId } = req.params;
+      const { take, skip, status } = req.query;
+      const { data, pagination } =
+        await this.orderService.getOrdersItemsByVendorId(
+          vendorId,
+          Number(take),
+          Number(skip) || 0,
+          status as OrderStatus
+        );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }

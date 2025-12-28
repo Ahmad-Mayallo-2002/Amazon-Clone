@@ -86,8 +86,6 @@ a:hover {
   }
 }
 
-.chakra-rating-group__root:focus,
-.chakra-rating-group__root {
-  border: none;
-  outline: none;
+.chakra-icon {
+  width: 15px;
 }

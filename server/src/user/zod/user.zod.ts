@@ -8,14 +8,18 @@ export const UserSchema = object({
       "Email must start with between 5 and 20 characters and at least one number",
   }),
   password: string().min(8).max(20),
+  reEnterPassword: string().min(8).max(20),
   phone: string().regex(/^\+[1-9]\d{1,14}$/),
+}).refine((arg) => arg.password == arg.reEnterPassword, {
+  message: "Passwords must match",
+  path: ["reEnterPassword"],
 });
 
 export const UpdateUserSchema = UserSchema.partial().refine(
   (data) => Object.keys(data).length > 0,
   {
     message: "At least one field must be provided",
-    path: ['body']
+    path: ["body"],
   }
 );
 

@@ -45,7 +45,7 @@ export default function Payment() {
             />
             {errors.cardNumber && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.cardNumber.message}
               </ErrorText>
             )}
@@ -66,7 +66,7 @@ export default function Payment() {
             />
             {errors.expiryDate && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.expiryDate.message}
               </ErrorText>
             )}
@@ -88,7 +88,7 @@ export default function Payment() {
             />
             {errors.cvv && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.cvv.message}
               </ErrorText>
             )}
@@ -109,7 +109,7 @@ export default function Payment() {
             />
             {errors.cardholderName && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.cardholderName.message}
               </ErrorText>
             )}

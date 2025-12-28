@@ -29,7 +29,10 @@ export class OrderService {
   private orderRepo: Repository<Order> = AppDataSource.getRepository(Order);
   constructor(@inject(DataSource) private dataSource: DataSource) {}
 
-  async getAllOrders(skip: number, take: number): Promise<PaginatedDate<Order>> {
+  async getAllOrders(
+    skip: number,
+    take: number
+  ): Promise<PaginatedDate<Order>> {
     const orders = await this.orderRepo.find({
       relations: {
         user: true,
@@ -41,10 +44,14 @@ export class OrderService {
     const counts = await this.orderRepo.count();
     if (!counts) throw new AppError("No orders", NOT_FOUND, NOT_FOUND_REASON);
     const pagination = calculatePagination(counts, skip, take);
-    return {data: orders, pagination};
+    return { data: orders, pagination };
   }
 
-  async getUserOrders(userId: string, skip: number ,take: number): Promise<PaginatedDate<Order>> {
+  async getUserOrders(
+    userId: string,
+    skip: number,
+    take: number
+  ): Promise<PaginatedDate<Order>> {
     const orders = await this.orderRepo.find({
       where: { userId },
       relations: {
@@ -54,10 +61,9 @@ export class OrderService {
       },
     });
     const counts = await this.orderRepo.count({ where: { userId } });
-    if (!counts)
-      throw new AppError("No orders", NOT_FOUND, NOT_FOUND_REASON);
+    if (!counts) throw new AppError("No orders", NOT_FOUND, NOT_FOUND_REASON);
     const pagination = calculatePagination(counts, skip, take);
-    return {data: orders, pagination};
+    return { data: orders, pagination };
   }
 
   async getOrder(orderId: string): Promise<Order> {
@@ -75,6 +81,37 @@ export class OrderService {
       throw new AppError("Order not found", NOT_FOUND, NOT_FOUND_REASON);
 
     return order;
+  }
+
+  async getOrdersItemsByVendorId(
+    vendorId: string,
+    take: number,
+    skip: number,
+    status?: OrderStatus
+  ): Promise<PaginatedDate<OrderItem>> {
+    const orderItemRepo = this.dataSource.getRepository(OrderItem);
+    const find: any = {
+      take,
+      skip,
+      where: {
+        product: {
+          vendorId,
+        },
+      },
+      relations: {
+        product: true,
+        order: true,
+      },
+    };
+    if (status) find.where.order.status = status;
+    const items = await orderItemRepo.find(find);
+    if (!items.length)
+      throw new AppError("No orders found", NOT_FOUND, NOT_FOUND_REASON);
+    const counts = await orderItemRepo.count({
+      where: find.where,
+    });
+    const pagination = calculatePagination(counts, skip, take);
+    return { data: items, pagination };
   }
 
   async deleteOrder(orderId: string): Promise<string> {

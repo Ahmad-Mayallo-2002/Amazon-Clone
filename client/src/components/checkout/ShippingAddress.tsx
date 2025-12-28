@@ -111,7 +111,7 @@ export default function ShippingAddress() {
             />
             {errors.fullName && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.fullName.message}
               </ErrorText>
             )}
@@ -130,7 +130,7 @@ export default function ShippingAddress() {
             />
             {errors.street && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.street.message}
               </ErrorText>
             )}
@@ -149,7 +149,7 @@ export default function ShippingAddress() {
             />
             {errors.city && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.city.message}
               </ErrorText>
             )}
@@ -168,7 +168,7 @@ export default function ShippingAddress() {
             />
             {errors.state && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.state.message}
               </ErrorText>
             )}
@@ -191,7 +191,7 @@ export default function ShippingAddress() {
             />
             {errors.postalCode && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.postalCode.message}
               </ErrorText>
             )}
@@ -214,7 +214,7 @@ export default function ShippingAddress() {
             />
             {errors.phone && (
               <ErrorText>
-                <ErrorIcon boxSize="15px" />
+                <ErrorIcon />
                 {errors.phone.message}
               </ErrorText>
             )}

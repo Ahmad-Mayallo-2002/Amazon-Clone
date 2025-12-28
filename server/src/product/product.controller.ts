@@ -80,6 +80,28 @@ export class ProductController {
     }
   };
 
+  getProductsByVendorId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { vendorId } = req.params;
+      const { take, skip, category, stockStatus } = req.query;
+      const { data, pagination } =
+        await this.productService.getProductsByVendorId(
+          vendorId,
+          Number(take),
+          Number(skip) || 0,
+          `${category}`,
+          Boolean(stockStatus)
+        );
+      return sendResponse(res, data, OK, OK_REASON, pagination);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   searchProducts = async (req: Request, res: Response, next: NextFunction) => {
     const { search, skip, take } = req.query;
     const { data, pagination } = await this.productService.searchProducts(

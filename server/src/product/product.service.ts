@@ -23,6 +23,8 @@ import { PaginatedDate } from "../interfaces/paginated-data.interface";
 import { calculatePagination } from "../utils/calculatePagination";
 import { SortBy } from "../types/sortBy.type";
 import { OrderBy } from "../enums/order-by.enum";
+import { CloudinaryUpload } from "../utils/cloudinaryUpload";
+import { v2 } from "cloudinary";
 
 @injectable()
 export class ProductService {
@@ -30,7 +32,7 @@ export class ProductService {
     AppDataSource.getRepository(Product);
 
   async createProduct(data: CreateProduct, vendorId: string) {
-    const strategy = new UploadContext(new LocalUpload());
+    const strategy = new UploadContext(new CloudinaryUpload());
     const result = await strategy.performStrategy(data.image);
     const image: Image = {
       public_id: "",
@@ -120,6 +122,42 @@ export class ProductService {
     return { data: products, pagination };
   }
 
+  async getProductsByVendorId(
+    vendorId: string,
+    take: number,
+    skip: number,
+    category?: string,
+    stockStatus?: boolean
+  ): Promise<PaginatedDate<Product>> {
+    const find: any = {
+      take,
+      skip,
+      where: { vendorId },
+      relations: {
+        category: true,
+      },
+    };
+    if (category) find.where.category = { name: category };
+    if (stockStatus !== undefined)
+      find.where.stock = stockStatus ? MoreThanOrEqual(0) : 0;
+    const products = await this.productRepo.find({
+      take,
+      skip,
+      where: { vendorId },
+      relations: {
+        category: true,
+      },
+      order: {
+        createdAt: "ASC",
+      },
+    });
+    if (!products.length)
+      throw new AppError("No products found", NOT_FOUND, NOT_FOUND_REASON);
+    const counts = await this.productRepo.count({ where: { vendorId } });
+    const pagination = calculatePagination(counts, skip, take);
+    return { data: products, pagination };
+  }
+
   async searchProducts(
     search: string,
     skip: number,
@@ -149,10 +187,15 @@ export class ProductService {
     const body: Record<any, any> = { ...data };
     if (body.categoryId) body.category = { id: data.categoryId };
     if (data.image) {
-      const context = new UploadContext(new LocalUpload());
+      const context = new UploadContext(new CloudinaryUpload());
       const res = await context.performStrategy(data.image);
-      if (typeof res === "string") body.image = { url: res, public_id: "" };
-      unlinkSync(join(__dirname, "../images/", product.image.url));
+      if (typeof res === "string") {
+        body.image = { url: res, public_id: "" };
+        unlinkSync(join(__dirname, "../images/", product.image.url));
+      } else {
+        body.image = { url: res.secure_url, public_id: res.public_id };
+        await v2.api.delete_resources([product.image.public_id]);
+      }
     }
     await this.productRepo.save(Object.assign(product, body));
     return "Product updated successfully";
@@ -162,7 +205,10 @@ export class ProductService {
     const product = await this.productRepo.findOne({ where: { id, vendorId } });
     if (!product)
       throw new AppError("Product not found", NOT_FOUND, NOT_FOUND_REASON);
-    unlinkSync(join(__dirname, "../images/", product.image.url));
+    if (product.image.public_id)
+      await v2.api.delete_resources([product.image.public_id]);
+    else unlinkSync(join(__dirname, "../images/", product.image.url));
+
     await this.productRepo.remove(product);
     return "Product deleted successfully";
   }

@@ -1,4 +1,16 @@
-import { Box, Table, Text, Badge, HStack, Link } from "@chakra-ui/react";
+import { useFetch } from "@/hooks/useFetch";
+import {
+  Box,
+  Table,
+  Text,
+  Badge,
+  HStack,
+  Link,
+  Center,
+  Heading,
+} from "@chakra-ui/react";
+import { getPayload } from "@/utils/payloadCookie";
+import type { CustomError } from "@/interfaces/responses";
 
 type OrderStatus = "Processing" | "Shipped" | "Delivered" | "Failed";
 
@@ -37,7 +49,7 @@ const orders: Order[] = [
     date: "Jan 19, 2025",
   },
   {
-    id: "ORD-2025-001234",
+    id: "ORD-2025-001231",
     customer: "Mike Johnson",
     product: "Gaming Keyboard",
     amount: "$129.99",
@@ -63,6 +75,18 @@ function RecentOrdersTable() {
   const { Root, Body, Cell, ColumnHeader, Header, Footer, Row, ScrollArea } =
     Table;
 
+  const payload = getPayload();
+
+  const { data, error } = useFetch({
+    url: `get-vendor-orders/${payload?.vendorId}?take=4`,
+    queryKey: ["recent-orders"],
+    config: {
+      headers: {
+        Authorization: `Bearer ${payload?.token}`,
+      },
+    },
+  });
+
   return (
     <Box mt={4} boxShadow="sm" className="panel">
       <HStack justify="space-between" flexWrap="wrap" mb={4}>
@@ -74,43 +98,51 @@ function RecentOrdersTable() {
         </Link>
       </HStack>
 
-      <ScrollArea maxW="calc(100vw - 15rem)">
-        <Root borderWidth="1px" showColumnBorder>
-          <Header>
-            <Row>
-              <ColumnHeader>No.</ColumnHeader>
-              <ColumnHeader>Customer</ColumnHeader>
-              <ColumnHeader>Product</ColumnHeader>
-              <ColumnHeader>Amount</ColumnHeader>
-              <ColumnHeader>Status</ColumnHeader>
-              <ColumnHeader>Date</ColumnHeader>
-            </Row>
-          </Header>
-
-          <Body>
-            {orders.map((order, index) => (
-              <Row key={order.id}>
-                <Cell fontWeight="medium">{index + 1}</Cell>
-                <Cell>{order.customer}</Cell>
-                <Cell>{order.product}</Cell>
-                <Cell fontWeight="semibold">{order.amount}</Cell>
-                <Cell>
-                  <Badge colorPalette={statusColor(order.status)}>
-                    {order.status}
-                  </Badge>
-                </Cell>
-                <Cell>{order.date}</Cell>
+      {data ? (
+        <ScrollArea maxW="calc(100vw - 15rem)">
+          <Root borderWidth="1px" showColumnBorder>
+            <Header>
+              <Row>
+                <ColumnHeader>No.</ColumnHeader>
+                <ColumnHeader>Customer</ColumnHeader>
+                <ColumnHeader>Product</ColumnHeader>
+                <ColumnHeader>Amount</ColumnHeader>
+                <ColumnHeader>Status</ColumnHeader>
+                <ColumnHeader>Date</ColumnHeader>
               </Row>
-            ))}
-          </Body>
-          <Footer>
-            <Row>
-              <Cell colSpan={5}>Total Orders:</Cell>
-              <Cell>{orders.length}</Cell>
-            </Row>
-          </Footer>
-        </Root>
-      </ScrollArea>
+            </Header>
+
+            <Body>
+              {orders.map((order, index) => (
+                <Row key={order.id}>
+                  <Cell fontWeight="medium">{index + 1}</Cell>
+                  <Cell>{order.customer}</Cell>
+                  <Cell>{order.product}</Cell>
+                  <Cell fontWeight="semibold">{order.amount}</Cell>
+                  <Cell>
+                    <Badge colorPalette={statusColor(order.status)}>
+                      {order.status}
+                    </Badge>
+                  </Cell>
+                  <Cell>{order.date}</Cell>
+                </Row>
+              ))}
+            </Body>
+            <Footer>
+              <Row>
+                <Cell colSpan={5}>Total Orders:</Cell>
+                <Cell>{orders.length}</Cell>
+              </Row>
+            </Footer>
+          </Root>
+        </ScrollArea>
+      ) : (
+        <Center h="300px">
+          <Heading fontWeight={700} fontSize="2xl">
+            {error && (error as CustomError).response.data.message}
+          </Heading>
+        </Center>
+      )}
     </Box>
   );
 }
