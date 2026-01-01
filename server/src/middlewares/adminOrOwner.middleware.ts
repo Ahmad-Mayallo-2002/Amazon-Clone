@@ -5,9 +5,9 @@ import { Roles } from "../enums/role.enum";
 
 export function adminOrOwner(getId: (req: Request) => string) {
   return (req: Request, _res: Response, next: NextFunction) => {
-    const { role, id } = (req as any).user;
+    const { role, id, vendorId } = (req as any).user;
     const targetId = getId(req);
-    if (role === Roles.ADMIN || id === targetId) {
+    if (role === Roles.ADMIN || id === targetId || vendorId === targetId) {
       return next();
     } else {
       throw new AppError(

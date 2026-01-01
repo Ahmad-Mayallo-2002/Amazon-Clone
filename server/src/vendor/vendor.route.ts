@@ -23,7 +23,7 @@ router.get(
   "/get-vendors/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
-  adminOrOwner,
+  adminOrOwner((req) => req.params.id),
   container.getVendorById
 );
 
@@ -31,7 +31,7 @@ router.patch(
   "/update-vendor/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
-  adminOrOwner,
+  adminOrOwner((req) => req.params.id),
   validateZod(VendorSchema.partial()),
   container.updateVendor
 );
@@ -40,7 +40,7 @@ router.delete(
   "/delete-vendor/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
-  adminOrOwner,
+  adminOrOwner((req) => req.params.id),
   container.deleteVendor
 );
 

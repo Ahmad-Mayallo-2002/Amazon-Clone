@@ -31,7 +31,12 @@ export class VendorService {
   }
 
   async getVendor(id: string): Promise<Vendor> {
-    const vendor = await this.vendorRepo.findOne({ where: { id } });
+    const vendor = await this.vendorRepo.findOne({
+      where: { id },
+      relations: {
+        user: true,
+      },
+    });
     if (!vendor)
       throw new AppError(NOT_FOUND_REASON, NOT_FOUND, `Vendor not found`);
     return vendor;
@@ -39,6 +44,12 @@ export class VendorService {
 
   async updateVendor(id: string, data: UpdateVendor): Promise<string> {
     const vendor = await this.getVendor(id);
+    if (!data.storeDescription || !data.storeName)
+      throw new AppError(
+        "You can not send empty data",
+        NOT_FOUND,
+        NOT_FOUND_REASON
+      );
     Object.assign(vendor, data);
     await this.vendorRepo.save(vendor);
     return "Vendor updated successfully";

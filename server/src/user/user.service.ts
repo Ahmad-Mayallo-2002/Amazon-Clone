@@ -7,7 +7,6 @@ import AppError from "../utils/appError";
 import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { UpdateUser } from "./zod/user.zod";
 import { PaginatedDate } from "../interfaces/paginated-data.interface";
-import { IPagination } from "../interfaces/pagination.interface";
 import { calculatePagination } from "../utils/calculatePagination";
 
 @injectable()
@@ -29,7 +28,7 @@ export class UserService {
 
   async getUser(id: string): Promise<User> {
     const user = await this.userRepo.findOne({
-      where: { id, role: Roles.USER },
+      where: { id },
     });
     if (!user)
       throw new AppError("User not found", NOT_FOUND, NOT_FOUND_REASON);

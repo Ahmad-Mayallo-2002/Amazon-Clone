@@ -1,4 +1,4 @@
-import { infer as zInfer, email, object, string, uuid } from "zod";
+import { infer as zInfer, email, object, string } from "zod";
 
 export const RegisterVendorSchema = object({
   username: string().min(5).max(20),

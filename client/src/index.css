@@ -64,7 +64,7 @@ a:hover {
 
 .field:focus {
   border-color: #e77600;
-  box-shadow: 0 0 3px 2px #e77600;
+  box-shadow: 0 0 0 1.5px #e77600;
 }
 
 .center {
@@ -88,4 +88,18 @@ a:hover {
 
 .chakra-icon {
   width: 15px;
+}
+
+.edit-vendor-root {
+  flex-direction: column;
+  align-items: start;
+  gap: 0;
+  color: #71717a;
+  font-size: 0.875rem;
+}
+
+.edit-vendor-root .edit-vendor-label {
+  font-weight: 700;
+  margin-bottom: 0.125rem;
+  color: #1a3478;
 }
