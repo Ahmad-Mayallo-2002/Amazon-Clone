@@ -1,16 +1,18 @@
-import { infer as zInfer, any, object, string, uuid, coerce } from "zod";
+import z, { any, coerce, infer as _infer, object, string, uuid } from "zod";
 
 export const ProductSchema = object({
   title: string().max(255),
   image: any(),
   description: string(),
-  price: coerce.number().gt(0),
-  stock: coerce.number().gt(0).int().default(1),
-  discount: coerce.number().default(0),
+  price: string().regex(/\d/),
+  stock: coerce.number().gte(1).int(),
+  discount: coerce.number(),
   categoryId: uuid(),
 });
 
-const updateProduct = ProductSchema.partial();
+export const updateProduct = ProductSchema.partial();
 
-export type CreateProduct = zInfer<typeof ProductSchema>;
-export type UpdateProduct = zInfer<typeof updateProduct>;
+export type CreateProduct = _infer<typeof ProductSchema>;
+export type UpdateProduct = _infer<typeof updateProduct>;
+
+const x: UpdateProduct = { categoryId: "" };

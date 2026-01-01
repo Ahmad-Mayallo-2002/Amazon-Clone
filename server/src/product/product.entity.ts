@@ -27,7 +27,7 @@ export class Product extends AbstractEntity {
   description: string;
 
   @Column({ type: "decimal", default: 0 })
-  price: number;
+  price: string;
 
   @Column({ type: "int", default: 1 })
   stock: number;

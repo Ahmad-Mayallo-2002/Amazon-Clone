@@ -115,9 +115,9 @@ export class ProductController {
   updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (req.file) req.body.image = req.file;
-      const { id, vendorId } = req.params;
+      const { productId, vendorId } = req.params;
       const message = await this.productService.updateProduct(
-        id,
+        productId,
         req.body,
         vendorId
       );
@@ -129,8 +129,11 @@ export class ProductController {
 
   deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id, vendorId } = req.params;
-      const message = await this.productService.deleteProduct(id, vendorId);
+      const { productId, vendorId } = req.params;
+      const message = await this.productService.deleteProduct(
+        productId,
+        vendorId
+      );
       return sendResponse(res, message, OK, OK_REASON);
     } catch (error) {
       next(error);

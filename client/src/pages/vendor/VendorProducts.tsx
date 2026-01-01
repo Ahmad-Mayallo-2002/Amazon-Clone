@@ -1,5 +1,6 @@
 import CreateProductDialog from "@/components/dashboards/vendor/CreateProductDialog";
 import VendorProductsActions from "@/components/dashboards/vendor/VendorProductsActions";
+import MainSpinner from "@/components/ui/MainSpinner";
 import { useFetch } from "@/hooks/useFetch";
 import type { Product } from "@/interfaces/product";
 import type { CustomError, PaginatedDate } from "@/interfaces/responses";
@@ -19,13 +20,12 @@ export default function VendorProducts() {
   const { ScrollArea, Root, Header, Body, Footer, Row, Cell, ColumnHeader } =
     Table;
   const payload = getPayload();
-  const { data, error } = useFetch<PaginatedDate<Product[]>>({
+  const { data, error, isLoading } = useFetch<PaginatedDate<Product[]>>({
     queryKey: ["vendor-products"],
     url: `get-products-by-vendorId/${payload?.vendorId}?take=10`,
   });
-
   return (
-    <Box bg="white" p={6} borderRadius="lg" boxShadow="sm">
+    <Box className="panel" overflow="hidden" boxShadow="sm">
       {/* Header */}
       <HStack justify="space-between" mb={4}>
         <Heading fontSize="2xl" fontWeight="bold">
@@ -38,12 +38,17 @@ export default function VendorProducts() {
         <>
           {/* Table */}
           <ScrollArea maxW="calc(100vw - 15rem)">
-            <Root borderWidth={1}>
+            <Root
+              showColumnBorder
+              borderWidth={1}
+              w={{ base: "150%", md: "125%", lg: "100%" }}
+            >
               <Header>
                 <Row>
                   <ColumnHeader>Product</ColumnHeader>
                   <ColumnHeader>Category</ColumnHeader>
                   <ColumnHeader>Price</ColumnHeader>
+                  <ColumnHeader>Discount</ColumnHeader>
                   <ColumnHeader>Stock</ColumnHeader>
                   <ColumnHeader>Status</ColumnHeader>
                   <ColumnHeader>Actions</ColumnHeader>
@@ -70,6 +75,8 @@ export default function VendorProducts() {
 
                     <Cell fontWeight="semibold">${product.price}</Cell>
 
+                    <Cell fontWeight="semibold">%{product.discount * 100}</Cell>
+
                     <Cell color={product.stock === 0 ? "red.500" : "inherit"}>
                       {product.stock}
                     </Cell>
@@ -92,7 +99,7 @@ export default function VendorProducts() {
               </Body>
               <Footer>
                 <Row>
-                  <Cell colSpan={5}>Total Products</Cell>
+                  <Cell colSpan={6}>Total Products</Cell>
                   <Cell>{data.data?.length}</Cell>
                 </Row>
               </Footer>
@@ -104,6 +111,11 @@ export default function VendorProducts() {
           <Heading fontWeight={700} fontSize="2xl">
             {error && (error as CustomError).response.data.message}
           </Heading>
+        </Center>
+      )}
+      {isLoading && (
+        <Center h="200px">
+          <MainSpinner w="100px" h="100px" />
         </Center>
       )}
     </Box>

@@ -1,7 +1,6 @@
 import SelectCategory from "@/components/common/selects/SelectCategory";
-import { usePost } from "@/hooks/usePost";
-import type { Product } from "@/interfaces/product";
-import type { Response } from "@/interfaces/responses";
+import { usePatch } from "@/hooks/usePatch";
+import type { CustomError, Response } from "@/interfaces/responses";
 import { queryClient } from "@/main";
 import { createToaster } from "@/utils/createToaster";
 import { getPayload } from "@/utils/payloadCookie";
@@ -11,7 +10,7 @@ import {
   Dialog,
   Field,
   Flex,
-  Icon,
+  IconButton,
   Image,
   Input,
   Portal,
@@ -21,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { useState, type ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
-import { FiPlus } from "react-icons/fi";
+import { FiEdit2 } from "react-icons/fi";
 
 export interface FormProps {
   title: string;
@@ -33,7 +32,11 @@ export interface FormProps {
   image: File;
 }
 
-export default function CreateProductDialog() {
+export default function UpdateProductDialog({
+  productId,
+}: {
+  productId: string;
+}) {
   const payload = getPayload();
   const {
     Root,
@@ -55,16 +58,12 @@ export default function CreateProductDialog() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormProps>({
-    defaultValues: {
-      discount: 0,
-    },
-  });
+  } = useForm<FormProps>();
 
-  const mutationAddProduct = usePost<{}, Response<Product>>({
-    url: "create-product",
+  const mutationUpdateProduct = usePatch<{}, Response<string>>({
+    url: `update-product/${productId}/${payload?.vendorId}`,
     onSuccess: (data) => {
-      createToaster("Done", data.message, "success");
+      createToaster("Done", data.data, "success");
       queryClient.invalidateQueries({
         queryKey: ["vendor-products"],
       });
@@ -72,6 +71,11 @@ export default function CreateProductDialog() {
     },
     onError: (error) => {
       console.log(error);
+      createToaster(
+        "Error",
+        (error as CustomError).response.data.message,
+        "error"
+      );
       setLoading(false);
     },
     config: {
@@ -88,30 +92,36 @@ export default function CreateProductDialog() {
     if (file) fileReader.readAsDataURL(file);
     fileReader.onload = () => setImage(fileReader.result as string);
   };
-
   const onSubmit = (_data: FormProps, event: any) => {
     setLoading(true);
-    const form = new FormData(event.target);
-    mutationAddProduct.mutate(form);
+    const rawForm = new FormData(event.target);
+    const filteredForm = new FormData();
+    rawForm.forEach((value, key) => {
+      if (value instanceof FileList) {
+        if (value.length) filteredForm.append(key, value);
+        return;
+      }
+      if (value) filteredForm.append(key, value);
+    });
+    mutationUpdateProduct.mutate(filteredForm);
   };
 
   return (
     <Root>
       <Trigger asChild>
-        <Button colorPalette="orange">
-          <Icon as={FiPlus} />
-          Add New Product
-        </Button>
+        <IconButton size="sm" variant="ghost" colorPalette="blue">
+          <FiEdit2 />
+        </IconButton>
       </Trigger>
       <Portal>
         <Backdrop />
         <Positioner>
           <Content>
             <Header>
-              <Title>Create Product</Title>
+              <Title>Update Product</Title>
             </Header>
             <Body>
-              <form onSubmit={handleSubmit(onSubmit)} id="create-product">
+              <form onSubmit={handleSubmit(onSubmit)} id="update-product">
                 <VStack gap={4}>
                   {/* Image */}
                   <FRoot invalid={!!errors.image}>
@@ -135,7 +145,6 @@ export default function CreateProductDialog() {
                       hidden
                       accept="image/*"
                       {...register("image", {
-                        required: "Image is required",
                         onChange: handleChangeImage,
                       })}
                     />
@@ -149,12 +158,7 @@ export default function CreateProductDialog() {
                   {/* Title */}
                   <FRoot invalid={!!errors.title}>
                     <Label>Title</Label>
-                    <Input
-                      placeholder="Product Title"
-                      {...register("title", {
-                        required: "Title is required",
-                      })}
-                    />
+                    <Input placeholder="Product Title" {...register("title")} />
                     {errors.title && (
                       <ErrorText>
                         <ErrorIcon />
@@ -170,7 +174,6 @@ export default function CreateProductDialog() {
                       <Input
                         placeholder="Product Price"
                         {...register("price", {
-                          required: "Price is required",
                           validate: (value) =>
                             !isNaN(+value) || "Price must be a number",
                         })}
@@ -188,7 +191,6 @@ export default function CreateProductDialog() {
                       <Input
                         placeholder="Product Stock"
                         {...register("stock", {
-                          required: "Stock is required",
                           validate: (value) =>
                             Number.isInteger(+value) ||
                             "Stock must be a number",
@@ -206,7 +208,7 @@ export default function CreateProductDialog() {
                   <Flex w="full" gap={4}>
                     {/* Category */}
                     <FRoot invalid={!!errors.categoryId}>
-                      <SelectCategory required={true} register={register} />
+                      <SelectCategory required={false} register={register} />
                       {errors.categoryId && (
                         <ErrorText>
                           <ErrorIcon />
@@ -245,9 +247,7 @@ export default function CreateProductDialog() {
                       h="200px"
                       resize="none"
                       placeholder="Product Description"
-                      {...register("description", {
-                        required: "Description is required",
-                      })}
+                      {...register("description")}
                     />
                     {errors.description && (
                       <ErrorText>
@@ -264,11 +264,11 @@ export default function CreateProductDialog() {
               <Button
                 loading={loading}
                 loadingText="Loading..."
-                form="create-product"
+                form="update-product"
                 type="submit"
                 colorPalette="blue"
               >
-                Create
+                Update
               </Button>
             </Footer>
             <CloseTrigger asChild>

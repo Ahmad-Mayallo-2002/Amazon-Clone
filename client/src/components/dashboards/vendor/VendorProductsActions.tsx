@@ -3,17 +3,20 @@ import type { Response } from "@/interfaces/responses";
 import { queryClient } from "@/main";
 import { createToaster } from "@/utils/createToaster";
 import { HStack, IconButton } from "@chakra-ui/react";
-import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import { FiTrash2 } from "react-icons/fi";
+import UpdateProductDialog from "./UpdateProductDialog";
+
+interface ActionsProps {
+  token: string;
+  productId: string;
+  vendorId: string;
+}
 
 export default function VendorProductsActions({
   token,
   productId,
   vendorId,
-}: {
-  token: string;
-  productId: string;
-  vendorId: string;
-}) {
+}: ActionsProps) {
   const mutationDeleteProduct = useDelete<Response<string>>({
     url: `delete-product/${productId}/${vendorId}`,
     onSuccess: (data) => {
@@ -38,16 +41,8 @@ export default function VendorProductsActions({
 
   return (
     <HStack gap={2}>
+      <UpdateProductDialog productId={productId} />
       <IconButton
-        aria-label="Edit product"
-        size="sm"
-        variant="ghost"
-        colorPalette="blue"
-      >
-        <FiEdit2 />
-      </IconButton>
-      <IconButton
-        aria-label="Delete product"
         size="sm"
         variant="ghost"
         colorPalette="red"

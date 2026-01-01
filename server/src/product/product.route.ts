@@ -5,7 +5,7 @@ import { ProductController } from "./product.controller";
 import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
 import { Roles } from "../enums/role.enum";
 import { validateZod } from "../middlewares/validate-zod.middleware";
-import { ProductSchema } from "./zod/product.zod";
+import { ProductSchema, updateProduct } from "./zod/product.zod";
 import { upload } from "../utils/multer";
 import { adminOrProductOwner } from "../middlewares/adminOrProductOwner.middleware";
 
@@ -36,17 +36,17 @@ router.post(
 );
 
 router.patch(
-  "/update-product/:id/:vendorId",
+  "/update-product/:productId/:vendorId",
   upload.single("image"),
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
   adminOrProductOwner,
-  validateZod(ProductSchema.partial()),
+  validateZod(updateProduct),
   container.updateProduct
 );
 
 router.delete(
-  "/delete-product/:id/:vendorId",
+  "/delete-product/:productId/:vendorId",
   checkToken,
   authorizeRoles(Roles.ADMIN, Roles.VENDOR),
   adminOrProductOwner,

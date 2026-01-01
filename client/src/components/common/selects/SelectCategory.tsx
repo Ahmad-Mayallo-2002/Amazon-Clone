@@ -7,9 +7,10 @@ import type { UseFormRegister } from "react-hook-form";
 
 interface SelectCategoryProps {
   register: UseFormRegister<FormProps>;
+  required: boolean;
 }
 
-export default function SelectCategory({ register }: SelectCategoryProps) {
+export default function SelectCategory({ register, required }: SelectCategoryProps) {
   const { data } = useFetch<Response<Category[]>>({
     queryKey: ["categories"],
     url: "get-categories",
@@ -36,7 +37,10 @@ export default function SelectCategory({ register }: SelectCategoryProps) {
       <Root collection={frameworks}>
         <HiddenSelect
           {...register("categoryId", {
-            required: "Category is required",
+            required: {
+              value: required,
+              message: "Category is required",
+            },
           })}
         />
         <Label>Select Category</Label>
