@@ -31,10 +31,18 @@ const UserOrders = lazy(() => import("./user/UserOrders"));
 
 // Vendor Dashboard
 const VendorDashboard = lazy(() => import("./vendor/VendorDashboard"));
+const VendorOverview = lazy(() => import("./vendor/VendorOverview"));
 const VendorOrders = lazy(() => import("./vendor/VendorOrders"));
 const VendorProducts = lazy(() => import("./vendor/VendorProducts"));
-const VendorOverview = lazy(() => import("./vendor/VendorOverview"));
 const VendorProfile = lazy(() => import("./vendor/VendorProfile"));
+
+// Admin Dashboard
+const AdminDashboard = lazy(() => import("./admin/AdminDashboard"));
+const AdminOverview = lazy(() => import("./admin/AdminOverview"));
+const AdminOrders = lazy(() => import("./admin/AdminOrders"));
+const AdminProducts = lazy(() => import("./admin/AdminProducts"));
+const AdminUsers = lazy(() => import("./admin/AdminUsers"));
+const AdminVendors = lazy(() => import("./admin/AdminVendors"));
 
 export default function AppRouter() {
   return (
@@ -70,6 +78,16 @@ export default function AppRouter() {
             <Route path="orders" element={<VendorOrders />} />
             <Route path="products" element={<VendorProducts />} />
             <Route path="profile" element={<VendorProfile />} />
+          </Route>
+        </Route>
+
+        <Route element={<ProtectedRoute currentRole={Roles.ADMIN} />}>
+          <Route path="admin-dashboard" element={<AdminDashboard />}>
+            <Route index element={<AdminOverview />} />
+            <Route element={<AdminProducts />} path="products" />
+            <Route element={<AdminUsers />} path="users" />
+            <Route element={<AdminVendors />} path="vendors" />
+            <Route element={<AdminOrders />} path="orders" />
           </Route>
         </Route>
 

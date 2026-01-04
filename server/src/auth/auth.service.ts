@@ -71,8 +71,7 @@ export class AuthService {
       where: { email: data.email },
       relations: ["vendor"],
     });
-    if (!user)
-      throw new AppError("Invalid Email", NOT_FOUND, NOT_FOUND_REASON);
+    if (!user) throw new AppError("Invalid Email", NOT_FOUND, NOT_FOUND_REASON);
     const isPasswordValid = await compare(data.password, user.password);
     if (!isPasswordValid)
       throw new AppError("Invalid password", BAD_REQUEST, BAD_REQUEST_REASON);
@@ -89,13 +88,17 @@ export class AuthService {
     const user = await this.userRepo.findOne({ where: { email } });
     if (!user)
       throw new AppError("User not found", NOT_FOUND, NOT_FOUND_REASON);
-    await emailQueue.add("sendVerificationCode", {
-      email,
-      username: user.username,
-    }, {
-      attempts: 3,
-      backoff: { type: 'exponential', delay: 5000 },
-    });
+    await emailQueue.add(
+      "sendVerificationCode",
+      {
+        email,
+        username: user.username,
+      },
+      {
+        attempts: 3,
+        backoff: { type: "exponential", delay: 5000 },
+      }
+    );
     emailWorker.run();
     return "Verification code sent to email";
   }

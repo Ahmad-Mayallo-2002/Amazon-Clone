@@ -5,7 +5,14 @@ import {
   FiUser,
   FiBox,
 } from "react-icons/fi";
-import { MdOutlineDashboard } from "react-icons/md";
+import {
+  MdDashboard,
+  MdInventory,
+  MdOutlineDashboard,
+  MdPeople,
+  MdShoppingCart,
+  MdStore,
+} from "react-icons/md";
 import type { NavItem } from "./data/navItems";
 import type { IconType } from "react-icons";
 
@@ -38,6 +45,34 @@ export const vendorDashboardLinks: DashboardLinks[] = [
   { label: "Products", href: "/vendor-dashboard/products", icon: FiBox },
   { label: "Orders", href: "/vendor-dashboard/orders", icon: FiShoppingCart },
   { label: "Profile", href: "/vendor-dashboard/profile", icon: FiUser },
+];
+
+export const adminDashboardLinks: DashboardLinks[] = [
+  {
+    label: "Overview",
+    href: "/admin-dashboard",
+    icon: MdDashboard,
+  },
+  {
+    label: "Users",
+    href: "/admin-dashboard/users",
+    icon: MdPeople,
+  },
+  {
+    label: "Vendors",
+    href: "/admin-dashboard/vendors",
+    icon: MdStore,
+  },
+  {
+    label: "Products",
+    href: "/admin-dashboard/products",
+    icon: MdInventory,
+  },
+  {
+    label: "Orders",
+    href: "/admin-dashboard/orders",
+    icon: MdShoppingCart,
+  },
 ];
 
 // Test vendor email
