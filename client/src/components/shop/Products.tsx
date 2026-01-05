@@ -38,7 +38,6 @@ export default function Products() {
   if (keyValue.key) {
     params.append("sortBy", keyValue.key.toString());
     params.append("orderBy", keyValue.value.toString());
-    console.log(`get-products?${params.toString()}`);
   }
   const { data, isLoading } = useFetch<PaginatedDate<Product[]>>({
     queryKey: ["products", TAKE, skip, filter, priceRange, keyValue],
@@ -67,11 +66,9 @@ export default function Products() {
               onPageChange={(e) => {
                 let totalPages = data.pagination.totalPages;
                 let currentPage = data.pagination.currentPage;
-                if (totalPages === currentPage + 1) {
-                  setSkip(totalPages);
-                } else {
-                  setSkip(e.page);
-                }
+                setSkip(
+                  (totalPages === currentPage + 1 ? totalPages : e.page) - 1
+                );
               }}
             >
               <ButtonGroup

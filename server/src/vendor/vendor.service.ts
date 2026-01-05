@@ -63,8 +63,6 @@ export class VendorService {
 
   async verifyVendorExists(id: string, status: boolean): Promise<string> {
     const vendor = await this.getVendor(id);
-    if (!vendor)
-      throw new AppError(NOT_FOUND_REASON, NOT_FOUND, `Vendor not found`);
     await this.vendorRepo.update(id, { isVerified: status });
     return `Vendor is ${status ? "verified" : "not verified"} successfully`;
   }

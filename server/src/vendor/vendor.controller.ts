@@ -63,6 +63,7 @@ export class VendorController {
       const result = await this.vendorService.verifyVendorExists(id, status);
       return sendResponse(res, result, OK, OK_REASON);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   };
