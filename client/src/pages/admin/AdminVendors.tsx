@@ -1,31 +1,16 @@
 import MainPagination from "@/components/common/MainPagination";
+import VendorsActionsMenu from "@/components/dashboards/admin/VendorsActionsMenu";
 import MainSpinner from "@/components/ui/MainSpinner";
-import { useDelete } from "@/hooks/useDelete";
 import { useFetch } from "@/hooks/useFetch";
-import { usePatch } from "@/hooks/usePatch";
-import type {
-  CustomError,
-  PaginatedDate,
-  Response,
-} from "@/interfaces/responses";
+import type { CustomError, PaginatedDate } from "@/interfaces/responses";
 import type { Vendor } from "@/interfaces/user";
-import { queryClient } from "@/main";
-import { createToaster } from "@/utils/createToaster";
 import { getPayload } from "@/utils/payloadCookie";
-import {
-  Badge,
-  Button,
-  ButtonGroup,
-  Center,
-  Heading,
-  Table,
-} from "@chakra-ui/react";
+import { Badge, Center, Heading, Table } from "@chakra-ui/react";
 import { useState } from "react";
 
 export default function AdminVendors() {
   const TAKE: number = 10;
   const [skip, setSkip] = useState<number>(0);
-  const [targetId, setTargetId] = useState<string>("");
   const payload = getPayload();
   const { Root, ScrollArea, Body, Cell, Footer, ColumnHeader, Header, Row } =
     Table;
@@ -39,64 +24,6 @@ export default function AdminVendors() {
       },
     },
   });
-
-  const mutationUpdateVendorStatus = usePatch<
-    {
-      status: boolean;
-    },
-    Response<string>
-  >({
-    url: `verify-vendor/${targetId}`,
-    onSuccess: (data) => {
-      createToaster("Success", data.data, "success"),
-        queryClient.invalidateQueries({ queryKey: ["vendors"] });
-    },
-    onError: (error) =>
-      createToaster(
-        "Error",
-        (error as CustomError).response.data.error,
-        "error"
-      ),
-    config: {
-      headers: {
-        Authorization: `Bearer ${payload?.token}`,
-      },
-    },
-  });
-
-  const handleUpdateVendorStatus = (id: string, currentStatus: boolean) => {
-    setTargetId(id);
-    mutationUpdateVendorStatus.mutate({
-      status: currentStatus ? false : true,
-    });
-  };
-
-  const mutationDeleteVendor = useDelete<Response<string>>({
-    url: `delete-vendor/${targetId}`,
-    config: {
-      headers: {
-        Authorization: `Bearer ${payload?.token}`,
-      },
-    },
-    onSuccess: (data) => {
-      createToaster("Success", data.data, "success"),
-        queryClient.invalidateQueries({ queryKey: ["vendors"] });
-    },
-    onError: (error) => {
-      createToaster(
-        "Error",
-        (error as CustomError).response.data.error,
-        "error"
-      );
-      console.log(error);
-    },
-  });
-
-  const handleDeleteVendor = (id: string) => {
-    setTargetId(id);
-    mutationDeleteVendor.mutate();
-  };
-
   if (!data) {
     return (
       <>
@@ -117,7 +44,9 @@ export default function AdminVendors() {
       <Heading fontWeight={700} fontSize="2xl" mb={4}>
         All Vendors
       </Heading>
-      <ScrollArea maxW="calc(100vw - 15rem)">
+      <ScrollArea
+        maxW={{ base: "calc(100vw - 12rem)", lg: "calc(100vw - 15rem)" }}
+      >
         <Root
           showColumnBorder
           borderWidth={1}
@@ -148,24 +77,11 @@ export default function AdminVendors() {
                   </Badge>
                 </Cell>
                 <Cell>
-                  <ButtonGroup attached size="xs">
-                    <Button
-                      onClick={() => handleDeleteVendor(vendor.id)}
-                      colorPalette="red"
-                      variant="outline"
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        handleUpdateVendorStatus(vendor.id, vendor.isVerified);
-                      }}
-                      colorPalette="blue"
-                      variant="outline"
-                    >
-                      Change Status
-                    </Button>
-                  </ButtonGroup>
+                  <VendorsActionsMenu
+                    currentState={vendor.isVerified}
+                    payload={payload}
+                    vendorId={vendor.id}
+                  />
                 </Cell>
               </Row>
             ))}
@@ -173,7 +89,7 @@ export default function AdminVendors() {
           <Footer>
             <Row>
               <Cell colSpan={6}>Total Vendors</Cell>
-              <Cell>{data.data.length}</Cell>
+              <Cell>{data.pagination.counts}</Cell>
             </Row>
           </Footer>
         </Root>

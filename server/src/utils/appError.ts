@@ -1,10 +1,10 @@
 class AppError extends Error {
   constructor(
-    msg: string,
+    message: string,
     public status: number,
     public error: any
   ) {
-    super(msg);
+    super(message);
     this.status = status;
     this.error = error;
     Object.setPrototypeOf(this, AppError.prototype);

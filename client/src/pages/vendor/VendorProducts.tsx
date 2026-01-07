@@ -21,7 +21,7 @@ export default function VendorProducts() {
     Table;
   const payload = getPayload();
   const { data, error, isLoading } = useFetch<PaginatedDate<Product[]>>({
-    queryKey: ["vendor-products"],
+    queryKey: ["products"],
     url: `get-products-by-vendorId/${payload?.vendorId}?take=10`,
   });
   return (

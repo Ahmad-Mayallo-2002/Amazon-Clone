@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import AppError from "../utils/appError";
 import {
   FORBIDDEN,
   FORBIDDEN_REASON,
@@ -30,9 +29,9 @@ export const checkToken = async (
     if (!authHeader && !googleToken)
       return sendResponse(
         res,
-        "Token is not found",
+        UNAUTHORIZED_REASON,
         UNAUTHORIZED,
-        UNAUTHORIZED_REASON
+        "Token is not found"
       );
 
     if (authHeader) {
@@ -41,9 +40,9 @@ export const checkToken = async (
         if (error)
           return sendResponse(
             res,
-            "Invalid or expired token",
+            FORBIDDEN_REASON,
             FORBIDDEN,
-            FORBIDDEN_REASON
+            "Invalid or expired token"
           );
 
         (req as any).user = user;
@@ -66,9 +65,9 @@ export const checkToken = async (
       } catch (error) {
         return sendResponse(
           res,
-          "Invalid or expired Google token",
+          UNAUTHORIZED_REASON,
           UNAUTHORIZED,
-          UNAUTHORIZED_REASON
+          "Invalid or expired Google token"
         );
       }
     }

@@ -5,6 +5,8 @@ import { createToaster } from "@/utils/createToaster";
 import { HStack, IconButton } from "@chakra-ui/react";
 import { FiTrash2 } from "react-icons/fi";
 import UpdateProductDialog from "./UpdateProductDialog";
+import { useState } from "react";
+import { FaEdit } from "react-icons/fa";
 
 interface ActionsProps {
   token: string;
@@ -17,6 +19,7 @@ export default function VendorProductsActions({
   productId,
   vendorId,
 }: ActionsProps) {
+  const [open, setOpen] = useState<boolean>(false);
   const mutationDeleteProduct = useDelete<Response<string>>({
     url: `delete-product/${productId}/${vendorId}`,
     onSuccess: (data) => {
@@ -41,7 +44,17 @@ export default function VendorProductsActions({
 
   return (
     <HStack gap={2}>
-      <UpdateProductDialog productId={productId} />
+      <UpdateProductDialog
+        open={open}
+        setOpen={setOpen}
+        trigger={
+          <IconButton size="sm" variant="ghost" colorPalette="blue">
+            <FaEdit />
+          </IconButton>
+        }
+        vendorId={vendorId}
+        productId={productId}
+      />
       <IconButton
         size="sm"
         variant="ghost"

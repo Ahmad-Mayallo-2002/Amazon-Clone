@@ -6,18 +6,19 @@ export function sendResponse<T>(
   res: Response,
   data: T,
   status: number,
-  msg: string,
+  message: string,
   pagination: IPagination = {
     prev: false,
     next: false,
     currentPage: 0,
     totalPages: 0,
+    counts: 0,
   }
 ) {
   const response: IResponse<T> = {
     data,
     status,
-    msg,
+    message,
   };
   if (Array.isArray(data)) response.pagination = pagination;
   res.status(status).json(response);

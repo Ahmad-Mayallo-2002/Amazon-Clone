@@ -19,6 +19,7 @@ export const calculatePagination = (
     currentPage,
     next: currentPage < totalPages,
     prev: currentPage > 1,
+    counts
   };
 
   return pagination;

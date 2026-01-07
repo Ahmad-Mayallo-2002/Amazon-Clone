@@ -10,7 +10,6 @@ import {
   Dialog,
   Field,
   Flex,
-  IconButton,
   Image,
   Input,
   Portal,
@@ -18,9 +17,14 @@ import {
   Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { useState, type ChangeEvent } from "react";
+import {
+  useState,
+  type ChangeEvent,
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+} from "react";
 import { useForm } from "react-hook-form";
-import { FiEdit2 } from "react-icons/fi";
 
 export interface FormProps {
   title: string;
@@ -34,8 +38,16 @@ export interface FormProps {
 
 export default function UpdateProductDialog({
   productId,
+  vendorId,
+  open,
+  setOpen,
+  trigger,
 }: {
   productId: string;
+  vendorId: string;
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  trigger?: ReactNode;
 }) {
   const payload = getPayload();
   const {
@@ -61,11 +73,11 @@ export default function UpdateProductDialog({
   } = useForm<FormProps>();
 
   const mutationUpdateProduct = usePatch<{}, Response<string>>({
-    url: `update-product/${productId}/${payload?.vendorId}`,
+    url: `update-product/${productId}/${vendorId}`,
     onSuccess: (data) => {
       createToaster("Done", data.data, "success");
       queryClient.invalidateQueries({
-        queryKey: ["vendor-products"],
+        queryKey: ["products"],
       });
       setLoading(false);
     },
@@ -107,12 +119,8 @@ export default function UpdateProductDialog({
   };
 
   return (
-    <Root>
-      <Trigger asChild>
-        <IconButton size="sm" variant="ghost" colorPalette="blue">
-          <FiEdit2 />
-        </IconButton>
-      </Trigger>
+    <Root open={open} onOpenChange={() => setOpen(false)}>
+      <Trigger asChild>{trigger}</Trigger>
       <Portal>
         <Backdrop />
         <Positioner>
