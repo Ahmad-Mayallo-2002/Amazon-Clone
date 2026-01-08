@@ -58,7 +58,7 @@ export default function AppRouter() {
           <Route path="product/:id" element={<SingleProduct />} />
 
           {/* Protected user routes */}
-          <Route element={<ProtectedRoute currentRole={Roles.USER} />}>
+          <Route element={<ProtectedRoute currentRole={Roles.USER || Roles.ADMIN} />}>
             {/* User Dashboard */}
             <Route path="user-dashboard" element={<UserDashboard />}>
               <Route index element={<UserProfile />} />

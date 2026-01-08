@@ -46,7 +46,7 @@ router.delete(
 );
 
 router.patch(
-  "/update-order-status/:orderId",
+  "/update-order-status/:id",
   checkToken,
   authorizeRoles(Roles.ADMIN),
   controller.updateOrderStatus

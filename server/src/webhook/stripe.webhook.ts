@@ -18,17 +18,6 @@ router.post(
     const sig = req.headers["stripe-signature"] as string;
     let event;
 
-    try {
-      event = stripe.webhooks.constructEvent(
-        req.body,
-        sig,
-        process.env.STRIPE_WEBHOOK_SECRET!
-      );
-    } catch (err: any) {
-      console.log(err);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
-
     const paymentRepo = AppDataSource.getRepository(Payment);
     const orderRepo = AppDataSource.getRepository(Order);
 
@@ -48,6 +37,17 @@ router.post(
       await orderRepo.update({ id: payment.orderId }, { status: orderStatus });
     };
 
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET!
+      );
+    } catch (err: any) {
+      console.log(err);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
     switch (event.type) {
       case "payment_intent.succeeded":
         await updatePaymentAndOrder(
@@ -63,13 +63,17 @@ router.post(
           OrderStatus.CANCELLED
         );
         break;
-      case "charge.refunded":
-        await updatePaymentAndOrder(
-          event.data.object.id,
-          PaymentStatus.REFUNDED,
-          OrderStatus.CANCELLED
-        );
-        break;
+      case "charge.refunded": {
+        const charge = event.data.object;
+        const paymentIntentId = charge.payment_intent as string;
+        if (paymentIntentId) {
+          await updatePaymentAndOrder(
+            paymentIntentId,
+            PaymentStatus.REFUNDED,
+            OrderStatus.CANCELLED
+          );
+        }
+      }
     }
 
     sendResponse(res, true, OK, OK_REASON);

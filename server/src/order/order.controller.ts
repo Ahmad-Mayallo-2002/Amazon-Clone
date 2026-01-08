@@ -85,10 +85,8 @@ export class OrderController {
   ) => {
     try {
       const { id } = req.params;
-      const message = await this.orderService.updateOrderStatus(
-        id,
-        req.body.status
-      );
+      const { status } = req.body;
+      const message = await this.orderService.updateOrderStatus(id, status);
       return sendResponse(res, message, OK, OK_REASON);
     } catch (error) {
       next(error);

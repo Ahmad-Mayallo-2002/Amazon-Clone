@@ -42,8 +42,6 @@ export default function AdminOrders() {
     );
   }
 
-  console.log(data.data);
-
   return (
     <>
       <Heading mb={4} fontWeight={700} fontSize="2xl">
@@ -99,7 +97,6 @@ export default function AdminOrders() {
                     payload={payload}
                     paymentId={order.payment.id}
                     orderId={order.id}
-                    userId={order.userId}
                   />
                 </Cell>
               </Row>

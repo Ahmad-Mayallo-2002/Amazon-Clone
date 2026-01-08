@@ -18,9 +18,6 @@ export class Vendor extends AbstractEntity {
   @Column({ type: "text", name: "store_description" })
   storeDescription: string;
 
-  @Column({ type: "decimal", default: 0 })
-  earnings: number;
-
   @Column({ type: "boolean", default: false, name: "is_verified" })
   isVerified: boolean;
 

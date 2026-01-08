@@ -12,7 +12,6 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 interface OrdersProps {
   orderId: string;
   paymentId: string;
-  userId: string;
   payload: PayloadCookie | null;
 }
 

@@ -200,7 +200,7 @@ export class OrderService {
         order: { id: order.id },
         providerPaymentId: paymentIntent.id,
       });
-      const payment = await manager.getRepository(Payment).save(newPayment);
+      await manager.getRepository(Payment).save(newPayment);
 
       // Clear Cart
       cart.totalPrice = `0`;

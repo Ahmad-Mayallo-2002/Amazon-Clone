@@ -13,7 +13,6 @@ export interface Vendor extends IdAndDate {
   storeDescription: string;
   storeName: string;
   isVerified: boolean;
-  earnings: number;
   userId: string;
   user: User;
 }

@@ -7,8 +7,8 @@ import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { PaymentStatus } from "../enums/payment-status.enum";
 import { CreatePayment } from "./zod/payment.zod";
 import { PaginatedDate } from "../interfaces/paginated-data.interface";
-import { IPagination } from "../interfaces/pagination.interface";
 import { calculatePagination } from "../utils/calculatePagination";
+import { stripe } from "../utils/stripe";
 
 @injectable()
 export class PaymentService {
@@ -51,6 +51,11 @@ export class PaymentService {
     status: PaymentStatus
   ): Promise<string> => {
     const payment = await this.getPaymentById(id);
+    if (status === PaymentStatus.REFUNDED) {
+      await stripe.refunds.create({
+        payment_intent: payment.providerPaymentId,
+      });
+    }
     payment.status = status;
     await this.paymentRepo.save(payment);
     return `Payment is ${status}`;
