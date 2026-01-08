@@ -20,6 +20,8 @@ export class OrderItem extends AbstractEntity {
   product: Relation<Product>;
 
   @JoinColumn({ name: "order" })
-  @ManyToOne(() => Order, (order) => order.orderItems)
+  @ManyToOne(() => Order, (order) => order.orderItems, {
+    onDelete: "CASCADE",
+  })
   order: Relation<Order>;
 }

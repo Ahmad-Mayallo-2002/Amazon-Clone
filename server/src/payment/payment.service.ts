@@ -23,6 +23,9 @@ export class PaymentService {
       order: { createdAt: "DESC" },
       take,
       skip,
+      relations: {
+        order: true,
+      },
     });
     if (!payments.length)
       throw new AppError("No payments found", NOT_FOUND, NOT_FOUND_REASON);

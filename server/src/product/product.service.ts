@@ -78,10 +78,7 @@ export class ProductService {
         rating < 5 ? Between(rating, rating + 1) : Equal(5);
     if (!isNaN(minPrice)) options.where.price = MoreThanOrEqual(minPrice);
     if (!isNaN(maxPrice)) options.where.price = LessThanOrEqual(maxPrice);
-    if (sortBy) {
-      options.order = { [sortBy]: orderBy };
-      log({ [sortBy]: orderBy });
-    }
+    if (sortBy) options.order = { [sortBy]: orderBy };
 
     const [products, counts] = await this.productRepo.findAndCount(options);
 

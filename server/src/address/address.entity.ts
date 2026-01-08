@@ -39,6 +39,8 @@ export class Address extends AbstractEntity {
   user: Relation<User>;
 
   @JoinColumn({ name: "order" })
-  @OneToOne(() => Order, (order) => order.address)
+  @OneToOne(() => Order, (order) => order.address, {
+    onDelete: "CASCADE",
+  })
   order: Relation<Order>;
 }

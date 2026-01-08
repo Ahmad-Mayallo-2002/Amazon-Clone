@@ -15,6 +15,7 @@ import {
   HStack,
   Stack,
   Text,
+  Link,
 } from "@chakra-ui/react";
 
 export default function UserCart() {
@@ -102,10 +103,11 @@ export default function UserCart() {
               colorPalette="yellow"
               size="lg"
               w="100%"
+              asChild
               onClick={() => {}}
               disabled={!data.data.cartItems.length}
             >
-              Buy Now
+              <Link href="/checkout">Buy Now</Link>
             </Button>
           </Box>
         </GridItem>

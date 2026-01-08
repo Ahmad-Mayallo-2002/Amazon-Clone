@@ -16,6 +16,8 @@ export class Payment extends AbstractEntity {
 
   // Relations
   @JoinColumn({ name: "order" })
-  @OneToOne(() => Order, (order) => order.payment)
+  @OneToOne(() => Order, (order) => order.payment, {
+    onDelete: "CASCADE",
+  })
   order: Relation<Order>;
 }

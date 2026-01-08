@@ -2,6 +2,8 @@ import type { OrderStatus } from "@/enums/order-status";
 import type { IdAndDate } from "./IdAndDate";
 import type { Product } from "./product";
 import type { User } from "./user";
+import type { Payment } from "./payment";
+import type { Address } from "./address";
 
 export interface OrderItem extends IdAndDate {
   totalPrice: number;
@@ -17,6 +19,8 @@ export interface Order extends IdAndDate {
   totalPrice: number;
   status: OrderStatus;
   orderItems: OrderItem[];
+  payment: Payment;
+  address: Address;
 }
 
 export interface CreateOrderRequest {

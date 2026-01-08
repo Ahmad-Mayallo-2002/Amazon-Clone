@@ -30,16 +30,25 @@ export class Order extends AbstractEntity {
   userId: string;
 
   // Relations
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
   orderItems: Relation<OrderItem[]>;
 
   @JoinColumn({ name: "user" })
   @ManyToOne(() => User, (user) => user.orders)
   user: Relation<User>;
 
-  @OneToOne(() => Address, (address) => address.order)
+  @OneToOne(() => Address, (address) => address.order, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
   address: Relation<Address>;
 
-  @OneToOne(() => Payment, (payment) => payment.order)
+  @OneToOne(() => Payment, (payment) => payment.order, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
   payment: Relation<Payment>;
 }

@@ -40,6 +40,9 @@ export class OrderService {
         address: true,
         payment: true,
       },
+      order: {
+        createdAt: "ASC",
+      },
     });
     const counts = await this.orderRepo.count();
     if (!counts) throw new AppError("No orders", NOT_FOUND, NOT_FOUND_REASON);

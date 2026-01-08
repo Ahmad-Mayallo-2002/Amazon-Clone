@@ -12,11 +12,11 @@ export class OrderController {
   getAllOrders = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { skip, take } = req.query;
-      const orders = await this.orderService.getAllOrders(
+      const { data, pagination } = await this.orderService.getAllOrders(
         Number(skip) || 0,
         Number(take)
       );
-      return sendResponse(res, orders, OK, OK_REASON);
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }
@@ -26,12 +26,12 @@ export class OrderController {
     try {
       const { userId } = req.params;
       const { skip, take } = req.query;
-      const orders = await this.orderService.getUserOrders(
+      const { data, pagination } = await this.orderService.getUserOrders(
         userId,
         Number(skip) || 0,
         Number(take)
       );
-      return sendResponse(res, orders, OK, OK_REASON);
+      return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
       next(error);
     }
