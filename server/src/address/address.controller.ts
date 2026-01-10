@@ -22,7 +22,7 @@ export class AddressController {
       const { skip, take } = req.query;
       const { data, pagination } = await this.addressService.getAll(
         Number(skip) || 0,
-        Number(take)
+        Number(take) || 12
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
@@ -49,7 +49,7 @@ export class AddressController {
       const { data, pagination } = await this.addressService.getByUserId(
         req.params.userId,
         Number(skip) || 0,
-        Number(take)
+        Number(take) || 12
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {

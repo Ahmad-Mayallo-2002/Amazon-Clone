@@ -38,7 +38,7 @@ export class ProductController {
       } = req.query;
       const { data, pagination } = await this.productService.getAllProducts(
         Number(skip ?? 0),
-        Number(take),
+        Number(take) || 12,
         category as string,
         Number(rating),
         Number(minPrice),
@@ -72,7 +72,7 @@ export class ProductController {
         await this.productService.getProductsByCategory(
           String(category),
           Number(skip) || 0,
-          Number(take)
+          Number(take) || 12
         );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
@@ -91,7 +91,7 @@ export class ProductController {
       const { data, pagination } =
         await this.productService.getProductsByVendorId(
           vendorId,
-          Number(take),
+          Number(take) || 12,
           Number(skip) || 0,
           `${category}`,
           Boolean(stockStatus)
@@ -103,11 +103,12 @@ export class ProductController {
   };
 
   searchProducts = async (req: Request, res: Response, next: NextFunction) => {
-    const { search, skip, take } = req.query;
+    const { search, skip, take, category } = req.query;
     const { data, pagination } = await this.productService.searchProducts(
       String(search) || "",
+      String(category) || "",
       Number(skip) || 0,
-      Number(take)
+      Number(take) || 12
     );
     return sendResponse(res, data, OK, OK_REASON, pagination);
   };

@@ -32,7 +32,7 @@ export class CommentController {
       const { data, pagination } = await this.commentService.getProductComments(
         productId,
         Number(skip) || 0,
-        Number(take)
+        Number(take) || 12
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
@@ -45,7 +45,7 @@ export class CommentController {
       const { skip, take } = req.query;
       const { data, pagination } = await this.commentService.getAllComments(
         Number(skip) || 0,
-        Number(take)
+        Number(take) || 12
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {

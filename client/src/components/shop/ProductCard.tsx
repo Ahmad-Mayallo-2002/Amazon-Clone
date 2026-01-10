@@ -1,27 +1,17 @@
-import {
-  Box,
-  Flex,
-  Image,
-  Text,
-  Badge,
-  Button,
-  Link,
-  RatingGroup,
-  Span,
-} from "@chakra-ui/react";
+import { Box, Flex, Image, Text, Badge, Button, Link } from "@chakra-ui/react";
 import type { Product } from "@/interfaces/product";
 
 export function ProductCard({ product }: { product: Product }) {
-  const { title, price, discount, stock, image, category, rating } = product;
+  const { title, price, discount, stock, image, category } = product;
   const finalPrice = discount > 0 ? price * (1 - discount) : price;
 
   return (
     <Box
-      borderWidth="1px"
-      borderRadius="lg"
-      overflow="hidden"
+      className="panel"
       p={3}
+      overflow="hidden"
       cursor="pointer"
+      borderWidth={1}
       _hover={{ shadow: "md", transform: "scale(1.02)" }}
       transition="all 0.2s ease-in-out"
     >
@@ -44,25 +34,6 @@ export function ProductCard({ product }: { product: Product }) {
       <Badge mt={2} colorPalette="blue">
         {category?.name}
       </Badge>
-
-      {/* Product Rating */}
-      <RatingGroup.Root
-        display="flex"
-        alignItems="center"
-        allowHalf
-        readOnly
-        count={5}
-        defaultValue={rating}
-        colorPalette="orange"
-        my={3}
-        size="sm"
-      >
-        <RatingGroup.HiddenInput />
-        <RatingGroup.Control />
-        <Span ms={1} color="#888" fontSize="sm">
-          ({rating})
-        </Span>
-      </RatingGroup.Root>
 
       {/* Price section */}
       <Flex align="center" gap={2}>

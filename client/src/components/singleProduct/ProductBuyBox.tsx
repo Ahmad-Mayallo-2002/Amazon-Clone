@@ -109,7 +109,7 @@ function ProductBuyBox({ product }: { product: Product }) {
         fontWeight="semibold"
         color={product.stock > 0 ? "green.500" : "red.500"}
       >
-        {product.stock > 0 ? "In Stock" : "Out of Stock"}
+        {product.stock > 0 ? `In Stock (${product.stock})` : "Out of Stock"}
       </Text>
 
       {/* Quantity */}

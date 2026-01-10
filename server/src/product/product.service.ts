@@ -157,6 +157,7 @@ export class ProductService {
 
   async searchProducts(
     search: string,
+    category: string,
     skip: number,
     take: number
   ): Promise<PaginatedDate<Product>> {
@@ -165,6 +166,10 @@ export class ProductService {
       take,
       where: {
         title: Raw((alias) => `${alias} ~* :pattern`, { pattern: search }),
+        category: category ? { name: category } : {},
+      },
+      relations: {
+        category: true,
       },
     });
     if (!counts)

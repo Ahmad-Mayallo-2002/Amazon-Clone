@@ -11,6 +11,7 @@ const ProtectedRoute = lazy(() => import("./ProtectedRoute"));
 const Shop = lazy(() => import("./Shop"));
 const SingleProduct = lazy(() => import("./SingleProduct"));
 const Checkout = lazy(() => import("./Checkout"));
+const SearchProducts = lazy(() => import("./SearchProducts"));
 
 // Auth
 const Login = lazy(() => import("./auth/Login"));
@@ -55,10 +56,13 @@ export default function AppRouter() {
           <Route path="help" element={<Help />} />
 
           <Route path="shop" element={<Shop />} />
+          <Route path="search-products" element={<SearchProducts />} />
           <Route path="product/:id" element={<SingleProduct />} />
 
           {/* Protected user routes */}
-          <Route element={<ProtectedRoute currentRole={Roles.USER || Roles.ADMIN} />}>
+          <Route
+            element={<ProtectedRoute currentRole={Roles.USER || Roles.ADMIN} />}
+          >
             {/* User Dashboard */}
             <Route path="user-dashboard" element={<UserDashboard />}>
               <Route index element={<UserProfile />} />

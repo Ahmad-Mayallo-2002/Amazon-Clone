@@ -13,7 +13,7 @@ export class UserController {
       const { skip, take } = req.query;
       const { data, pagination } = await this.userService.getUsers(
         Number(skip) || 0,
-        Number(take) || 10
+        Number(take) || 12
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {

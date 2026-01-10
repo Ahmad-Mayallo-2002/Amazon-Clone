@@ -55,7 +55,7 @@ export default function SingleProduct() {
         <Container>
           {/* Product Details */}
           <Grid
-            gridTemplateColumns={{ base: "1fr", lg: "auto 1fr auto" }}
+            gridTemplateColumns={{ base: "1fr", lg: "500px 1fr auto" }}
             gap={4}
           >
             <Box
@@ -66,18 +66,11 @@ export default function SingleProduct() {
               w="full"
               className="panel"
             >
-              <Image
-                src={data.data.image.url}
-                h="400px"
-                w="full"
-                rounded={"lg"}
-              />
+              <Image src={data.data.image.url} maxW="100%" rounded={"lg"} />
             </Box>
             <ProductDetails product={data.data} />
 
-            <ProductBuyBox
-              product={data.data}
-            />
+            <ProductBuyBox product={data.data} />
           </Grid>
 
           {/* Comments Section */}

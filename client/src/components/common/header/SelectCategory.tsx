@@ -29,7 +29,7 @@ export default function SelectCategory() {
           <Positioner>
             <Content className="select-category">
               {state.category && (
-                <Item onClick={() => state.setCategory("All")} value="All">
+                <Item onClick={() => state.setCategory("")} value="">
                   All
                 </Item>
               )}

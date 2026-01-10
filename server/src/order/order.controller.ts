@@ -14,7 +14,7 @@ export class OrderController {
       const { skip, take } = req.query;
       const { data, pagination } = await this.orderService.getAllOrders(
         Number(skip) || 0,
-        Number(take)
+        Number(take) || 12
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
@@ -29,7 +29,7 @@ export class OrderController {
       const { data, pagination } = await this.orderService.getUserOrders(
         userId,
         Number(skip) || 0,
-        Number(take)
+        Number(take) || 12
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
@@ -58,7 +58,7 @@ export class OrderController {
       const { data, pagination } =
         await this.orderService.getOrdersItemsByVendorId(
           vendorId,
-          Number(take),
+          Number(take) || 12,
           Number(skip) || 0,
           status as OrderStatus
         );

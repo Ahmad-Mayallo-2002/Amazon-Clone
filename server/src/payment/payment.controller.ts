@@ -13,7 +13,7 @@ export class PaymentController {
       const { skip, take } = req.query;
       const { data, pagination } = await this.paymentService.getAllPayments(
         Number(skip) || 0,
-        Number(take) || 10
+        Number(take) || 12
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {

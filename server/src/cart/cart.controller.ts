@@ -44,7 +44,7 @@ export class CartController {
       const { skip, take } = req.query;
       const { data, pagination } = await this.cartService.getAll(
         Number(skip) || 0,
-        Number(take)
+        Number(take) || 12
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {

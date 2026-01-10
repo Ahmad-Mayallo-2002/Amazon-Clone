@@ -13,7 +13,7 @@ export class ReviewController {
       const { skip, take } = req.query;
       const { data, pagination } = await this.reviewService.getAllReviews(
         Number(skip) || 0,
-        Number(take)
+        Number(take) || 12
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {

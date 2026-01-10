@@ -85,7 +85,7 @@ export default function ProductDetails({ product }: { product: Product }) {
           <List.Item mb={i < 5 ? 3 : 0} key={i}>
             <Flex alignItems="center" gap={2}>
               <Icon as={FaCheckCircle} color="green.600" />
-              <Span>
+              <Span color="#777">
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit.
               </Span>
             </Flex>

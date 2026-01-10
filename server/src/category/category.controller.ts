@@ -28,7 +28,7 @@ export class CategoryController {
       const { skip, take } = req.query;
       const { data, pagination } = await this.categoryService.getAllCategories(
         Number(skip) || 0,
-        Number(take)
+        Number(take) || 12
       );
       return sendResponse(res, data, OK, OK_REASON, pagination);
     } catch (error) {
