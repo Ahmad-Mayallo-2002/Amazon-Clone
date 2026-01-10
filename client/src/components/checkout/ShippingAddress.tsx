@@ -4,9 +4,10 @@ import type {
   CreateOrderResponse,
 } from "@/interfaces/order";
 import type { Response } from "@/interfaces/responses";
+import { createToaster } from "@/utils/createToaster";
 import { getPayload } from "@/utils/payloadCookie";
 import { useCountry } from "@/zustand/selectCountry";
-import { Box, Grid, Heading, Input, Field, Button } from "@chakra-ui/react";
+import { Box, Grid, Heading, Input, Field } from "@chakra-ui/react";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useForm } from "react-hook-form";
 
@@ -39,10 +40,11 @@ export default function ShippingAddress() {
     Response<CreateOrderResponse>
   >({
     url: "create-order",
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: () => {
+      createToaster("Done", "Your order now is processed", "success");
     },
     onError: (error: any) => {
+      createToaster("Error", "Something is error", "error");
       console.log(error);
     },
     config: {
@@ -73,18 +75,14 @@ export default function ShippingAddress() {
       },
     });
 
-    console.log(result);
-
     if (result.error) {
-      console.error(result.error.message);
+      createToaster("Error", `${result.error.message}`, "error");
     } else {
-      if (result.paymentIntent?.status === "succeeded") {
-        console.log("Done");
-      }
+      if (result.paymentIntent?.status === "succeeded") console.log("Done");
     }
   };
 
-  const { ErrorIcon, ErrorText, Label, RequiredIndicator, Root } = Field;
+  const { ErrorIcon, ErrorText, Label, Root } = Field;
 
   return (
     <Box borderWidth="1px" className="panel shipping-address">
@@ -92,13 +90,11 @@ export default function ShippingAddress() {
         1. Shipping Address
       </Heading>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form id="make-order" onSubmit={handleSubmit(onSubmit)}>
         <Grid gap={4} gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }}>
           {/* Full Name */}
           <Root invalid={!!errors.fullName}>
-            <Label>
-              Full Name <RequiredIndicator />
-            </Label>
+            <Label>Full Name</Label>
             <Input
               {...register("fullName", {
                 required: "Full name is required",
@@ -119,9 +115,7 @@ export default function ShippingAddress() {
 
           {/* Street Address */}
           <Root invalid={!!errors.street}>
-            <Label>
-              Street Address <RequiredIndicator />
-            </Label>
+            <Label>Street Address</Label>
             <Input
               {...register("street", {
                 required: "Street address is required",
@@ -138,9 +132,7 @@ export default function ShippingAddress() {
 
           {/* City */}
           <Root invalid={!!errors.city}>
-            <Label>
-              City <RequiredIndicator />
-            </Label>
+            <Label>City</Label>
             <Input
               {...register("city", {
                 required: "City is required",
@@ -157,9 +149,7 @@ export default function ShippingAddress() {
 
           {/* State */}
           <Root invalid={!!errors.state}>
-            <Label>
-              State <RequiredIndicator />
-            </Label>
+            <Label>State</Label>
             <Input
               {...register("state", {
                 required: "State is required",
@@ -176,16 +166,14 @@ export default function ShippingAddress() {
 
           {/* Postal Code */}
           <Root invalid={!!errors.postalCode}>
-            <Label>
-              ZIP / Postal Code <RequiredIndicator />
-            </Label>
+            <Label>ZIP / Postal Code</Label>
             <Input
               {...register("postalCode", {
                 required: "Postal code is required",
-                // pattern: {
-                //   value: /^\d{5}(-\d{4})?$/,
-                //   message: "Invalid postal code format",
-                // },
+                pattern: {
+                  value: /^\d{5}?$/,
+                  message: "Invalid postal code format",
+                },
               })}
               placeholder="Enter your postal code"
             />
@@ -199,16 +187,14 @@ export default function ShippingAddress() {
 
           {/* Phone Number */}
           <Root invalid={!!errors.phone}>
-            <Label>
-              Phone Number <RequiredIndicator />
-            </Label>
+            <Label>Phone Number</Label>
             <Input
               {...register("phone", {
                 required: "Phone number is required",
-                // pattern: {
-                //   value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
-                //   message: "Invalid phone number format",
-                // },
+                pattern: {
+                  value: /^\+[1-9]\d{1,14}$/,
+                  message: "Invalid Phone Number Syntax",
+                },
               })}
               placeholder="Enter your phone number"
             />
@@ -220,10 +206,6 @@ export default function ShippingAddress() {
             )}
           </Root>
         </Grid>
-
-        <Button type="submit" w="full" mt={6} className="main-button">
-          Submit
-        </Button>
       </form>
     </Box>
   );

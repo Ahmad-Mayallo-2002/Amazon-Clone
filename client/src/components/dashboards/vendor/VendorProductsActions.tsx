@@ -48,7 +48,12 @@ export default function VendorProductsActions({
         open={open}
         setOpen={setOpen}
         trigger={
-          <IconButton size="sm" variant="ghost" colorPalette="blue">
+          <IconButton
+            onClick={() => setOpen(true)}
+            size="sm"
+            variant="ghost"
+            colorPalette="blue"
+          >
             <FaEdit />
           </IconButton>
         }

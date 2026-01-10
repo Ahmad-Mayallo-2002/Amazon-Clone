@@ -2,11 +2,15 @@ import type { DashboardLinks } from "@/assets/assets";
 import { removeCookie } from "@/utils/payloadCookie";
 import { Box, Button, Heading, Icon, Link, List, Span } from "@chakra-ui/react";
 import { MdLogout } from "react-icons/md";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Sidebar({ links }: { links: DashboardLinks[] }) {
   const { pathname } = useLocation();
-  const handleLogout = () => removeCookie("payload");
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    removeCookie("payload");
+    navigate("/auth/login");
+  };
   return (
     <Box
       w={{ base: "fit", lg: "300px" }}
@@ -42,11 +46,9 @@ export default function Sidebar({ links }: { links: DashboardLinks[] }) {
           </List.Item>
         ))}
       </List.Root>
-      <Button colorPalette="red" rounded={6} w="full" asChild>
-        <Link href="/" onClick={handleLogout}>
-          <MdLogout />
-          <Span display={{ base: "none", lg: "inline" }}>Logout</Span>
-        </Link>
+      <Button onClick={handleLogout} colorPalette="red" rounded={6} w="full">
+        <MdLogout />
+        <Span display={{ base: "none", lg: "inline" }}>Logout</Span>
       </Button>
     </Box>
   );

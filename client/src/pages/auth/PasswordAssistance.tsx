@@ -29,7 +29,7 @@ function PasswordAssistance() {
     formState: { errors, isSubmitting },
   } = useForm<EmailRequest>();
 
-  const { ErrorIcon, ErrorText, Label, Root, RequiredIndicator } = Field;
+  const { ErrorIcon, ErrorText, Label, Root } = Field;
   const navigate = useNavigate();
   const passwordAssistanceMutation = usePost<
     EmailRequest,
@@ -77,7 +77,7 @@ function PasswordAssistance() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Root invalid={!!errors.email}>
               <Label fontWeight="medium" fontSize="sm">
-                Email address <RequiredIndicator>*</RequiredIndicator>
+                Email address
               </Label>
               {/* Email Input */}
               <Input

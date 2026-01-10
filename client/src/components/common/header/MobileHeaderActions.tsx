@@ -1,4 +1,5 @@
 import { userAccountLinks, userListLinks } from "@/assets/data/navItems";
+import { removeCookie } from "@/utils/payloadCookie";
 import {
   Button,
   GridItem,
@@ -96,6 +97,17 @@ export default function MobileHeaderActions() {
                   }}
                 >
                   Orders
+                </Link>
+                <br />
+                <Link
+                  href="/auth/login"
+                  _hover={{
+                    color: "orange",
+                    textDecor: "underline",
+                  }}
+                  onClick={() => removeCookie("payload")}
+                >
+                  Logout
                 </Link>
               </Body>
             </Content>

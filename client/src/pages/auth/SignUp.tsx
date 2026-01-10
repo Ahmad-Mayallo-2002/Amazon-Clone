@@ -26,8 +26,7 @@ function SignUp() {
     formState: { errors, isSubmitting },
   } = useForm<SignUpUserRequest>();
   const navigate = useNavigate();
-  const { Root, Label, ErrorIcon, ErrorText, RequiredIndicator, HelperText } =
-    Field;
+  const { Root, Label, ErrorIcon, ErrorText, HelperText } = Field;
 
   const password = watch("password");
 
@@ -70,9 +69,7 @@ function SignUp() {
 
           {/* 1. Name Input */}
           <Root invalid={!!errors.username}>
-            <Label htmlFor="username">
-              Username <RequiredIndicator>*</RequiredIndicator>
-            </Label>
+            <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               {...register("username", {
@@ -87,9 +84,7 @@ function SignUp() {
 
           {/* 2. Email Input */}
           <Root invalid={!!errors.email}>
-            <Label htmlFor="email">
-              Email <RequiredIndicator>*</RequiredIndicator>
-            </Label>
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
@@ -109,9 +104,7 @@ function SignUp() {
 
           {/* 3. Phone Input */}
           <Root invalid={!!errors.phone}>
-            <Label htmlFor="phone">
-              Phone Number <RequiredIndicator>*</RequiredIndicator>
-            </Label>
+            <Label htmlFor="phone">Phone Number</Label>
             <Input
               id="phone"
               {...register("phone", {
@@ -130,9 +123,7 @@ function SignUp() {
 
           {/* 4. Password Input */}
           <Root invalid={!!errors.password}>
-            <Label htmlFor="password">
-              Password <RequiredIndicator>*</RequiredIndicator>
-            </Label>
+            <Label htmlFor="password">Password</Label>
             <PasswordInput
               id="password"
               {...register("password", {
@@ -160,9 +151,7 @@ function SignUp() {
 
           {/* 4. Re-enter Password Input */}
           <Root invalid={!!errors.reEnterPassword}>
-            <Label htmlFor="reEnterPassword">
-              Re-enter password <RequiredIndicator>*</RequiredIndicator>
-            </Label>
+            <Label htmlFor="reEnterPassword">Re-enter password</Label>
             <PasswordInput
               id="reEnterPassword"
               {...register("reEnterPassword", {

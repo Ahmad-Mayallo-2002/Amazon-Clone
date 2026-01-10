@@ -7,10 +7,15 @@ import Cart from "./Cart";
 import OrderAndReturn from "./OrderAndReturn";
 import MobileHeaderActions from "./MobileHeaderActions";
 import { getPayload, removeCookie } from "@/utils/payloadCookie";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const payload = getPayload();
-  const handleRemovePayload = () => removeCookie("payload");
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    removeCookie("payload");
+    navigate("/auth/login");
+  };
   return (
     <>
       <Box as="header" py={3} bgColor="var(--color-neutral-900)">
@@ -28,15 +33,12 @@ export default function Header() {
             <Box display={{ base: "none", lg: "flex" }}>
               {payload ? (
                 <VStack gap={0} alignItems="flex-start">
-                  <Link
-                    color="#fff"
-                    href="/"
-                    onClick={handleRemovePayload}
-                    _hover={{ textDecor: "underline" }}
-                    fontSize="sm"
+                  <button
+                    onClick={handleLogout}
+                    style={{ color: "#fff", fontSize: "13px" }}
                   >
                     Logout
-                  </Link>
+                  </button>
                   <Link
                     color="#fff"
                     href="/user-dashboard"

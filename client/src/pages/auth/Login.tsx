@@ -31,7 +31,7 @@ function Login() {
     register,
     formState: { errors, isSubmitting },
   } = useForm<SignInRequest>();
-  const { ErrorIcon, ErrorText, Label, Root, RequiredIndicator } = Field;
+  const { ErrorIcon, ErrorText, Label, Root } = Field;
   const navigate = useNavigate();
   const loginMutation = usePost<SignInRequest, Response<ILogin>>({
     url: "login",
@@ -46,14 +46,7 @@ function Login() {
       createToaster("Error", error.response.data.message, "error"),
   });
 
-  const onSubmit = async (data: SignInRequest) => {
-    try {
-      console.log(data);
-      loginMutation.mutate(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const onSubmit = (data: SignInRequest) => loginMutation.mutate(data);
 
   return (
     <Center minH="100vh" py={12} bg="white">
@@ -71,10 +64,7 @@ function Login() {
 
           {/* 1. Email or Mobile Phone Number Input */}
           <Root invalid={!!errors.email}>
-            <Label htmlFor="email">
-              Email
-              <RequiredIndicator />
-            </Label>
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               {...register("email", {
@@ -102,7 +92,6 @@ function Login() {
             >
               <Label htmlFor="password" mb={1}>
                 Password
-                <RequiredIndicator />
               </Label>
             </Box>
             <PasswordInput

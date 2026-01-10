@@ -6,11 +6,25 @@ import {
   Text,
   VStack,
   HStack,
-  Separator,
 } from "@chakra-ui/react";
 import ProductSummary from "./ProductSummary";
+import { useFetch } from "@/hooks/useFetch";
+import type { Response } from "@/interfaces/responses";
+import type { Cart } from "@/interfaces/cart";
+import { getPayload } from "@/utils/payloadCookie";
 
 export default function OrderSummary() {
+  const payload = getPayload();
+  const { data } = useFetch<Response<Cart>>({
+    queryKey: ["use-cart"],
+    url: `get-user-cart/${payload?.id}?take=10`,
+    config: {
+      headers: {
+        Authorization: `Bearer ${payload?.token}`,
+      },
+    },
+  });
+
   return (
     <Box
       borderWidth="1px"
@@ -19,7 +33,7 @@ export default function OrderSummary() {
       top="4"
     >
       <Heading size="md" mb={4}>
-        Order Summary
+        3. Order Summary
       </Heading>
 
       <VStack align="stretch" gap={4}>
@@ -33,20 +47,24 @@ export default function OrderSummary() {
           h="300px"
           pe={4}
         >
-          <ProductSummary />
-          <Separator />
-          <ProductSummary />
-          <Separator />
-          <ProductSummary />
-          <Separator />
-          <ProductSummary />
-          <Separator />
+          {data &&
+            data.data.cartItems.map((item) => (
+              <ProductSummary key={item.id} item={item} />
+            ))}
         </Box>
         <HStack justify="space-between" fontWeight="bold" fontSize="lg">
-          <Text>Order Total:</Text>
-          <Text color="orange.500">$205.17</Text>
+          <Text>Order Total: </Text>
+          <Text color="orange.500">
+            ${Number(data?.data.totalPrice ?? 0).toFixed(3)}
+          </Text>
         </HStack>
-        <Button className="main-button" size="lg" width="full">
+        <Button
+          className="main-button"
+          size="lg"
+          form="make-order"
+          width="full"
+          type="submit"
+        >
           Place Your Order
         </Button>
         <Text fontSize="sm" color="gray.600">

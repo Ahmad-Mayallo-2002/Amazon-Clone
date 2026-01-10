@@ -41,7 +41,7 @@ function ResetPassword() {
 
   const onSubmit = (data: IResetPassword) => resetPasswordMutation.mutate(data);
 
-  const { Root, Label, RequiredIndicator, ErrorIcon, ErrorText } = Field;
+  const { Root, Label, ErrorIcon, ErrorText } = Field;
 
   return (
     <Center px={6} py={12} minH="100vh" bg="#fff">
@@ -68,9 +68,7 @@ function ResetPassword() {
             <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
               {/* New Password */}
               <Root invalid={!!errors.password}>
-                <Label fontSize="sm">
-                  New password <RequiredIndicator>*</RequiredIndicator>
-                </Label>
+                <Label fontSize="sm">New password</Label>
                 <PasswordInput
                   placeholder="Enter new password"
                   {...register("password", {
@@ -95,9 +93,7 @@ function ResetPassword() {
 
               {/* Confirm Password */}
               <Root mt={4} invalid={!!errors.confirmPassword}>
-                <Label fontSize="sm">
-                  Confirm new password <RequiredIndicator>*</RequiredIndicator>
-                </Label>
+                <Label fontSize="sm">Confirm new password</Label>
                 <PasswordInput
                   placeholder="Re-enter new password"
                   {...register("confirmPassword", {
