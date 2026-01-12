@@ -27,7 +27,6 @@ import wishRoutes from "./wish/wish.route";
 import paymentRoutes from "./payment/payment.route";
 import webhook from "./webhook/stripe.webhook";
 import orderRoutes from "./order/order.route";
-import googleAuth from "./passport/passport.route";
 import { config } from "dotenv";
 import cors from "cors";
 import session from "express-session";
@@ -68,7 +67,6 @@ app.use("/api", wishRoutes);
 app.use("/api", paymentRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", webhook);
-app.use(googleAuth);
 
 app.get("/", async (_req: Request, res: Response) =>
   sendResponse(res, "Hello, World!", OK, OK_REASON)

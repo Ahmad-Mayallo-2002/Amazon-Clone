@@ -33,9 +33,6 @@ export class User extends AbstractEntity {
   @Column({ type: "varchar", length: 255, unique: true, default: "" })
   phone: string;
 
-  @Column({ type: "varchar", length: 255, nullable: true, name: "google_id" })
-  googleId: string;
-
   // Relations
   @OneToOne(() => Vendor, (vendor) => vendor.user)
   vendor: Relation<Vendor>;

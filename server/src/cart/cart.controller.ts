@@ -13,7 +13,6 @@ export class CartController {
       const message = await this.cartService.addToCart(
         req.params.productId,
         (req as any).user.id,
-        req.body.amount
       );
       return sendResponse(res, message, OK, OK_REASON);
     } catch (error) {

@@ -4,7 +4,12 @@ import { Cart } from "./cart.entity";
 import { AppDataSource } from "../data-source";
 import { CartItem } from "./cartItem.entity";
 import AppError from "../utils/appError";
-import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
+import {
+  BAD_REQUEST,
+  BAD_REQUEST_REASON,
+  NOT_FOUND,
+  NOT_FOUND_REASON,
+} from "../utils/statusCodes";
 import { ProductService } from "../product/product.service";
 import { Product } from "../product/product.entity";
 import { calculatePagination } from "../utils/calculatePagination";
@@ -68,11 +73,7 @@ export class CartService {
     return "Cart deleted successfully";
   }
 
-  async addToCart(
-    productId: string,
-    userId: string,
-    amount: number
-  ): Promise<string> {
+  async addToCart(productId: string, userId: string): Promise<string> {
     const product = (await this.productService.getProductById(
       productId
     )) as Product;
@@ -86,7 +87,7 @@ export class CartService {
     }
     const discount: number = 1 - product.discount;
     // Calculate the price at payment of product
-    const price: number = +product.price * discount * amount;
+    const price: number = +product.price * discount;
     // Check if cart item is exist or not
     const currentItem = await this.cartItemRepo.findOne({
       where: {
@@ -96,15 +97,11 @@ export class CartService {
     });
     // If exist
     if (currentItem) {
-      // Update amount and price at payment
-      currentItem.amount += amount;
-      // Update price at payment of cart item
-      currentItem.priceAtPayment = `${+currentItem.priceAtPayment + price}`;
-      // Update total price of cart
-      cart.totalPrice = `${+cart.totalPrice + price}`;
-      // Save all of these
-      await this.cartRepo.save(cart);
-      await this.cartItemRepo.save(currentItem);
+      throw new AppError(
+        "Already Exist in Cart",
+        BAD_REQUEST,
+        BAD_REQUEST_REASON
+      );
     } else {
       // If not exist
       // Calculate price of payment
@@ -114,7 +111,6 @@ export class CartService {
         cartId: cart.id,
         product: { id: productId },
         cart: { id: cart.id },
-        amount,
         priceAtPayment: `${price}`,
       });
       // Save new cart item

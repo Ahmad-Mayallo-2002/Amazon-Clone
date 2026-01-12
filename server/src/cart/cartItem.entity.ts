@@ -5,9 +5,6 @@ import { Cart } from "./cart.entity";
 
 @Entity({ name: "cart_items" })
 export class CartItem extends AbstractEntity {
-  @Column({ type: "int", default: 0 })
-  amount: number;
-
   @Column({ type: "decimal", default: 0, name: "price_at_payment" })
   priceAtPayment: string;
 
