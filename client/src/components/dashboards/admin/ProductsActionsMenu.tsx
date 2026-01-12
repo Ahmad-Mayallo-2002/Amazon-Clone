@@ -22,7 +22,7 @@ export default function ProductsActionsMenu({
   const [open, setOpen] = useState<boolean>(false);
   const { Root, Trigger, Content, Item, Positioner } = Menu;
 
-  const mutationDeleteVendor = useDelete<Response<string>>({
+  const mutationDeleteProduct = useDelete<Response<string>>({
     url: `delete-product/${productId}/${vendorId}`,
     config: {
       headers: {
@@ -43,7 +43,7 @@ export default function ProductsActionsMenu({
     },
   });
 
-  const handleDeleteVendor = () => mutationDeleteVendor.mutate();
+  const handleDeleteVendor = () => mutationDeleteProduct.mutate();
   return (
     <>
       <Root>

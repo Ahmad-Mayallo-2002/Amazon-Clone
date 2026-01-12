@@ -1,6 +1,6 @@
 import MainPagination from "@/components/common/MainPagination";
+import ProductsActionsMenu from "@/components/dashboards/admin/ProductsActionsMenu";
 import CreateProductDialog from "@/components/dashboards/vendor/CreateProductDialog";
-import VendorProductsActions from "@/components/dashboards/vendor/VendorProductsActions";
 import MainSpinner from "@/components/ui/MainSpinner";
 import { useFetch } from "@/hooks/useFetch";
 import type { Product } from "@/interfaces/product";
@@ -102,10 +102,10 @@ export default function VendorProducts() {
                   </Cell>
 
                   <Cell>
-                    <VendorProductsActions
+                    <ProductsActionsMenu
+                      payload={payload}
                       productId={product.id}
-                      token={`${payload?.token}`}
-                      vendorId={`${payload?.vendorId}`}
+                      vendorId={payload?.vendorId as string}
                     />
                   </Cell>
                 </Row>

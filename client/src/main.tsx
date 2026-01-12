@@ -9,8 +9,10 @@ import AppRouter from "./pages/AppRouter.tsx";
 import { QueryClient } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient();
+const container = document.getElementById("root")!;
+const root = createRoot(container);
 
-createRoot(document.getElementById("root")!).render(
+root.render(
   <StrictMode>
     <Provider>
       <QueryClientProvider client={queryClient}>
