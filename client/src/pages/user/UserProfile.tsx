@@ -63,10 +63,10 @@ export default function UserProfile() {
             <Input
               placeholder="Enter username"
               {...register("username", {
-                // minLength: {
-                //   value: 5,
-                //   message: "Username must be at least 5 characters",
-                // },
+                minLength: {
+                  value: 5,
+                  message: "Username must be at least 5 characters",
+                },
               })}
             />
             {errors.username && (

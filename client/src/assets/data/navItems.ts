@@ -4,7 +4,7 @@ export interface NavItem {
 }
 
 export const userListLinks: NavItem[] = [
-  { label: "Create a List", href: "/" },
+  { label: "Cart List", href: "/user-dashboard/cart" },
   { label: "Wish List", href: "/user-dashboard/wish" },
 ];
 

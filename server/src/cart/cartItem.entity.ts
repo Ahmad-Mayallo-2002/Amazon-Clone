@@ -5,6 +5,9 @@ import { Cart } from "./cart.entity";
 
 @Entity({ name: "cart_items" })
 export class CartItem extends AbstractEntity {
+  @Column({ type: "int", default: 0 })
+  amount: number;
+
   @Column({ type: "decimal", default: 0, name: "price_at_payment" })
   priceAtPayment: string;
 
@@ -16,10 +19,10 @@ export class CartItem extends AbstractEntity {
 
   // Relations
   @JoinColumn({ name: "product" })
-  @ManyToOne(() => Product, (product) => product.cartItems)
+  @ManyToOne(() => Product, (product) => product.cartItems, {nullable: false})
   product: Relation<Product>;
 
   @JoinColumn({ name: "cart" })
-  @ManyToOne(() => Cart, (cart) => cart.cartItems)
+  @ManyToOne(() => Cart, (cart) => cart.cartItems, { nullable: false })
   cart: Relation<Cart>;
 }

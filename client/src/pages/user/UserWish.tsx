@@ -19,44 +19,48 @@ export default function UserWish() {
     },
   });
 
-  if (!data) {
+  if (isLoading)
     return (
       <Center h="400px">
-        {isLoading && <MainSpinner w="100px" h="100px" />}
-        {error && (
-          <Heading fontSize="3xl" fontWeight={700}>
-            {(error as CustomError).response.data.message}
-          </Heading>
-        )}
+        <MainSpinner w="100px" h="100px" />
       </Center>
+    );
+
+  if (data) {
+    if (data.data.wishItems.length === 0)
+      return (
+        <Center h="400px">
+          <Heading fontSize="3xl" fontWeight={700}>
+            Wish List is Empty
+          </Heading>
+        </Center>
+      );
+
+    return (
+      <>
+        <Heading mb={4} fontSize="3xl" fontWeight={700}>
+          My Wish List
+        </Heading>
+        <SimpleGrid gap={4} columns={{ base: 1, md: 2, lg: 3 }}>
+          {data.data.wishItems.map((item) => (
+            <WishItemCartd
+              item={item.product}
+              key={item.id}
+              wishId={item.wishId}
+              token={`${payload?.token}`}
+              queryWishKey={queryWishKey}
+            />
+          ))}
+        </SimpleGrid>
+      </>
     );
   }
 
-  if (data.data.wishItems.length === 0)
-    return (
-      <Center h="400px">
-        <Heading fontSize="3xl" fontWeight={700}>
-          Wish List is Empty
-        </Heading>
-      </Center>
-    );
-
   return (
-    <>
-      <Heading mb={4} fontSize="3xl" fontWeight={700}>
-        My Wish List
+    <Center h="400px">
+      <Heading fontWeight={700} fontSize="2xl">
+        {(error as CustomError).response.data.message}
       </Heading>
-      <SimpleGrid gap={4} columns={{ base: 1, md: 2, lg: 3 }}>
-        {data.data.wishItems.map((item) => (
-          <WishItemCartd
-            item={item.product}
-            key={item.id}
-            wishId={item.wishId}
-            token={`${payload?.token}`}
-            queryWishKey={queryWishKey}
-          />
-        ))}
-      </SimpleGrid>
-    </>
+    </Center>
   );
 }

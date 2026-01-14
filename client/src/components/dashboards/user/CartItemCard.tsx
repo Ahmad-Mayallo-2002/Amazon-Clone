@@ -5,6 +5,7 @@ import type { CustomError, Response } from "@/interfaces/responses";
 import { createToaster } from "@/utils/createToaster";
 import { getPayload } from "@/utils/payloadCookie";
 import { queryClient } from "@/main";
+import NumberInputCartItemAmount from "./NumberInputCartItemAmount";
 
 interface CartItemCardProps {
   item: CartItem;
@@ -36,8 +37,6 @@ export default function CartItemCard({
     },
   });
 
-  const handleRemoveFromCart = () => mutationDeleteFromCart.mutate();
-
   return (
     <Box p={4} borderWidth="1px" borderRadius="lg">
       <HStack gap={4}>
@@ -58,6 +57,12 @@ export default function CartItemCard({
           </Text>
         </Box>
 
+        <NumberInputCartItemAmount
+          defaultAmount={item.amount}
+          payload={payload}
+          productId={item.productId}
+        />
+
         <Text fontWeight="bold">${Number(item.priceAtPayment).toFixed(2)}</Text>
       </HStack>
 
@@ -65,7 +70,7 @@ export default function CartItemCard({
         mt={3}
         size="xs"
         colorPalette="red"
-        onClick={handleRemoveFromCart}
+        onClick={() => mutationDeleteFromCart.mutate()}
       >
         Remove From Cart
       </Button>

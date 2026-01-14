@@ -4,12 +4,7 @@ import { Cart } from "./cart.entity";
 import { AppDataSource } from "../data-source";
 import { CartItem } from "./cartItem.entity";
 import AppError from "../utils/appError";
-import {
-  BAD_REQUEST,
-  BAD_REQUEST_REASON,
-  NOT_FOUND,
-  NOT_FOUND_REASON,
-} from "../utils/statusCodes";
+import { NOT_FOUND, NOT_FOUND_REASON } from "../utils/statusCodes";
 import { ProductService } from "../product/product.service";
 import { Product } from "../product/product.entity";
 import { calculatePagination } from "../utils/calculatePagination";
@@ -43,9 +38,12 @@ export class CartService {
     return cart;
   }
 
-  private async getItemByProductId(productId: string): Promise<CartItem> {
+  private async getItemByProductId(
+    productId: string,
+    cartId: string
+  ): Promise<CartItem> {
     const item = await this.cartItemRepo.findOne({
-      where: { productId },
+      where: { productId, cartId },
       relations: ["product"],
     });
     if (!item)
@@ -57,6 +55,7 @@ export class CartService {
     const cart = await this.cartRepo.findOne({
       where: { userId },
       relations: ["cartItems", "cartItems.product"],
+      order: { cartItems: { createdAt: "ASC" } },
     });
     if (!cart)
       throw new AppError(
@@ -73,57 +72,66 @@ export class CartService {
     return "Cart deleted successfully";
   }
 
-  async addToCart(productId: string, userId: string): Promise<string> {
+  async addToCart(
+    productId: string,
+    userId: string,
+    amount: number
+  ): Promise<string> {
     const product = (await this.productService.getProductById(
       productId
     )) as Product;
     // Check if cart is exist or not
-    let cart = await this.cartRepo.findOne({ where: { userId } });
+    let cart = await this.cartRepo.findOne({
+      where: { userId },
+    });
     // if not exist
     if (!cart) {
       // create one and save it
       cart = this.cartRepo.create({ userId, user: { id: userId } });
       await this.cartRepo.save(cart);
+      console.log("New Cart");
     }
     const discount: number = 1 - product.discount;
     // Calculate the price at payment of product
-    const price: number = +product.price * discount;
+    const price: number = +product.price * discount * amount;
     // Check if cart item is exist or not
-    const currentItem = await this.cartItemRepo.findOne({
-      where: {
-        productId,
-        cartId: cart.id,
-      },
+    let currentItem = await this.cartItemRepo.findOne({
+      where: { productId, cartId: cart.id },
     });
     // If exist
     if (currentItem) {
-      throw new AppError(
-        "Already Exist in Cart",
-        BAD_REQUEST,
-        BAD_REQUEST_REASON
-      );
+      currentItem.amount = amount;
+      currentItem.priceAtPayment = `${price}`;
+      console.log("Update");
     } else {
       // If not exist
       // Calculate price of payment
       // Create new cart item
-      const newItem = this.cartItemRepo.create({
+      currentItem = this.cartItemRepo.create({
         productId,
         cartId: cart.id,
         product: { id: productId },
-        cart: { id: cart.id },
+        cart: { id: cart.id, totalPrice: `${price}` },
         priceAtPayment: `${price}`,
+        amount,
       });
-      // Save new cart item
-      await this.cartItemRepo.save(newItem);
-      // Update cart total price and save it
-      cart.totalPrice = `${+cart.totalPrice + +newItem.priceAtPayment}`;
-      await this.cartRepo.save(cart);
+      console.log("Create");
     }
+    // Save new cart item
+    await this.cartItemRepo.save(currentItem);
+
+    let total: number = 0;
+    const items = await this.cartItemRepo.find({ where: { cartId: cart.id } });
+    for (const item of items) total += +item.priceAtPayment;
+    cart.totalPrice = `${total}`;
+
+    await this.cartRepo.save(cart);
+
     return "Product added to cart successfully";
   }
 
   async removeFromCart(cartId: string, productId: string): Promise<string> {
-    const item = await this.getItemByProductId(productId);
+    const item = await this.getItemByProductId(productId, cartId);
     const cart = await this.getById(cartId);
     cart.totalPrice = `${+cart.totalPrice - +item?.priceAtPayment}`;
     await this.cartRepo.save(cart);

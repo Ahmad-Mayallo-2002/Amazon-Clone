@@ -30,7 +30,6 @@ import orderRoutes from "./order/order.route";
 import { config } from "dotenv";
 import cors from "cors";
 import session from "express-session";
-import passport from "passport";
 config();
 
 const port: number = parseInt(process.env.PORT as string);
@@ -51,8 +50,6 @@ app.use(
   })
 );
 app.use(session({ secret: "secret", resave: false, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use("/api", userRoutes);
 app.use("/api", vendorRoutes);

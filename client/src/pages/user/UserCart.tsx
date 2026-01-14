@@ -31,87 +31,91 @@ export default function UserCart() {
     },
   });
 
-  if (!data) {
+  if (isLoading)
     return (
       <Center h="400px">
-        {isLoading && <MainSpinner w="100px" h="100px" />}
-        {error && (
-          <Heading fontSize="3xl" fontWeight={700}>
-            {(error as CustomError).response.data.message}
-          </Heading>
-        )}
+        <MainSpinner w="100px" h="100px" />
       </Center>
+    );
+
+  if (data) {
+    if (!data.data.cartItems.length)
+      return (
+        <Center h="400px">
+          <Heading fontSize="3xl" fontWeight={700}>
+            Cart is Empty
+          </Heading>
+        </Center>
+      );
+
+    return (
+      <>
+        <Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap={6} p={6}>
+          {/* Cart data.data */}
+          <GridItem>
+            <Stack gap={4}>
+              {data.data.cartItems.map((item) => (
+                <CartItemCard
+                  queryCartKey={queryCartKey}
+                  cartId={item.cartId}
+                  key={item.id}
+                  item={item}
+                />
+              ))}
+            </Stack>
+          </GridItem>
+
+          {/* Summary */}
+          <GridItem>
+            <Box
+              p={6}
+              borderWidth="1px"
+              borderRadius="lg"
+              position="sticky"
+              top="80px"
+            >
+              <Text fontSize="lg" fontWeight="bold" mb={4}>
+                Order Summary
+              </Text>
+
+              <HStack justify="space-between" mb={2}>
+                <Text>Total: </Text>
+                <Text>{data.data.cartItems.length}</Text>
+              </HStack>
+
+              <Separator my={3} />
+
+              <HStack justify="space-between" mb={4}>
+                <Text fontSize="lg" fontWeight="bold">
+                  Total
+                </Text>
+                <Text fontSize="lg" fontWeight="bold">
+                  ${(+data.data.totalPrice).toFixed(2)}
+                </Text>
+              </HStack>
+
+              <Button
+                colorPalette="yellow"
+                size="lg"
+                w="100%"
+                asChild
+                onClick={() => {}}
+                disabled={!data.data.cartItems.length}
+              >
+                <Link href="/checkout">Buy Now</Link>
+              </Button>
+            </Box>
+          </GridItem>
+        </Grid>
+      </>
     );
   }
 
-  if (!data.data.cartItems.length)
-    return (
-      <Center h="400px">
-        <Heading fontSize="3xl" fontWeight={700}>
-          Cart is Empty
-        </Heading>
-      </Center>
-    );
-
   return (
-    <>
-      <Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap={6} p={6}>
-        {/* Cart data.data */}
-        <GridItem>
-          <Stack gap={4}>
-            {data.data.cartItems.map((item) => (
-              <CartItemCard
-                queryCartKey={queryCartKey}
-                cartId={item.cartId}
-                key={item.id}
-                item={item}
-              />
-            ))}
-          </Stack>
-        </GridItem>
-
-        {/* Summary */}
-        <GridItem>
-          <Box
-            p={6}
-            borderWidth="1px"
-            borderRadius="lg"
-            position="sticky"
-            top="80px"
-          >
-            <Text fontSize="lg" fontWeight="bold" mb={4}>
-              Order Summary
-            </Text>
-
-            <HStack justify="space-between" mb={2}>
-              <Text>Total: </Text>
-              <Text>{data.data.cartItems.length}</Text>
-            </HStack>
-
-            <Separator my={3} />
-
-            <HStack justify="space-between" mb={4}>
-              <Text fontSize="lg" fontWeight="bold">
-                Total
-              </Text>
-              <Text fontSize="lg" fontWeight="bold">
-                ${(+data.data.totalPrice).toFixed(2)}
-              </Text>
-            </HStack>
-
-            <Button
-              colorPalette="yellow"
-              size="lg"
-              w="100%"
-              asChild
-              onClick={() => {}}
-              disabled={!data.data.cartItems.length}
-            >
-              <Link href="/checkout">Buy Now</Link>
-            </Button>
-          </Box>
-        </GridItem>
-      </Grid>
-    </>
+    <Center h="400px">
+      <Heading fontSize="2xl" fontWeight={700}>
+        {(error as CustomError).response.data.message}
+      </Heading>
+    </Center>
   );
 }

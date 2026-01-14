@@ -7,15 +7,11 @@ import {
 } from "../utils/statusCodes";
 import { verify } from "jsonwebtoken";
 import { config } from "dotenv";
-import { OAuth2Client } from "google-auth-library";
-import { sendResponse } from "../utils/sendResponse";
+import AppError from "../utils/appError";
 
 config();
 
-const { JWT_SECRET, GOOGLE_CLIENT_ID } = process.env;
-
-const jwt: string = JWT_SECRET!;
-const client = new OAuth2Client(GOOGLE_CLIENT_ID!);
+const { JWT_SECRET } = process.env;
 
 export const checkToken = async (
   req: Request,
@@ -23,55 +19,29 @@ export const checkToken = async (
   next: NextFunction
 ) => {
   try {
-    const authHeader = req.headers.authorization;
-    const googleToken = req.headers["x-google-token"] as string | undefined;
+    const authHeader = req.headers.authorization!;
+    const token = authHeader.split(" ")[1];
 
-    if (!authHeader && !googleToken)
-      return sendResponse(
-        res,
-        UNAUTHORIZED_REASON,
+    if (!authHeader || !token)
+      throw new AppError(
+        "Token is not found",
         UNAUTHORIZED,
-        "Token is not found"
+        UNAUTHORIZED_REASON
       );
 
-    if (authHeader) {
-      const token = authHeader.split(" ")[1];
-      verify(token, jwt, (error, user) => {
-        if (error)
-          return sendResponse(
-            res,
-            FORBIDDEN_REASON,
-            FORBIDDEN,
-            "Invalid or expired token"
-          );
-
-        (req as any).user = user;
-        next();
-      });
-      return;
-    }
-
-    if (googleToken) {
-      try {
-        const ticket = await client.verifyIdToken({
-          idToken: googleToken,
-          audience: GOOGLE_CLIENT_ID,
-        });
-
-        const payload = ticket.getPayload();
-        req.user = payload;
-        (req.user as any).provider = "google";
-        next();
-      } catch (error) {
-        return sendResponse(
-          res,
-          UNAUTHORIZED_REASON,
-          UNAUTHORIZED,
-          "Invalid or expired Google token"
+    
+    verify(token, `${JWT_SECRET}`, (error, user) => {
+      if (error)
+        throw new AppError(
+          "Invalid or expired token",
+          FORBIDDEN,
+          FORBIDDEN_REASON
         );
-      }
-    }
+
+      (req as any).user = user;
+      return next();
+    });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };

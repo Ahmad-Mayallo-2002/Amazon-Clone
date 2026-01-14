@@ -9,10 +9,12 @@ export class CartController {
   constructor(@inject(CartService) private cartService: CartService) {}
 
   addToCart = async (req: Request, res: Response, next: NextFunction) => {
+    const { amount } = req.body;
     try {
       const message = await this.cartService.addToCart(
         req.params.productId,
         (req as any).user.id,
+        amount
       );
       return sendResponse(res, message, OK, OK_REASON);
     } catch (error) {
